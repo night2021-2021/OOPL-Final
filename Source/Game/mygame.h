@@ -65,7 +65,10 @@ namespace game_framework {
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
+		void loadbackground();
 		CMovingBitmap logo;								// csie的logo
+		CMovingBitmap background;
+		CMovingBitmap character;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -89,6 +92,9 @@ namespace game_framework {
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
+	private:
+		CMovingBitmap background;
+		CMovingBitmap character;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -105,6 +111,7 @@ namespace game_framework {
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
+		CMovingBitmap background;
 		int counter;	// 倒數之計數器
 	};
 
