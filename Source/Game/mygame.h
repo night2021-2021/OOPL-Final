@@ -38,6 +38,7 @@
  *      3. Use ShowInitProgress(percent) to display loading progress.
 */
 
+#include "mygame_operator.h"
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
@@ -95,6 +96,7 @@ namespace game_framework {
 	private:
 		CMovingBitmap background;
 		CMovingBitmap character;
+		std::vector<Operator> operators;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

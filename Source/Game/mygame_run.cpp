@@ -5,7 +5,10 @@
 #include "../Library/audio.h"
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
+#include "mygame_operator.h"
 #include "mygame.h"
+#include <vector>
+
 
 using namespace game_framework;
 
@@ -35,8 +38,11 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	background.LoadBitmapByString({ "resources/0-3.bmp" });
 	background.SetTopLeft(0, 0);
 
-	character.LoadBitmapByString({ "resources/Reed.bmp" }, RGB(255, 255, 255));
-	character.SetTopLeft(120, 120);
+	Operator reed;
+	reed.image.LoadBitmapByString({ "resources/Reed.bmp" }, RGB(255, 255, 255));
+    reed.position = CPoint(120, 120);
+
+	operators.push_back(reed);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -51,10 +57,12 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
+	
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
+
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
