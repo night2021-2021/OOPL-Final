@@ -81,5 +81,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 void CGameStateRun::OnShow()
 {
 	background.ShowBitmap();
-	character.ShowBitmap();
+	for (auto& op : operators) {
+		op.image.ShowBitmap();
+	}
 }
