@@ -2,14 +2,17 @@
 #define OPERATOR_H
 
 #include <afxwin.h> 
-
-struct Operator
+namespace game_framework 
 {
-	CMovingBitmap image;
-	CPoint position;
-	bool isPlacing;
+	struct Operator
+	{
+		CMovingBitmap image;
+		CPoint position;
+		bool isPlacing;
 
-	Operator() : isPlacing(false) {}
-};
+		Operator() : isPlacing(false) {}
+	};
+}
+
 
 #endif
