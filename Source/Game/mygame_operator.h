@@ -5,7 +5,7 @@
 
 struct Operator
 {
-	CBitmap image;
+	CMovingBitmap image;
 	CPoint position;
 	bool isPlacing;
 
