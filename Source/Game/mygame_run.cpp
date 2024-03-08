@@ -7,6 +7,7 @@
 #include "../Library/gamecore.h"
 #include "mygame_operator.h"
 #include "mygame.h"
+#include "mygame_map.h"
 #include <vector>
 
 
@@ -15,6 +16,8 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
+const int GRID_SIZE = 100;
+bool isDragging = false;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
@@ -40,7 +43,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	Operator reed;
 	reed.image.LoadBitmapByString({ "resources/Reed.bmp" }, RGB(255, 255, 255));
-    reed.position = CPoint(120, 120);
+    reed.position = CPoint(1180, 720);
 
 	operators.push_back(reed);
 }
@@ -57,17 +60,26 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
-	
+	isDragging = true;
 }
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-
+	if (isDragging)
+	{
+		operators[0].position.x = (point.x / GRID_SIZE) * GRID_SIZE + 40;
+		operators[0].position.y = (point.y / GRID_SIZE) * GRID_SIZE;
+		isDragging = false;
+	}
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-
+	if (isDragging)
+	{
+		operators[0].position.x = (point.x / GRID_SIZE) * GRID_SIZE + 40;
+		operators[0].position.y = (point.y / GRID_SIZE) * GRID_SIZE;
+	}
 }
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
@@ -82,6 +94,7 @@ void CGameStateRun::OnShow()
 {
 	background.ShowBitmap();
 	for (auto& op : operators) {
+		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
 	}
 }
