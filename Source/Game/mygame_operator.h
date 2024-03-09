@@ -9,6 +9,7 @@ namespace game_framework
 		CMovingBitmap image;
 		CPoint position;
 		bool isPlacing;
+		int maxHealth;
 
 		Operator() : isPlacing(false) {}
 	};
