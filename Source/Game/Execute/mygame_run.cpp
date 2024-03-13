@@ -5,9 +5,9 @@
 #include "../Library/audio.h"
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
-#include "mygame_operator.h"
-#include "mygame.h"
-#include "mygame_map.h"
+#include "../Actors/Character/mygame_operator.h"
+#include "../mygame.h"
+#include "../Checkpoint/mygame_map.h"
 #include <vector>
 
 
@@ -43,7 +43,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	Operator reed;
 	reed.image.LoadBitmapByString({ "resources/Reed.bmp" }, RGB(255, 255, 255));
-    reed.position = CPoint(1180, 720);
+    reed.position = CPoint(180, 320);
 
 	operators.push_back(reed);
 }

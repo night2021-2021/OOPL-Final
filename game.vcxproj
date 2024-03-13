@@ -232,6 +232,8 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include="readme.md" />
     <None Include="Resources\gamecurs.cur" />
     <None Include="Resources\GAME.RC2" />
   </ItemGroup>
@@ -243,9 +245,9 @@
     <ClCompile Include="Source\Core\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Source\Game\mygame_initialize.cpp" />
-    <ClCompile Include="Source\Game\mygame_over.cpp" />
-    <ClCompile Include="Source\Game\mygame_run.cpp" />
+    <ClCompile Include="Source\Game\Execute\mygame_run.cpp" />
+    <ClCompile Include="Source\Game\Initialization\mygame_initialize.cpp" />
+    <ClCompile Include="Source\Game\Termination\mygame_over.cpp" />
     <ClCompile Include="Source\Library\audio.cpp" />
     <ClCompile Include="Source\Library\gamecore.cpp" />
     <ClCompile Include="Source\Library\gameutil.cpp" />
@@ -257,6 +259,8 @@
     <ClInclude Include="Source\Core\MainFrm.h" />
     <ClInclude Include="Source\Core\Resource.h" />
     <ClInclude Include="Source\Core\StdAfx.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
+    <ClInclude Include="Source\Game\Checkpoint\mygame_map.h" />
     <ClInclude Include="Source\Game\config.h" />
     <ClInclude Include="Source\Game\mygame.h" />
     <ClInclude Include="Source\Game\mygame_map.h" />
@@ -269,6 +273,7 @@
     <ResourceCompile Include="Source\Core\game.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Resources\0-3.bmp" />
     <Image Include="resources\bitmap1.bmp" />
     <Image Include="Resources\Game Framework.png" />
     <Image Include="resources\game.ico" />
@@ -276,6 +281,8 @@
     <Image Include="Resources\GAME_FRAMEWORK.bmp" />
     <Image Include="Resources\GAME_FRAMEWORK.ico" />
     <Image Include="resources\icon1.ico" />
+    <Image Include="Resources\mizuki.bmp" />
+    <Image Include="Resources\Reed.bmp" />
     <Image Include="resources\Toolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

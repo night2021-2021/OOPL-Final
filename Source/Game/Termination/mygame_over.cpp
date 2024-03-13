@@ -5,7 +5,7 @@
 #include "../Library/audio.h"
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
-#include "mygame.h"
+#include "../mygame.h"
 
 using namespace game_framework;
 
