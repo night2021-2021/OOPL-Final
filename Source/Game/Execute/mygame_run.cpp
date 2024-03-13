@@ -38,11 +38,11 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 
 void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
 {
-	background.LoadBitmapByString({ "resources/0-3.bmp" });
+	background.LoadBitmapByString({ "resources/map/0-3.bmp" });
 	background.SetTopLeft(0, 0);
 
 	Operator reed;
-	reed.image.LoadBitmapByString({ "resources/Reed.bmp" }, RGB(255, 255, 255));
+	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
     reed.position = CPoint(180, 320);
 
 	operators.push_back(reed);

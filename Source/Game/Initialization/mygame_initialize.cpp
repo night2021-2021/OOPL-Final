@@ -51,7 +51,7 @@ void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateInit::loadbackground()
 {
-	background.LoadBitmapByString({ "resources/mizuki.bmp" });
+	background.LoadBitmapByString({ "resources/cg/mizuki.bmp" });
 	background.SetTopLeft(0, 0);
 }
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
