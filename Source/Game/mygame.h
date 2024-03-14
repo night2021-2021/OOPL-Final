@@ -38,7 +38,7 @@
  *      3. Use ShowInitProgress(percent) to display loading progress.
 */
 
-#include "../Game/Actors/Character/mygame_operator.h"
+#include "../Game/Actors/Operator/mygame_operator.h"
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////

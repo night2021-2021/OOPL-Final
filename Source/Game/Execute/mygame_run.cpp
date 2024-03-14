@@ -5,7 +5,7 @@
 #include "../Library/audio.h"
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
-#include "../Actors/Character/mygame_operator.h"
+#include "../Actors/Operator/mygame_operator.h"
 #include "../mygame.h"
 #include "../Checkpoint/mygame_map.h"
 #include <vector>
