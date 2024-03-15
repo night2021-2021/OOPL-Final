@@ -9,7 +9,7 @@ namespace game_framework
     {
     public:
         Reed()
-        : Operator(1000, 100, 100, 1.5f, OperatorClass::Medic) {}
+        : Operator(1135, 362, 109, 2.85f, OperatorClass::Medic) {}
     };
 }
 
