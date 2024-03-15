@@ -9,7 +9,7 @@ namespace game_framework
     {
     public:
         Skadi()
-        : Operator(1135, 362, 109, 2.85f, OperatorClass::Guard) {}
+        : Operator(2745, 738, 155, 1.5f, OperatorClass::Guard) {}
     };
 }
 
