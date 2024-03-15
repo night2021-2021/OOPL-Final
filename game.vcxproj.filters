@@ -94,6 +94,8 @@
     <ClInclude Include="Source\Game\mygame_map.h" />
     <ClInclude Include="Source\Game\Checkpoint\mygame_map.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_character.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
