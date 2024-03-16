@@ -7,26 +7,24 @@
 
 namespace MyNamespace
 {
-    class MapTile {
+    class Checkpoint {
     public:
         bool walkable;              
         bool placeable;             
         bool occupied;              
-        std::string tileType;       
-        std::string tileName;       
+        std::string CKPTType;       
+        std::string CKPTName;       
 
-        MapTile(bool w, bool p, bool o, std::string t, std::string n) 
-            : walkable(w), placeable(p), occupied(o), tileType(t), tileName(n) {}
+        Checkpoint(bool w, bool p, bool o, std::string t, std::string n) 
+            : walkable(w), placeable(p), occupied(o), CKPTType(t), CKPTName(n) {}
     };
 
     class GameMap {
     public:
         int width, height;
-        std::vector<std::vector<MapTile>> tiles;        // 二維陣列，用來儲存地圖上每個tile的資訊
-
-        GameMap(int w, int h) : width(w), height(h), tiles(h, std::vector<MapTile>(w)) {}
+        std::vector<std::vector<Checkpoint>> checkpoint;        
+        GameMap(int w, int h) : width(w), height(h), checkpoint(h, std::vector<Checkpoint>(w)) {}
     };
-
 }
 
 #endif 
