@@ -5,18 +5,19 @@
 #include <vector>
 #include "../nlohmann/json.hpp"
 
-namespace MyNamespace
+namespace game_framework
 {
     class Checkpoint {
     public:
         bool walkable;              
         bool placeable;             
         bool occupied;              
+        int enemyCount;
         std::string CKPTType;       
         std::string CKPTName;       
 
-        Checkpoint(bool w, bool p, bool o, std::string t, std::string n) 
-            : walkable(w), placeable(p), occupied(o), CKPTType(t), CKPTName(n) {}
+        Checkpoint(bool w, bool p, std::string t, std::string n) 
+            : walkable(w), placeable(p), occupied(false), enemyCount(0), CKPTType(t), CKPTName(n) {}
     };
 
     class GameMap {
