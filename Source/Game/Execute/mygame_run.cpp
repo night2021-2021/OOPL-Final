@@ -8,7 +8,7 @@
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include "../mygame.h"
-#include "../Checkpoint/mygame_map.h"
+#include "../Checkpoint/mygame_logicMap.h"
 #include <vector>
 
 
