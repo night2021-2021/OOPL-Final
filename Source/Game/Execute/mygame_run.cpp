@@ -8,9 +8,9 @@
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include "../mygame.h"
-#include "../Checkpoint/mygame_logicMap.h"
+#include "../Map/mygame_mapManager.h"
 #include <vector>
-
+#include <iostream>
 
 using namespace game_framework;
 
@@ -41,6 +41,17 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 {
 	background.LoadBitmapByString({ "resources/map/0-3.bmp" });
 	background.SetTopLeft(0, 0);
+
+	GameMapManager mapManager;	
+	std::string mapPath = "resources/map/0-1.json";	
+
+	try{
+		game_framework::GameMap gameMap = mapManager.loadMapFromJson(mapPath);
+		std::cerr << "Success of file open." << std::endl;
+	}
+	catch (std::exception& e) {
+		std::cerr << "Error of file open." << e.what() << std::endl;
+	}
 
 	game_framework::Reed reed;
 	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
