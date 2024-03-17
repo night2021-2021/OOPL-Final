@@ -1,5 +1,4 @@
-#ifndef REED_H
-#define REED_H
+#pragma once
 
 #include "../../Character/mygame_operator.h"
 
@@ -13,4 +12,3 @@ namespace game_framework
     };
 }
 
-#endif

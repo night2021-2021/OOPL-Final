@@ -3,7 +3,7 @@
 #define GAME_MAP_MANAGER_H
 
 #include "mygame_logicMap.h"
-#include <../nlohmann/json.hpp>
+#include "../nlohmann/json.hpp"
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -15,7 +15,7 @@ namespace game_framework {
         GameMap loadMapFromJson(const std::string& jsonFilePath) {
             std::ifstream file(jsonFilePath);
             if (!file.is_open()) {
-                std::cerr << "無法打開檔案: " << jsonFilePath << std::endl;     // 在這裡應該處理錯誤，可能是拋出異常或返回一個空的 GameMap
+                std::cerr << "Can't open file " << jsonFilePath << std::endl;
             }
 
             nlohmann::json mapJson;

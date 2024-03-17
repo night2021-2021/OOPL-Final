@@ -15,6 +15,7 @@ using namespace game_framework;
 
 CGameStateOver::CGameStateOver(CGame *g): CGameState(g)
 {
+
 }
 
 void CGameStateOver::OnMove()

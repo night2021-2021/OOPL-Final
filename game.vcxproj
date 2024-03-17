@@ -262,11 +262,11 @@
     <ClInclude Include="Source\Game\Actors\Character\mygame_character.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
-    <ClInclude Include="Source\Game\Checkpoint\mygame_map.h" />
+    <ClInclude Include="Source\Game\Map\mygame_logicMap.h" />
+    <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
+    <ClInclude Include="Source\Game\nlohmann\json.hpp" />
     <ClInclude Include="Source\Game\config.h" />
     <ClInclude Include="Source\Game\mygame.h" />
-    <ClInclude Include="Source\Game\mygame_map.h" />
-    <ClInclude Include="Source\Game\mygame_operator.h" />
     <ClInclude Include="Source\Library\audio.h" />
     <ClInclude Include="Source\Library\gamecore.h" />
     <ClInclude Include="Source\Library\gameutil.h" />
@@ -275,7 +275,7 @@
     <ResourceCompile Include="Source\Core\game.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Resources\0-3.bmp" />
+    <Image Include="Resources\0_3.bmp" />
     <Image Include="resources\bitmap1.bmp" />
     <Image Include="Resources\Game Framework.png" />
     <Image Include="resources\game.ico" />
@@ -283,6 +283,7 @@
     <Image Include="Resources\GAME_FRAMEWORK.bmp" />
     <Image Include="Resources\GAME_FRAMEWORK.ico" />
     <Image Include="resources\icon1.ico" />
+    <Image Include="Resources\map\0_1.bmp" />
     <Image Include="Resources\mizuki.bmp" />
     <Image Include="Resources\Reed.bmp" />
     <Image Include="resources\Toolbar.bmp" />

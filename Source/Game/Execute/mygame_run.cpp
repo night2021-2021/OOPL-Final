@@ -39,15 +39,15 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 
 void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
 {
-	background.LoadBitmapByString({ "resources/map/0-3.bmp" });
+	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
 	GameMapManager mapManager;	
-	std::string mapPath = "resources/map/0-1.json";	
+	std::string mapPath = "resources/map/mapJSON/0_1.json";	
 
 	try{
 		game_framework::GameMap gameMap = mapManager.loadMapFromJson(mapPath);
-		std::cerr << "Success of file open." << std::endl;
+		std::cout << "Success of file open." << std::endl;
 	}
 	catch (std::exception& e) {
 		std::cerr << "Error of file open." << e.what() << std::endl;

@@ -39,7 +39,7 @@
 */
 
 #include "../Game/Actors/Character/mygame_operator.h"
-
+#include "../Game/Map/mygame_logicMap.h"
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants

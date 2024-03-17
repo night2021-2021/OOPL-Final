@@ -8,13 +8,13 @@ namespace game_framework
 {
 	enum class OperatorClass
 	{
-		Caster,
-		Defender,
-		Guard,
-		Medic,
-		Sniper,
-		Supporter,
-		Vanguard
+		Caster,			//High purple
+		Defender,		//Tank
+		Guard,			//Low Red
+		Medic,			//Healer	
+		Sniper,			//High Red	
+		Supporter,		//High other
+		Vanguard		//Low cost
 	};
 
 	enum class OperatorStatus {
@@ -32,7 +32,7 @@ namespace game_framework
 		OperatorClass operatorClass;
 		OperatorStatus operatorStatus;
 
-		Operator(int maxHp, int atk, int def, float attackSpeed, OperatorClass opClass, bool placing = false)		//構造函數，用以初始化成員變量
+		Operator(int maxHp, int atk, int def, float attackSpeed, OperatorClass opClass, bool placing = false)		
         : Character(maxHp, atk, def, attackSpeed), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default)
 		{
 			HP = maxHp; 
