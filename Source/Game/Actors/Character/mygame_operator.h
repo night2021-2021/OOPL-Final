@@ -28,12 +28,13 @@ namespace game_framework
 	public:
 		CMovingBitmap image;
 		CPoint position;
+		int blockCounts;		//the number of blocks that the operator can block the enemy
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorStatus operatorStatus;
 
-		Operator(int maxHp, int atk, int def, float attackSpeed, OperatorClass opClass, bool placing = false)		
-        : Character(maxHp, atk, def, attackSpeed), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default)
+		Operator(int maxHp, int atk, int def, int blockCounts, float attackSpeed, OperatorClass opClass, bool placing = false)		
+        : Character(maxHp, atk, def, attackSpeed), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default)
 		{
 			HP = maxHp; 
 		}

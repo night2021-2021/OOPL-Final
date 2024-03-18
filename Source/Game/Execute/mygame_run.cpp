@@ -57,6 +57,8 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
     reed.position = CPoint(180, 320);
 
+
+
 	operators.push_back(reed);
 }
 
