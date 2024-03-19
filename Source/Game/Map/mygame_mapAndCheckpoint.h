@@ -14,13 +14,14 @@ namespace game_framework
         bool occupied;              
         int enemyCount;
         int blockCount;
+        int visualX, visualY;
         std::string CKPTType;       
         std::string CKPTName;   //Height is Englsih, Width is Math     
 
-        Checkpoint() : walkable(false), placeable(false), occupied(false), enemyCount(0), blockCount(0) {}
+        Checkpoint() : walkable(false), placeable(false), occupied(false), enemyCount(0), blockCount(0) ,visualX(0), visualY(0){}
 
         Checkpoint(bool w, bool p, std::string t, std::string n) 
-            : walkable(w), placeable(p), occupied(false), enemyCount(0), blockCount(0), CKPTType(t), CKPTName(n) {}
+            : walkable(w), placeable(p), occupied(false), enemyCount(0), blockCount(0), visualX(0), visualY(0), CKPTType(t), CKPTName(n) {}
     };
 
     class GameMap {

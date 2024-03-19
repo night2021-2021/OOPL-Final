@@ -39,7 +39,7 @@
 */
 
 #include "../Game/Actors/Character/mygame_operator.h"
-#include "../Game/Map/mygame_logicMap.h"
+#include "../Game/Map/mygame_mapAndCheckpoint.h"
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -90,6 +90,7 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
+		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -97,6 +98,7 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
+		GameMap gameMap;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

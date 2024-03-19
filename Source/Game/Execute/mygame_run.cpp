@@ -10,7 +10,9 @@
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include <vector>
+#include <limits>
 #include <iostream>
+
 
 using namespace game_framework;
 
@@ -43,11 +45,20 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	background.SetTopLeft(0, 0);
 
 	GameMapManager mapManager;	
-	std::string mapPath = "resources/map/mapJSON/0_1.json";	
-
+	std::string logicMapPath = "resources/map/mapJSON/0_1.json";	
+	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
 	try{
-		game_framework::GameMap gameMap = mapManager.loadMapFromJson(mapPath);
-		std::cout << "Success of file open." << std::endl;
+		game_framework::GameMap gameMap = mapManager.loadLogicMapFromJson(logicMapPath);
+		std::cout << "Success of logic file open." << std::endl;
+
+		mapManager.loadVisualMapFromJson(visualMapPath);
+		std::cout << "Visual map loaded successfully." << std::endl;
+
+		for (const auto& row : gameMap.checkpoint) {
+			for (const auto& checkpoint : row) {
+				std::cout << "Checkpoint visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << std::endl;
+			}
+		}
 	}
 	catch (std::exception& e) {
 		std::cerr << "Error of file open." << e.what() << std::endl;
@@ -81,8 +92,11 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging)
 	{
-		operators[0].position.x = (point.x / GRID_SIZE) * GRID_SIZE + 40;
-		operators[0].position.y = (point.y / GRID_SIZE) * GRID_SIZE;
+		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
+		if (nearestCheckpoint != nullptr) {
+			operators[0].position.x = nearestCheckpoint->visualX;
+			operators[0].position.y = nearestCheckpoint->visualY;
+		}
 		isDragging = false;
 	}
 }
@@ -91,8 +105,11 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging)
 	{
-		operators[0].position.x = (point.x / GRID_SIZE) * GRID_SIZE + 40;
-		operators[0].position.y = (point.y / GRID_SIZE) * GRID_SIZE;
+		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
+		if (nearestCheckpoint != nullptr) {
+			operators[0].position.x = nearestCheckpoint->visualX;
+			operators[0].position.y = nearestCheckpoint->visualY;
+		}
 	}
 }
 
@@ -111,4 +128,22 @@ void CGameStateRun::OnShow()
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
 	}
+}
+
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)  // §ä¥X³Ìªñªºcheckpoint	
+{
+	Checkpoint* NearestCheckpoint = nullptr;
+	double minDistance = 1e308;
+
+	for (auto& row : gameMap.checkpoint) {
+		for (auto& checkpoint : row) {
+			double distance = std::sqrt(std::pow(checkpoint.visualX - point.x, 2) + std::pow(checkpoint.visualY - point.y, 2));
+			if (distance < minDistance) {
+				minDistance = distance;
+				NearestCheckpoint = &checkpoint;
+			}
+		}
+	}
+
+	return NearestCheckpoint;
 }
