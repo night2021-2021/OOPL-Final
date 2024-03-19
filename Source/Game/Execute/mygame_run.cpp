@@ -9,10 +9,19 @@
 #include "../Actors/Operator/Reed/Reed.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
+#include "../Map/mygame_mapAndCheckpoint.h"
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <Windows.h>
+#include <sstream>
 
+#define DBOUT( s )            \
+{                             \
+   std::ostringstream os_;    \
+   os_ << s;                  \
+   OutputDebugString( os_.str().c_str() );  \
+}	
 
 using namespace game_framework;
 
@@ -47,21 +56,24 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	GameMapManager mapManager;	
 	std::string logicMapPath = "resources/map/mapJSON/0_1.json";	
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
+
 	try{
-		game_framework::GameMap gameMap = mapManager.loadLogicMapFromJson(logicMapPath);
-		std::cout << "Success of logic file open." << std::endl;
+		mapManager.loadLogicMapFromJson(logicMapPath);
+		DBOUT("Success of logic map file open." << endl);
 
 		mapManager.loadVisualMapFromJson(visualMapPath);
-		std::cout << "Visual map loaded successfully." << std::endl;
+		DBOUT("Success of visual map file open." << endl);
+
+		auto& gameMap = mapManager.getGameMap();
 
 		for (const auto& row : gameMap.checkpoint) {
 			for (const auto& checkpoint : row) {
-				std::cout << "Checkpoint visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << std::endl;
+				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
 	}
 	catch (std::exception& e) {
-		std::cerr << "Error of file open." << e.what() << std::endl;
+		DBOUT("Error of file open." << e.what());
 	}
 
 	game_framework::Reed reed;
