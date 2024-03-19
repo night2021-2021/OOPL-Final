@@ -94,6 +94,7 @@
     <ClInclude Include="Source\Game\Map\mygame_logicMap.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
     <ClInclude Include="Source\Game\nlohmann\json.hpp" />
+    <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
