@@ -38,6 +38,9 @@
  *      3. Use ShowInitProgress(percent) to display loading progress.
 */
 
+#include "../Game/Actors/Character/mygame_operator.h"
+#include "../Game/Map/mygame_mapAndCheckpoint.h"
+#include "../Game/Map/mygame_mapManager.h"
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
@@ -89,12 +92,16 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
+		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		CMovingBitmap background;
 		CMovingBitmap character;
+		std::vector<Operator> operators;
+		GameMap gameMap;
+		GameMapManager gameMapManager;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -112,6 +119,8 @@ namespace game_framework {
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		CMovingBitmap background;
+		GameMapManager gameMapManager;
+		GameMap gameMap;
 		int counter;	// 倒數之計數器
 	};
 
