@@ -16,6 +16,7 @@
 #include <Windows.h>
 #include <sstream>
 
+#define NOMINMAX
 #define DBOUT( s )            \
 {                             \
    std::ostringstream os_;    \
@@ -28,8 +29,11 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int GRID_SIZE = 100;
+const int deviationX = 50;
+const int deviationY = 50;
 bool isDragging = false;
+GameMapManager gameMapManager;
+
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
@@ -53,31 +57,33 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
-	GameMapManager mapManager;	
+		
 	std::string logicMapPath = "resources/map/mapJSON/0_1.json";	
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
 
 	try{
-		mapManager.loadLogicMapFromJson(logicMapPath);
+		gameMapManager.loadLogicMapFromJson(logicMapPath);
 		DBOUT("Success of logic map file open." << endl);
 
-		mapManager.loadVisualMapFromJson(visualMapPath);
+		gameMapManager.loadVisualMapFromJson(visualMapPath);
 		DBOUT("Success of visual map file open." << endl);
 
-		auto& gameMap = mapManager.getGameMap();
+		auto& gameMap = gameMapManager.getGameMap();
 
 		for (const auto& row : gameMap.checkpoint) {
 			for (const auto& checkpoint : row) {
 				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
+
+		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
 	}
 
 	game_framework::Reed reed;
-	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
+	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
     reed.position = CPoint(180, 320);
 
 
@@ -106,8 +112,8 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			operators[0].position.x = nearestCheckpoint->visualX;
-			operators[0].position.y = nearestCheckpoint->visualY;
+			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
+			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
 		}
 		isDragging = false;
 	}
@@ -119,8 +125,8 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			operators[0].position.x = nearestCheckpoint->visualX;
-			operators[0].position.y = nearestCheckpoint->visualY;
+			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
+			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
 		}
 	}
 }
@@ -142,10 +148,13 @@ void CGameStateRun::OnShow()
 	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)  // §ä¥X³Ìªñªºcheckpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)							// §ä¥X³Ìªñªºcheckpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
-	double minDistance = 1e308;
+	double minDistance = (std::numeric_limits<double>::max)();
+	auto& gameMap = gameMapManager.getGameMap();
+
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
 	for (auto& row : gameMap.checkpoint) {
 		for (auto& checkpoint : row) {
@@ -156,6 +165,9 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)  // §ä¥X³Ìªñªºche
 			}
 		}
 	}
+
+	DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
+	DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
 
 	return NearestCheckpoint;
 }
