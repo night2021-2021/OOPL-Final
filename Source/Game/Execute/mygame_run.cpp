@@ -117,6 +117,8 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 		}
 		isDragging = false;
 	}
+
+	DBOUT("The class of operator is:" << operators[0].operatorClass << endl);
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // 處理滑鼠的動作

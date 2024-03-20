@@ -3,6 +3,8 @@
 
 #include <afxwin.h> 
 #include "mygame_character.h"
+#include "../../../Library/gameutil.h"
+
 
 namespace game_framework 
 {
@@ -40,6 +42,8 @@ namespace game_framework
 		}
 
 	};
+
+	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
 }
 
 #endif
