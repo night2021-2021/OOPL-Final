@@ -10,6 +10,7 @@
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
+#include "OperatorPlacement.hpp"
 #include <vector>
 #include <limits>
 #include <iostream>
