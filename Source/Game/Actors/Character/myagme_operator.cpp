@@ -17,4 +17,17 @@ namespace game_framework {
         }
         return os;
     }
+
+    std::string OperatorClassToString(OperatorClass opClass) {
+        switch (opClass) {
+        case OperatorClass::Caster: return "caster";
+        case OperatorClass::Defender: return "defender";
+        case OperatorClass::Guard: return "guard";
+        case OperatorClass::Medic: return "medic";
+        case OperatorClass::Sniper: return "sniper";
+        case OperatorClass::Supporter: return "supporter";
+        case OperatorClass::Vanguard: return "vanguard";
+        default: return "unknown";
+        }
+    }
 }

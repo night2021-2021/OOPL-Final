@@ -44,6 +44,7 @@ namespace game_framework
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
+	std::string OperatorClassToString(OperatorClass opClass);
 }
 
 #endif

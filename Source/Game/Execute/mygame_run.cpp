@@ -170,6 +170,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)							// §ä¥X³Ìªñ
 
 	DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
 	DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
+	DBOUT("The type of this CKPT:" << typeid(NearestCheckpoint->CKPTType).name() << endl);
 
 	return NearestCheckpoint;
 }
