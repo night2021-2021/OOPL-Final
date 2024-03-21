@@ -1,7 +1,8 @@
-#include "OperatorPlacementManager.hpp"
+#include "StdAfx.h"
+#include "OperatorPlacement.hpp"
 
 namespace game_framework {
-    bool OperatorPlacementManager::CanPlaceOperator(const Operator& op, const Checkpoint& checkpoint) const {
+    bool OperatorPlacement::CanPlaceOperator(const Operator& op, const Checkpoint& checkpoint) const {
         switch(op.operatorClass) {
             case OperatorClass::Caster:
             case OperatorClass::Medic:

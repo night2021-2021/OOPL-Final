@@ -29,6 +29,7 @@ namespace game_framework
 	{
 	public:
 		CMovingBitmap image;
+		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
 		bool isPlacing;
@@ -44,7 +45,6 @@ namespace game_framework
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
-	std::string OperatorClassToString(OperatorClass opClass);
 }
 
 #endif

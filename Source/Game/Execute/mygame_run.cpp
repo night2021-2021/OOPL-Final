@@ -85,9 +85,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	game_framework::Reed reed;
 	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
-    reed.position = CPoint(180, 320);
-
-
+	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
 
 	operators.push_back(reed);
 }
@@ -111,10 +109,20 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging)
 	{
+		game_framework::OperatorPlacement operatorPlacement;
+		
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
-		if (nearestCheckpoint != nullptr) {
+
+		if(operators[0].isPlacing == false){
+			if (nearestCheckpoint != nullptr && operatorPlacement.CanPlaceOperator(operators[0], *nearestCheckpoint)) {
 			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
 			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
+			operators[0].isPlacing = true;
+			}
+			else {
+				operators[0].position.x = 1080;
+				operators[0].position.y = 720;
+			}
 		}
 		isDragging = false;
 	}
@@ -124,7 +132,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging)
+	if (isDragging && operators[0].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
@@ -142,9 +150,13 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()
+void CGameStateRun::OnShow()							  // Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
+	for (auto& op : operators) {
+		op.headImage.SetTopLeft(980, 600);
+		op.headImage.ShowBitmap();
+	}
 	for (auto& op : operators) {
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
@@ -169,9 +181,9 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)							// §ä¥X³Ìªñ
 		}
 	}
 
-	DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
-	DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
-	DBOUT("The type of this CKPT:" << typeid(NearestCheckpoint->CKPTType).name() << endl);
+	//DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
+	//DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
+	//DBOUT("The type of this CKPT:" << typeid(NearestCheckpoint->CKPTType).name() << endl);
 
 	return NearestCheckpoint;
 }
