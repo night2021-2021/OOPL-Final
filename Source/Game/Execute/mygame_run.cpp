@@ -10,7 +10,6 @@
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
-#include "OperatorPlacement.hpp"
 #include <vector>
 #include <limits>
 #include <iostream>
@@ -33,6 +32,7 @@ using namespace game_framework;
 const int deviationX = 50;
 const int deviationY = 50;
 bool isDragging = false;
+
 GameMapManager gameMapManager;
 
 
@@ -58,7 +58,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
-		
+	
 	std::string logicMapPath = "resources/map/mapJSON/0_1.json";	
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
 
@@ -86,13 +86,17 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	game_framework::Reed reed;
 	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
 	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
-
+	reed.position.SetPoint(1080, 720);
 	operators.push_back(reed);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-
+	if (nChar == VK_BACK) {
+		operators[0].isPlacing = false;
+		operators[0].position.x = 1080;
+		operators[0].position.y = 720;
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -105,23 +109,38 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 	isDragging = true;
 }
 
+static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
+	switch (op.operatorClass) {
+	case OperatorClass::Caster:
+	case OperatorClass::Medic:
+	case OperatorClass::Sniper:
+	case OperatorClass::Supporter:
+		return cp.CKPTType == "platform";
+	case OperatorClass::Vanguard:
+	case OperatorClass::Defender:
+	case OperatorClass::Guard:
+		return cp.CKPTType == "path";
+	default:
+		return false;
+	}
+}
+
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging)
 	{
-		game_framework::OperatorPlacement operatorPlacement;
-		
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 
 		if(operators[0].isPlacing == false){
-			if (nearestCheckpoint != nullptr && operatorPlacement.CanPlaceOperator(operators[0], *nearestCheckpoint)) {
-			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
-			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
-			operators[0].isPlacing = true;
+			if (nearestCheckpoint != nullptr && CanPlaceOperator(operators[0], *nearestCheckpoint)) {
+				operators[0].position.x = nearestCheckpoint->visualX -deviationX;
+				operators[0].position.y = nearestCheckpoint->visualY -deviationY;
+				operators[0].isPlacing = true;
 			}
 			else {
 				operators[0].position.x = 1080;
 				operators[0].position.y = 720;
+				DBOUT("The operator can't be deployed on this plot");
 			}
 		}
 		isDragging = false;
@@ -150,7 +169,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()							  // Åã¥Ü¹CÀ¸µe­±	
+void CGameStateRun::OnShow()															// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
 	for (auto& op : operators) {
@@ -187,3 +206,5 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)							// §ä¥X³Ìªñ
 
 	return NearestCheckpoint;
 }
+
+
