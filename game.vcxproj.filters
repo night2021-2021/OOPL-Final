@@ -137,5 +137,14 @@
     <Image Include="Resources\map\0_1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="Resources\cg\mizuki.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\operators\Reed\Reed.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

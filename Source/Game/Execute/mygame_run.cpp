@@ -92,16 +92,16 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
+
+}
+
+void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
+{
 	if (nChar == VK_BACK) {
 		operators[0].isPlacing = false;
 		operators[0].position.x = 1080;
 		operators[0].position.y = 720;
 	}
-}
-
-void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
-{
-
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
@@ -169,12 +169,16 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()															// Åã¥Ü¹CÀ¸µe­±	
+void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
+
+	int locateFirst = 1150;
+
 	for (auto& op : operators) {
-		op.headImage.SetTopLeft(980, 600);
+		op.headImage.SetTopLeft(locateFirst, 605);
 		op.headImage.ShowBitmap();
+		locateFirst -= 100;
 	}
 	for (auto& op : operators) {
 		op.image.SetTopLeft(op.position.x, op.position.y);
@@ -182,7 +186,7 @@ void CGameStateRun::OnShow()															// Åã¥Ü¹CÀ¸µe­±
 	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)							// §ä¥X³Ìªñªºcheckpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();

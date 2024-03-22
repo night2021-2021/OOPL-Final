@@ -279,6 +279,9 @@
   <ItemGroup>
     <Image Include="Resources\0_3.bmp" />
     <Image Include="resources\bitmap1.bmp" />
+    <Image Include="Resources\cg\mizuki.bmp" />
+    <Image Include="Resources\characters\operators\Reed\Reed.bmp" />
+    <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp" />
     <Image Include="Resources\Game Framework.png" />
     <Image Include="resources\game.ico" />
     <Image Include="resources\gameDoc.ico" />
