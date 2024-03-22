@@ -92,7 +92,7 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
+		Checkpoint* FindNearestCheckpoint(CPoint point);// 找出最近的checkpoint
 
 	protected:
 		void OnMove();									// 移動遊戲元素
@@ -123,7 +123,7 @@ namespace game_framework {
 		CMovingBitmap background;
 		GameMapManager gameMapManager;
 		GameMap gameMap;
-		int counter;	// 倒數之計數器
+		int counter;									// 倒數之計數器
 	};
 
 }

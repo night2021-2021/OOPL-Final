@@ -25,6 +25,13 @@ namespace game_framework
         Retreat  
     };
 
+	enum class Orientation {
+		Up,
+		Down,
+		Left,
+		Right
+	};
+
 	class Operator : public Character
 	{
 	public:
@@ -35,9 +42,10 @@ namespace game_framework
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorStatus operatorStatus;
+		Orientation orientation;
 
-		Operator(int maxHp, int atk, int def, int blockCounts, float attackSpeed, OperatorClass opClass, bool placing = false)		
-        : Character(maxHp, atk, def, attackSpeed), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default)
+		Operator(int maxHp, int atk, int def, int blockCounts, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+        : Character(maxHp, atk, def, attackSpeed), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default), orientation(ori)
 		{
 			HP = maxHp; 
 		}
