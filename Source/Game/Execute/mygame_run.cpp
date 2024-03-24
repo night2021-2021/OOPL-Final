@@ -7,6 +7,7 @@
 #include "../Library/gamecore.h"
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Operator/Reed/Reed.h"
+#include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -58,11 +59,11 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
-	
-	std::string logicMapPath = "resources/map/mapJSON/0_1.json";	
+
+	std::string logicMapPath = "resources/map/mapJSON/0_1.json";
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
 
-	try{
+	try {
 		gameMapManager.loadLogicMapFromJson(logicMapPath);
 		DBOUT("Success of logic map file open." << endl);
 
@@ -88,6 +89,11 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
 	reed.position.SetPoint(1080, 720);
 	operators.push_back(reed);
+
+	game_framework::Bug_normal bug_normal;
+	bug_normal.image.LoadBitmapByString({ "resorces/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
+	bug_normal.image.SetTopLeft(1000, 100);
+	bug_normal.image.SetAnimation(10, false);
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)

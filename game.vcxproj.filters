@@ -53,7 +53,7 @@
     <ClCompile Include="Source\Game\Execute\mygame_run.cpp" />
     <ClCompile Include="Source\Game\Initialization\mygame_initialize.cpp" />
     <ClCompile Include="Source\Game\Termination\mygame_over.cpp" />
-    <ClCompile Include="Source\Game\Actors\Character\myagme_operator.cpp" />
+    <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -96,6 +96,8 @@
     <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
     <ClInclude Include="Source\Game\nlohmann\json.hpp" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_enemy.h" />
+    <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
@@ -144,6 +146,24 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_2.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_3.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_4.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_5.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\enimies\Bug_normal\frame_6.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
