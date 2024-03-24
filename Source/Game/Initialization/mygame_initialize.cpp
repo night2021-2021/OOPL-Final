@@ -34,7 +34,7 @@ void CGameStateInit::OnInit()
 
 	ShowInitProgress(66, "Initialize...");
 
-	Sleep(2500);                // 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
+	Sleep(100);                // 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
 	//
 	// 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
 	//
