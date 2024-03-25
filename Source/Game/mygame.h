@@ -125,5 +125,4 @@ namespace game_framework {
 		GameMap gameMap;
 		int counter;									// 倒數之計數器
 	};
-
 }
