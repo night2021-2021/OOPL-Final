@@ -39,6 +39,7 @@
 */
 
 #include "../Game/Actors/Character/mygame_operator.h"
+#include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
 
@@ -102,13 +103,14 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
+		std::vector<std::unique_ptr<Enemy>> enemies;   // ノvectorㄓ纗┮Τ寄
 		GameMap gameMap;
 		GameMapManager gameMapManager;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
 	// 硂class笴栏挡篈(Game Over)
-	// –Member functionImplementation常璶来
+	// –Member functionImplementation常璶来nji
 	/////////////////////////////////////////////////////////////////////////////
 
 	class CGameStateOver : public CGameState {

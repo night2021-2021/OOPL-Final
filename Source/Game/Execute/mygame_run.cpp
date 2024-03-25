@@ -6,6 +6,7 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "../Actors/Character/mygame_operator.h"
+#include "../Actors/Character/mygame_enemy.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../mygame.h"
@@ -85,15 +86,13 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	}
 
 	game_framework::Reed reed;
-	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
-	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
-	reed.position.SetPoint(1080, 720);
+	
 	operators.push_back(reed);
 
-	game_framework::Bug_normal bug_normal;
-	bug_normal.image.LoadBitmapByString({ "resources/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
-	bug_normal.image.SetTopLeft(1000, 100);
-	bug_normal.image.SetAnimation(10, false);
+	for (int i = 0; i < 5; ++i) {
+		auto bug_normal = std::make_unique<game_framework::Bug_normal>(100, 10, 5, 1.5f, 1.0f);
+		enemies.push_back(std::move(bug_normal));
+	}
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -189,6 +188,9 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 	for (auto& op : operators) {
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
+	}
+	for (auto& enemy : enemies) {
+		enemy->image.ShowBitmap();
 	}
 }
 
