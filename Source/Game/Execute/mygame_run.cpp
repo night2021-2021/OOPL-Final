@@ -6,6 +6,7 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "../Actors/Character/mygame_operator.h"
+#include "../Actors/Character/mygame_enemy.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../mygame.h"
@@ -28,7 +29,7 @@
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
-// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
+// ï¿½oï¿½ï¿½classï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½æª«ï¿½ï¿½Aï¿½Dï¿½nï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½oï¿½ï¿½
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 50;
 const int deviationY = 50;
@@ -49,12 +50,12 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
+void CGameStateRun::OnMove()                            // ï¿½ï¿½ï¿½Ê¹Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 
 }
 
-void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
+void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¤Î¹Ï§Î³]ï¿½w
 {
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
@@ -78,22 +79,20 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 			}
 		}
 
-		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
+		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½PFindNearestCheckpointï¿½ï¿½ï¿½ï¿½
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
 	}
 
 	game_framework::Reed reed;
-	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
-	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
-	reed.position.SetPoint(1080, 720);
+	
 	operators.push_back(reed);
 
-	game_framework::Bug_normal bug_normal;
-	bug_normal.image.LoadBitmapByString({ "resources/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
-	bug_normal.image.SetTopLeft(1000, 100);
-	bug_normal.image.SetAnimation(10, false);
+	for (int i = 0; i < 5; ++i) {
+		auto bug_normal = std::make_unique<game_framework::Bug_normal>(100, 10, 5, 1.5f, 1.0f);
+		enemies.push_back(std::move(bug_normal));
+	}
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -110,7 +109,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
 {
 	isDragging = true;
 }
@@ -131,7 +130,7 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 	}
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
 {
 	if (isDragging)
 	{
@@ -155,7 +154,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 	DBOUT("The class of operator is:" << operators[0].operatorClass << endl);
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
 {
 	if (isDragging && operators[0].isPlacing == false)
 	{
@@ -167,15 +166,15 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 	}
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
 {
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
 {
 }
 
-void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
+void CGameStateRun::OnShow()									// ï¿½ï¿½Ü¹Cï¿½ï¿½ï¿½eï¿½ï¿½	
 {
 	background.ShowBitmap();
 
@@ -190,15 +189,18 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
 	}
+	for (auto& enemy : enemies) {
+		enemy->image.ShowBitmap();
+	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ï¿½ï¿½Xï¿½Ìªï¿½checkpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
 	auto& gameMap = gameMapManager.getGameMap();
 
-	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½POnInitï¿½ï¿½ï¿½ï¿½
 
 	for (auto& row : gameMap.checkpoint) {
 		for (auto& checkpoint : row) {
