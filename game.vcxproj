@@ -262,6 +262,7 @@
     <ClInclude Include="Source\Core\StdAfx.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_character.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemy.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />

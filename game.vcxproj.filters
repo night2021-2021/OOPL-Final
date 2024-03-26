@@ -98,6 +98,7 @@
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemy.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">

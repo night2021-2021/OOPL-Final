@@ -7,8 +7,9 @@
 #include "../Library/gamecore.h"
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Character/mygame_enemy.h"
-#include "../Actors/Operator/Reed/Reed.h"
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
+#include "../Actors/Character/mygame_enemyManager.h"
+#include "../Actors/Operator/Reed/Reed.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -86,11 +87,22 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	}
 
 	game_framework::Reed reed;
-	
 	operators.push_back(reed);
 
 	for (int i = 0; i < 5; ++i) {
-		auto bug_normal = std::make_unique<game_framework::Bug_normal>(100, 10, 5, 1.5f, 1.0f);
+		auto bug_normal = std::make_unique<game_framework::Bug_normal>(
+			1,          // IDENTIFY
+			100,        // MAX_HP
+			10,         // ATK
+			5,          // DEF
+			0,          // SP
+			1,          // BLOCKS
+			1.5f,       // AS
+			1.0f,       // MS
+			std::vector<std::string>{"A1", "B2", "C3"},			// ROUTE
+			EnemyType::BUG_NORMAL,								// TYPE
+			EnemyState::IDLE									// STATE
+		);
 		enemies.push_back(std::move(bug_normal));
 	}
 }
@@ -191,6 +203,7 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 	}
 	for (auto& enemy : enemies) {
 		enemy->image.ShowBitmap();
+		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
 	}
 }
 

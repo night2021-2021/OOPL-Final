@@ -7,8 +7,8 @@ namespace game_framework
 	class Bug_normal : public Enemy
 	{
 	public:
-		Bug_normal(int maxHp, int atk, int def, float attackSpeed, float moveSpeed)
-			: Enemy(maxHp, atk, def, attackSpeed, moveSpeed)
+        Bug_normal(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::string>& TRAJECTORY, EnemyType TYPE, EnemyState STATE)
+            : Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE)
 		{
             image.LoadBitmapByString({
                 "resources/characters/enimies/Bug_normal/frame_01.bmp",
@@ -38,7 +38,7 @@ namespace game_framework
                 }, RGB(255, 255, 255));
 			image.SetAnimation(10, false);
 
-			position = CPoint(1000, 100);
+			position.SetPoint(100, 100);
 		}
 	};
 }
