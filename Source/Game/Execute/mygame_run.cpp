@@ -29,7 +29,7 @@
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
-// ï¿½oï¿½ï¿½classï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½æª«ï¿½ï¿½Aï¿½Dï¿½nï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½oï¿½ï¿½
+// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 50;
 const int deviationY = 50;
@@ -50,12 +50,12 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()                            // ï¿½ï¿½ï¿½Ê¹Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 {
 
 }
 
-void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¤Î¹Ï§Î³]ï¿½w
+void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
@@ -79,7 +79,7 @@ void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 		}
 
-		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½PFindNearestCheckpointï¿½ï¿½ï¿½ï¿½
+		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
@@ -109,7 +109,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
 	isDragging = true;
 }
@@ -130,7 +130,7 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 	}
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging)
 	{
@@ -154,7 +154,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿
 	DBOUT("The class of operator is:" << operators[0].operatorClass << endl);
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging && operators[0].isPlacing == false)
 	{
@@ -166,15 +166,15 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿
 	}
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()									// ï¿½ï¿½Ü¹Cï¿½ï¿½ï¿½eï¿½ï¿½	
+void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
 
@@ -194,13 +194,13 @@ void CGameStateRun::OnShow()									// ï¿½ï¿½Ü¹Cï¿½ï¿½ï¿½eï¿½ï¿½
 	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ï¿½ï¿½Xï¿½Ìªï¿½checkpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
 	auto& gameMap = gameMapManager.getGameMap();
 
-	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½POnInitï¿½ï¿½ï¿½ï¿½
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
 	for (auto& row : gameMap.checkpoint) {
 		for (auto& checkpoint : row) {
