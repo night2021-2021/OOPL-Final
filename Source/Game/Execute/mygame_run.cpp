@@ -91,7 +91,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	operators.push_back(reed);
 
 	game_framework::Bug_normal bug_normal;
-	bug_normal.image.LoadBitmapByString({ "resorces/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
+	bug_normal.image.LoadBitmapByString({ "resources/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
 	bug_normal.image.SetTopLeft(1000, 100);
 	bug_normal.image.SetAnimation(10, false);
 }
