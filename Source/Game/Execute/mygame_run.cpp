@@ -36,8 +36,9 @@ const int deviationX = 50;
 const int deviationY = 50;
 bool isDragging = false;
 
-GameMapManager gameMapManager;
+game_framework::EnemyManager enemyManager;
 
+GameMapManager gameMapManager;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
@@ -89,21 +90,23 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	game_framework::Reed reed;
 	operators.push_back(reed);
 
-	for (int i = 0; i < 5; ++i) {
-		auto bug_normal = std::make_unique<game_framework::Bug_normal>(
-			1,          // IDENTIFY
-			100,        // MAX_HP
-			10,         // ATK
-			5,          // DEF
-			0,          // SP
-			1,          // BLOCKS
-			1.5f,       // AS
-			1.0f,       // MS
-			std::vector<std::string>{"A1", "B2", "C3"},			// ROUTE
-			EnemyType::BUG_NORMAL,								// TYPE
-			EnemyState::IDLE									// STATE
-		);
-		enemies.push_back(std::move(bug_normal));
+	//¥H¤U¬°Åª¨ú¼Ä¤HJSONÀÉ®×ªºµ{¦¡½X
+	
+	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
+	
+	try {
+		enemyManager.loadEnemyFromJson(enemyPath);
+		DBOUT("Success of enemy file open." << endl);
+	}
+	catch (std::exception& e) {
+		DBOUT("Error of enemy file open." << e.what());
+	}
+
+	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+	auto& loadedEnemies = enemyManager.getEnemies();
+	for (auto& enemy : loadedEnemies) {
+		enemies.push_back(enemy);
+		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
 }
 
@@ -201,9 +204,16 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
 	}
+
 	for (auto& enemy : enemies) {
-		enemy->image.ShowBitmap();
 		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
+		enemy->image.ShowBitmap();
+	}
+
+	//´ú¸Õ ¼Ä¤Hªº²¾°Ê  ¦¨¥\
+	if (!enemies.empty()) {
+		auto& firstEnemy = enemies[0]; // Àò¨ú²Ä¤@¦ì¼Ä¤Hªº¤Þ¥Î
+		firstEnemy->position.x -= 1;
 	}
 }
 

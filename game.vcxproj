@@ -236,6 +236,7 @@
     <None Include="readme.md" />
     <None Include="Resources\gamecurs.cur" />
     <None Include="Resources\GAME.RC2" />
+    <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\game.cpp" />

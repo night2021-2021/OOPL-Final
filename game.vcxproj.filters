@@ -24,6 +24,7 @@
     </None>
     <None Include=".gitignore" />
     <None Include="readme.md" />
+    <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Library\audio.cpp">

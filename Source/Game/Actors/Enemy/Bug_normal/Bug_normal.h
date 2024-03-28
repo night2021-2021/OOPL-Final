@@ -38,7 +38,7 @@ namespace game_framework
                 }, RGB(255, 255, 255));
 			image.SetAnimation(10, false);
 
-			position.SetPoint(100, 100);
+			position.SetPoint(1000, 100);
 		}
 	};
 }

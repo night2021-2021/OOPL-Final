@@ -103,7 +103,7 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
-		std::vector<std::unique_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
+		std::vector<std::shared_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
 		GameMap gameMap;
 		GameMapManager gameMapManager;
 	};
