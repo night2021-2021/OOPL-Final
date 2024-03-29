@@ -36,8 +36,7 @@ const int deviationX = 50;
 const int deviationY = 50;
 bool isDragging = false;
 
-game_framework::EnemyManager enemyManager;
-
+EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
@@ -210,7 +209,7 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		enemy->image.ShowBitmap();
 	}
 
-	//測試 敵人的移動  成功
+	//測試 敵人的移動 成功
 	if (!enemies.empty()) {
 		auto& firstEnemy = enemies[0]; // 獲取第一位敵人的引用
 		firstEnemy->position.x -= 1;
