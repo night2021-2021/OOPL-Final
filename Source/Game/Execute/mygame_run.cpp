@@ -16,6 +16,8 @@
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <Windows.h>
 #include <sstream>
 
@@ -105,6 +107,14 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
+
+	//¥H¤U¬°­p®É¾¹
+	auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdateTime).count();
+
+    if (elapsed >= 100) { 
+        lastUpdateTime = now;
+    }
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
