@@ -32,8 +32,8 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int deviationX = 50;
-const int deviationY = 50;
+const int deviationX = 150;
+const int deviationY = 220;
 bool isDragging = false;
 
 EnemyManager enemyManager;
@@ -88,8 +88,6 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	game_framework::Reed reed;
 	operators.push_back(reed);
-
-	//¥H¤U¬°Åª¨ú¼Ä¤HJSONÀÉ®×ªºµ{¦¡½X
 	
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 	
