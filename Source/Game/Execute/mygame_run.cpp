@@ -16,6 +16,8 @@
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <Windows.h>
 #include <sstream>
 
@@ -32,12 +34,11 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int deviationX = 50;
-const int deviationY = 50;
+const int deviationX = 150;
+const int deviationY = 220;
 bool isDragging = false;
 
-game_framework::EnemyManager enemyManager;
-
+EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
@@ -89,8 +90,6 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	game_framework::Reed reed;
 	operators.push_back(reed);
-
-	//¥H¤U¬°Åª¨ú¼Ä¤HJSONÀÉ®×ªºµ{¦¡½X
 	
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 	
@@ -108,6 +107,14 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
+
+	//¥H¤U¬°­p®É¾¹
+	auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdateTime).count();
+
+    if (elapsed >= 100) { 
+        lastUpdateTime = now;
+    }
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -210,7 +217,7 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		enemy->image.ShowBitmap();
 	}
 
-	//´ú¸Õ ¼Ä¤Hªº²¾°Ê  ¦¨¥\
+	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
 	if (!enemies.empty()) {
 		auto& firstEnemy = enemies[0]; // Àò¨ú²Ä¤@¦ì¼Ä¤Hªº¤Þ¥Î
 		firstEnemy->position.x -= 1;

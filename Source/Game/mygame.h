@@ -88,12 +88,14 @@ namespace game_framework {
 		void OnInit();  								// 遊戲的初值及圖形設定
 		void OnKeyDown(UINT, UINT, UINT);
 		void OnKeyUp(UINT, UINT, UINT);
-		void OnLButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
-		void OnLButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
-		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
-		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		Checkpoint* FindNearestCheckpoint(CPoint point);// 找出最近的checkpoint
+		void OnLButtonDown(UINT nFlags, CPoint point);  		// 處理滑鼠的動作
+		void OnLButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
+		void OnMouseMove(UINT nFlags, CPoint point);			// 處理滑鼠的動作 
+		void OnRButtonDown(UINT nFlags, CPoint point); 		 	// 處理滑鼠的動作
+		void OnRButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
+		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
+		std::chrono::steady_clock::time_point startTime;
+    	std::chrono::steady_clock::time_point currentTime;
 
 	protected:
 		void OnMove();									// 移動遊戲元素
@@ -103,7 +105,7 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
-		std::vector<std::shared_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
+		std::vector<std::unique_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
 		GameMap gameMap;
 		GameMapManager gameMapManager;
 		//void textShow();
@@ -128,4 +130,5 @@ namespace game_framework {
 		GameMap gameMap;
 		int counter;									// 倒數之計數器
 	};
+
 }

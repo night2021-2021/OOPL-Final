@@ -268,7 +268,6 @@
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
-    <ClInclude Include="Source\Game\Execute\enemyMove.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapAndCheckpoint.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
     <ClInclude Include="Source\Game\nlohmann\json.hpp" />
