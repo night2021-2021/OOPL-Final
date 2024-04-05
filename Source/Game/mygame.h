@@ -42,6 +42,7 @@
 #include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include <chrono>
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
@@ -94,21 +95,29 @@ namespace game_framework {
 		void OnRButtonDown(UINT nFlags, CPoint point); 		 	// 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
 		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
-		std::chrono::steady_clock::time_point startTime;
-    	std::chrono::steady_clock::time_point currentTime;
+
+		void PauseGame();										// 暫停遊戲
+		void ResumeGame();										// 繼續遊戲
+		void UpdateGameTime();									// 更新遊戲時間
 
 	protected:
-		void OnMove();									// 移動遊戲元素
-		void OnShow();									// 顯示這個狀態的遊戲畫面
+		void OnMove();											// 移動遊戲元素
+		void OnShow();											// 顯示這個狀態的遊戲畫面
 
 	private:
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
-		std::vector<std::unique_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
-		GameMap gameMap;
+		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
+		GameMap gameMap;		
 		GameMapManager gameMapManager;
-		//void textShow();
+		void textShow();
+		int cost;
+		bool isGamePaused;										//time
+		std::chrono::steady_clock::time_point mainTime;
+		std::chrono::steady_clock::duration gameTime;
+		std::chrono::steady_clock::time_point lastUpdateTime;
+		std::chrono::steady_clock::time_point lastCostUpdateTime;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

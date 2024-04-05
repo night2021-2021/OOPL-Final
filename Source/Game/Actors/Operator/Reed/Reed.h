@@ -19,7 +19,7 @@ namespace game_framework
                 imagePaths.push_back(std::string(buffer));
             }
 
-            image.LoadBitmapByString(imagePaths, RGB(255, 255, 255));
+            image.LoadBitmapByString(imagePaths, RGB(0, 0, 0));
 
             image.SetAnimation(10, false);
 
