@@ -22,7 +22,7 @@
     <ProjectGuid>{DDD280D7-4B85-4B03-BBC4-C46CA9BECCCB}</ProjectGuid>
     <RootNamespace>game</RootNamespace>
     <Keyword>MFCProj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnitTest|Win32'" Label="Configuration">
@@ -236,6 +236,7 @@
     <None Include="readme.md" />
     <None Include="Resources\gamecurs.cur" />
     <None Include="Resources\GAME.RC2" />
+    <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\game.cpp" />
@@ -262,6 +263,7 @@
     <ClInclude Include="Source\Core\StdAfx.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_character.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemy.h" />
+    <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />

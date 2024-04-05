@@ -1,0 +1,29 @@
+{
+    "enemies": [
+      {
+        "ID": 1,
+        "MaxHP": 100,
+        "ATK": 15,
+        "DEF": 5,
+        "AS": 1.2,
+        "MS": 0.5,
+        "SP": 0,
+        "BlockCounts": 1,
+        "Trajectory": ["A1", "B2", "C3"],
+        "type": "BUG_NORMAL"
+      },
+      {
+        "ID": 2,
+        "MaxHP": 120,
+        "ATK": 20,
+        "DEF": 8,
+        "AS": 1.0,
+        "MS": 0.4,
+        "SP": 0,
+        "BlockCounts": 1,
+        "Trajectory": ["A3", "B4", "C5"],
+        "type": "BUG_NORMAL"
+      }
+    ]
+  }
+  

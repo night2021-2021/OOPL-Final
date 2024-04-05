@@ -6,14 +6,18 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "../Actors/Character/mygame_operator.h"
-#include "../Actors/Operator/Reed/Reed.h"
+#include "../Actors/Character/mygame_enemy.h"
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
+#include "../Actors/Character/mygame_enemyManager.h"
+#include "../Actors/Operator/Reed/Reed.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
 #include <vector>
 #include <limits>
 #include <iostream>
+#include <chrono>
+#include <thread>
 #include <Windows.h>
 #include <sstream>
 
@@ -30,15 +34,19 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int deviationX = 50;
-const int deviationY = 50;
+const int deviationX = 150;
+const int deviationY = 220;
+
 bool isDragging = false;
 
+EnemyManager enemyManager;
 GameMapManager gameMapManager;
-
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
+	mainTime = std::chrono::steady_clock::now();
+	lastUpdateTime = mainTime;
+	gameTime = std::chrono::steady_clock::duration::zero();
 }
 
 CGameStateRun::~CGameStateRun()
@@ -56,6 +64,8 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
+	cost = 0;
+
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
@@ -85,20 +95,41 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	}
 
 	game_framework::Reed reed;
-	reed.image.LoadBitmapByString({ "resources/characters/operators/Reed/Reed.bmp" }, RGB(255, 255, 255));
-	reed.headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
-	reed.position.SetPoint(1080, 720);
 	operators.push_back(reed);
+	
+	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
+	
+	try {
+		enemyManager.loadEnemyFromJson(enemyPath);
+		DBOUT("Success of enemy file open." << endl);
+	}
+	catch (std::exception& e) {
+		DBOUT("Error of enemy file open." << e.what());
+	}
 
-	game_framework::Bug_normal bug_normal;
-	bug_normal.image.LoadBitmapByString({ "resorces/characters/enimies/Bug_normal/frame_1.bmp" }, RGB(255, 255, 255));
-	bug_normal.image.SetTopLeft(1000, 100);
-	bug_normal.image.SetAnimation(10, false);
+	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+	auto& loadedEnemies = enemyManager.getEnemies();
+	for (auto& enemy : loadedEnemies) {
+		enemies.push_back(enemy);
+		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
+	}
+
+	//¥H¤U¬°­p®É¾¹
+	mainTime = std::chrono::steady_clock::now();
+	isGamePaused = false;
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
+	if (nChar == VK_SPACE) {
 
+		if (isGamePaused) {
+			ResumeGame();
+		}
+		else {
+			PauseGame();
+		}
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -178,7 +209,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
-
+	textShow();
 	int locateFirst = 1150;
 
 	for (auto& op : operators) {
@@ -190,6 +221,59 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		op.image.SetTopLeft(op.position.x, op.position.y);
 		op.image.ShowBitmap();
 	}
+
+	for (auto& enemy : enemies) {
+		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
+		enemy->image.ShowBitmap();
+	}
+
+	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
+	if (!enemies.empty()) {
+		auto& firstEnemy = enemies[0]; // Àò¨ú²Ä¤@¦ì¼Ä¤Hªº¤Þ¥Î
+		firstEnemy->position.x -= 1;
+	}
+
+	//´ú¸Õ ®É¶¡¶b
+	UpdateGameTime();
+}
+
+
+void CGameStateRun::UpdateGameTime() {
+	if (!isGamePaused) {
+		auto now = std::chrono::steady_clock::now();
+		gameTime += now - lastUpdateTime;								// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
+		lastUpdateTime = now;											// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
+
+		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
+		if (LastCostUpdate >= 500 && cost < 99) {
+			cost += 1; 
+			lastCostUpdateTime = now; 
+		}
+	}
+}
+
+// ¼È°±¹CÀ¸¡A°±¤î¹CÀ¸®É¶¡ªº²Ö¿n
+void CGameStateRun::PauseGame() {
+	if (!isGamePaused) {
+		UpdateGameTime();												// ½T«O¦b¼È°±«e¹CÀ¸®É¶¡¬O³Ì·sªº
+		isGamePaused = true;											// ³]©w¹CÀ¸¬°¼È°±ª¬ºA
+	}
+}
+
+// ±q¼È°±ª¬ºA«ì´_¹CÀ¸¡A¤¹³\¹CÀ¸®É¶¡¦A¦¸²Ö¿n
+void CGameStateRun::ResumeGame() {
+	if (isGamePaused) {
+		isGamePaused = false;											// ¹CÀ¸¤£¦A¬O¼È°±ª¬ºA
+		lastUpdateTime = std::chrono::steady_clock::now();				// ­«¸m lastUpdateTime ¬°²{¦b
+	}
+}
+
+void CGameStateRun::textShow(){
+	CDC* pDC = CDDraw::GetBackCDC();
+	CTextDraw::ChangeFontLog(pDC, 40, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
+	std::string costStr = "Cost: " + std::to_string(cost);
+	CTextDraw::Print(pDC, 1100, 528, costStr.c_str());
+	CDDraw::ReleaseBackCDC();
 }
 
 Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
@@ -209,12 +293,5 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 			}
 		}
 	}
-
-	//DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
-	//DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
-	//DBOUT("The type of this CKPT:" << typeid(NearestCheckpoint->CKPTType).name() << endl);
-
 	return NearestCheckpoint;
 }
-
-

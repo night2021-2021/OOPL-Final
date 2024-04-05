@@ -19,10 +19,10 @@ namespace game_framework
 		Vanguard		//Low cost
 	};
 
-	enum class OperatorStatus {
-        Default, 
-        Battle,  
-        Retreat  
+	enum class OperatorState {
+        IDLE,
+		ATTACK,
+		DEAD
     };
 
 	enum class Orientation {
@@ -39,15 +39,16 @@ namespace game_framework
 		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
+		int cost;
 		bool isPlacing;
 		OperatorClass operatorClass;
-		OperatorStatus operatorStatus;
+		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int maxHp, int atk, int def, int blockCounts, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-        : Character(maxHp, atk, def, attackSpeed), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorStatus::Default), orientation(ori)
+		Operator(int MAX_HP, int ATK, int DEF, int BLOCKS, int COST, float AS, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+        : Character(MAX_HP, ATK, DEF, AS), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
 		{
-			HP = maxHp; 
+			HP = MAX_HP; 
 		}
 
 	};

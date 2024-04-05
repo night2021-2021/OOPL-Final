@@ -2,7 +2,6 @@
 #ifndef GAME_MAP_MANAGER_H
 #define GAME_MAP_MANAGER_H
 
-#include "mygame_mapAndCheckpoint.h"
 #include "../nlohmann/json.hpp"
 #include <string>
 #include <fstream>

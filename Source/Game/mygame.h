@@ -39,8 +39,10 @@
 */
 
 #include "../Game/Actors/Character/mygame_operator.h"
+#include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include <chrono>
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
@@ -87,28 +89,40 @@ namespace game_framework {
 		void OnInit();  								// 遊戲的初值及圖形設定
 		void OnKeyDown(UINT, UINT, UINT);
 		void OnKeyUp(UINT, UINT, UINT);
-		void OnLButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
-		void OnLButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		void OnMouseMove(UINT nFlags, CPoint point);	// 處理滑鼠的動作 
-		void OnRButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
-		void OnRButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
-		Checkpoint* FindNearestCheckpoint(CPoint point);// 找出最近的checkpoint
+		void OnLButtonDown(UINT nFlags, CPoint point);  		// 處理滑鼠的動作
+		void OnLButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
+		void OnMouseMove(UINT nFlags, CPoint point);			// 處理滑鼠的動作 
+		void OnRButtonDown(UINT nFlags, CPoint point); 		 	// 處理滑鼠的動作
+		void OnRButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
+		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
+
+		void PauseGame();										// 暫停遊戲
+		void ResumeGame();										// 繼續遊戲
+		void UpdateGameTime();									// 更新遊戲時間
 
 	protected:
-		void OnMove();									// 移動遊戲元素
-		void OnShow();									// 顯示這個狀態的遊戲畫面
+		void OnMove();											// 移動遊戲元素
+		void OnShow();											// 顯示這個狀態的遊戲畫面
 
 	private:
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
-		GameMap gameMap;
+		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
+		GameMap gameMap;		
 		GameMapManager gameMapManager;
+		void textShow();
+		int cost;
+		bool isGamePaused;										//time
+		std::chrono::steady_clock::time_point mainTime;
+		std::chrono::steady_clock::duration gameTime;
+		std::chrono::steady_clock::time_point lastUpdateTime;
+		std::chrono::steady_clock::time_point lastCostUpdateTime;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
 	// 這個class為遊戲的結束狀態(Game Over)
-	// 每個Member function的Implementation都要弄懂
+	// 每個Member function的Implementation都要弄懂nji
 	/////////////////////////////////////////////////////////////////////////////
 
 	class CGameStateOver : public CGameState {
