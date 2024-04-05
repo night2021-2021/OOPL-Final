@@ -14,12 +14,12 @@ namespace game_framework
             std::vector<std::string> imagePaths;
             char buffer[128];
 
-            for (int i = 1; i <= 142; ++i) {
-                sprintf(buffer, "resources/characters/operators/Reed/front/idle/reed_front_idle_%d.bmp", i);
+            for (int i = 1; i <= 143; ++i) {
+                sprintf(buffer, "resources/characters/operators/Reed/front/Reed_Idle/Reed_Idle_%d.bmp", i);
                 imagePaths.push_back(std::string(buffer));
             }
 
-            image.LoadBitmapByString(imagePaths, RGB(0, 0, 0));
+            image.LoadBitmapByString(imagePaths, RGB(255, 255, 255));
 
             image.SetAnimation(10, false);
 
