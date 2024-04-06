@@ -143,7 +143,13 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-	isDragging = true;
+	if (cost >= operators[0].cost) {
+		DBOUT("The cost of Reed is : " << operators[0].cost << endl);
+		isDragging = true;
+
+	}else {
+		DBOUT("The cost is not enough" << endl);
+	}
 }
 
 static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
@@ -164,26 +170,24 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 {
-	if (isDragging)
+	if (isDragging && operators[0].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
-
-		if(operators[0].isPlacing == false){
-			if (nearestCheckpoint != nullptr && CanPlaceOperator(operators[0], *nearestCheckpoint)) {
-				operators[0].position.x = nearestCheckpoint->visualX -deviationX;
-				operators[0].position.y = nearestCheckpoint->visualY -deviationY;
+		if (nearestCheckpoint != nullptr) {
+			if (CanPlaceOperator(operators[0], *nearestCheckpoint)) {
+				operators[0].position.x = nearestCheckpoint->visualX - deviationX;
+				operators[0].position.y = nearestCheckpoint->visualY - deviationY;
 				operators[0].isPlacing = true;
+				cost -= operators[0].cost;
 			}
 			else {
 				operators[0].position.x = 1080;
 				operators[0].position.y = 720;
-				DBOUT("The operator can't be deployed on this plot");
+				DBOUT("The operator can't be placed here" << endl);
 			}
-		}
-		isDragging = false;
+		}	
 	}
-
-	DBOUT("The class of operator is:" << operators[0].operatorClass << endl);
+	isDragging = false;
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // 處理滑鼠的動作

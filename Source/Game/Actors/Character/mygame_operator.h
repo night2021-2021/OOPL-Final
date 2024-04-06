@@ -45,11 +45,12 @@ namespace game_framework
 		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int MAX_HP, int ATK, int DEF, int BLOCKS, int COST, float AS, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-        : Character(MAX_HP, ATK, DEF, AS), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
+		Operator(int maxHp, int atk, int def, int blocks, int cost, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
 		{
-			HP = MAX_HP; 
+			HP = maxHp;
 		}
+
 
 	};
 
