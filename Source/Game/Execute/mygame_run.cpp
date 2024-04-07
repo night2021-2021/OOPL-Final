@@ -10,6 +10,8 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
+
+#include"../Actors/Operator/Skadi/Skadi.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -34,10 +36,11 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int deviationX = 150;
-const int deviationY = 220;
+const int deviationX = 120;
+const int deviationY = 180;
 
 bool isDragging = false;
+int selOpIdx = -1;
 
 EnemyManager enemyManager;
 GameMapManager gameMapManager;
@@ -64,7 +67,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
-	cost = 0;
+	cost = 30;
 
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
@@ -95,7 +98,9 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	}
 
 	game_framework::Reed reed;
+	game_framework::Skadi skadi;
 	operators.push_back(reed);
+	operators.push_back(skadi);
 	
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 	
@@ -135,20 +140,28 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		operators[0].isPlacing = false;
-		operators[0].position.x = 1080;
-		operators[0].position.y = 720;
+		if (selOpIdx >= 0) {
+			operators[selOpIdx].isPlacing = false;
+			operators[selOpIdx].position.x = 1080;
+			operators[selOpIdx].position.y = 720;
+		}
 	}
 }
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (cost >= operators[0].cost) {
-		DBOUT("The cost of Reed is : " << operators[0].cost << endl);
-		isDragging = true;
+	for (size_t i = 0; i < operators.size(); ++i) {						//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
+		if (operators[i].CheckIfSelected(point)) {	
+			selOpIdx = i; 
 
-	}else {
-		DBOUT("The cost is not enough" << endl);
+			if (cost >= operators[selOpIdx].cost) {
+					DBOUT("The cost of operator is : " << operators[i].cost << endl);
+					isDragging = true;
+			}else {
+				DBOUT("The cost is not enough" << endl);
+			}
+			break; 
+		}
 	}
 }
 
@@ -170,34 +183,39 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && operators[0].isPlacing == false)
+	if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			if (CanPlaceOperator(operators[0], *nearestCheckpoint)) {
-				operators[0].position.x = nearestCheckpoint->visualX - deviationX;
-				operators[0].position.y = nearestCheckpoint->visualY - deviationY;
-				operators[0].isPlacing = true;
-				cost -= operators[0].cost;
+			if (CanPlaceOperator(operators[selOpIdx], *nearestCheckpoint)) {
+				operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
+				operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
+				operators[selOpIdx].isPlacing = true;
+				cost -= operators[selOpIdx].cost;
 			}
 			else {
-				operators[0].position.x = 1080;
-				operators[0].position.y = 720;
+				operators[selOpIdx].position.x = 1080;
+				operators[selOpIdx].position.y = 720;
 				DBOUT("The operator can't be placed here" << endl);
 			}
 		}	
+		isDragging = false;
+		selOpIdx = -1;
 	}
-	isDragging = false;
+	else if(isDragging){
+		isDragging = false;
+		selOpIdx = -1;
+	}
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && operators[0].isPlacing == false)
+	if (isDragging && operators[selOpIdx].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
-			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
+			operators[selOpIdx].position.x = nearestCheckpoint->visualX -deviationX;
+			operators[selOpIdx].position.y = nearestCheckpoint->visualY -deviationY;
 		}
 	}
 }

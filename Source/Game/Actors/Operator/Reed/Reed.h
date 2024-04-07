@@ -7,7 +7,6 @@ namespace game_framework
     class Reed : public Operator
     {
     public:
-
         Reed()
         : Operator(1135, 362, 109, 1, 12, 2.85f, OperatorClass::Medic) {
 

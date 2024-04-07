@@ -108,12 +108,12 @@ namespace game_framework {
 		CMovingBitmap background;
 		CMovingBitmap character;
 		std::vector<Operator> operators;
-		Operator* selectedOperator;								// 選擇的幹員
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
 		void textShow();
 		int cost;
+		int selectedOperatorIndex;
 		bool isGamePaused;										//time
 		std::chrono::steady_clock::time_point mainTime;
 		std::chrono::steady_clock::duration gameTime;

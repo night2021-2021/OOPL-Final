@@ -51,7 +51,8 @@ namespace game_framework
 			HP = maxHp;
 		}
 
-
+		void SetHeadPosition(int x, int y);
+		bool CheckIfSelected(const CPoint& point);
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
