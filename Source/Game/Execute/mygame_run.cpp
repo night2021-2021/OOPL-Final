@@ -21,6 +21,7 @@
 #include <thread>
 #include <Windows.h>
 #include <sstream>
+#include <algorithm>
 
 #define NOMINMAX
 #define DBOUT( s )            \
@@ -100,6 +101,11 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	game_framework::Skadi skadi;
 	operators.push_back(reed);
 	operators.push_back(skadi);
+
+	std::sort(operators.begin(), operators.end(), [](const Operator& a, const Operator& b)
+	{
+		return a.cost > b.cost;						// ÁöµM¬O­°§Ç±Æ¦C¡A¦ý§Ú¬O±q³Ì¥kÃä¶}©l©¹¥ª¡A©Ò¥H¬Ý°_¨Ó¹³¤É§Ç											
+	});
 	
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 	
@@ -111,14 +117,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		DBOUT("Error of enemy file open." << e.what());
 	}
 
-	//?H?U????J??H???{???X
 	auto& loadedEnemies = enemyManager.getEnemies();
 	for (auto& enemy : loadedEnemies) {
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
-	}*/
+	}
 
-	//?H?U???p???
 	mainTime = std::chrono::steady_clock::now();
 	isGamePaused = false;
 }
@@ -199,7 +203,10 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 			}
 		}	
 		isDragging = false;
-		selOpIdx = -1;
+		selOpIdx= -1;
+	}
+	else if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == true) {
+		isDragging = false;
 	}
 	else if(isDragging){
 		isDragging = false;
