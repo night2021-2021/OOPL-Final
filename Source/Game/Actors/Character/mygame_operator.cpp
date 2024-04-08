@@ -43,4 +43,16 @@ namespace game_framework {
         return os;
     }
     
+
+    void Operator::Retreat() {
+        isPlacing = false;
+
+        position.x = 1080;  
+        position.y = 720;
+
+        if (retreatCostIncreaseTimes < maxRetreatCostIncrease) {
+            cost += costIncreaseAmount; 
+            ++retreatCostIncreaseTimes; 
+        }
+    }
 }

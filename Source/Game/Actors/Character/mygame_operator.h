@@ -51,8 +51,16 @@ namespace game_framework
 			HP = maxHp;
 		}
 
+		//Operator Selected
 		void SetHeadPosition(int x, int y);
 		bool CheckIfSelected(const CPoint& point);
+
+		//Add cost if retreat
+		int retreatCostIncreaseTimes = 0;
+		static constexpr int maxRetreatCostIncrease = 3;
+		static constexpr int costIncreaseAmount = 2;
+		void Retreat();
+
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);

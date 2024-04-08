@@ -146,9 +146,8 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
 		if (selOpIdx >= 0) {
-			operators[selOpIdx].isPlacing = false;
-			operators[selOpIdx].position.x = 1080;
-			operators[selOpIdx].position.y = 720;
+			cost += operators[selOpIdx].cost / 2;		//撤退返還一半的費用
+			operators[selOpIdx].Retreat();
 		}
 	}
 }
