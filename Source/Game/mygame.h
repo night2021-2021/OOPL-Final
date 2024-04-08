@@ -109,6 +109,7 @@ namespace game_framework {
 		std::vector<std::unique_ptr<Enemy>> enemies;   // 用vector來儲存所有的敵人
 		GameMap gameMap;
 		GameMapManager gameMapManager;
+		//void textShow();
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -195,7 +195,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 void CGameStateRun::OnShow()									// 顯示遊戲畫面	
 {
 	background.ShowBitmap();
-
+	//textShow();
 	int locateFirst = 1150;
 
 	for (auto& op : operators) {
@@ -226,6 +226,11 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		DBOUT("Elapsed time: " << elapsed << endl);
 	}
 }
+/*void CGameStateRun::textShow() {
+	CDC* pDC = CDDraw::GetBackCDC();
+	CTextDraw::ChangeFontLog(pDC, 10, "微軟正黑體", RGB(0, 0, 0), 800);
+	CTextDraw::Print(pDC, 237, 128, "Cost:");
+}	*/
 
 Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// 找出最近的checkpoint	
 {
