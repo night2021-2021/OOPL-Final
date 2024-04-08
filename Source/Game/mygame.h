@@ -42,6 +42,7 @@
 #include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include <chrono>
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////

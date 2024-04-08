@@ -100,21 +100,17 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	catch (std::exception& e) {
 		DBOUT("Error of enemy file open." << e.what());
 	}
-
+	/*
 	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
 	auto& loadedEnemies = enemyManager.getEnemies();
 	for (auto& enemy : loadedEnemies) {
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
-	}
+	}*/
 
 	//¥H¤U¬°­p®É¾¹
-	auto now = std::chrono::steady_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUpdateTime).count();
-
-    if (elapsed >= 100) { 
-        lastUpdateTime = now;
-    }
+	startTime = std::chrono::steady_clock::now();
+    currentTime = startTime;
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -221,6 +217,13 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 	if (!enemies.empty()) {
 		auto& firstEnemy = enemies[0]; // Àò¨ú²Ä¤@¦ì¼Ä¤Hªº¤Þ¥Î
 		firstEnemy->position.x -= 1;
+	}
+
+	//®É¶¡­pºâ
+	currentTime = std::chrono::steady_clock::now();
+	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count();
+	if(elapsed % 100 == 0){
+		DBOUT("Elapsed time: " << elapsed << endl);
 	}
 }
 
