@@ -10,6 +10,8 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
+
+#include"../Actors/Operator/Skadi/Skadi.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -34,15 +36,20 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
-const int deviationX = 150;
-const int deviationY = 220;
+const int deviationX = 120;
+const int deviationY = 180;
+
 bool isDragging = false;
+int selOpIdx = -1;
 
 EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
 CGameStateRun::CGameStateRun(CGame *g) : CGameState(g)
 {
+	mainTime = std::chrono::steady_clock::now();
+	lastUpdateTime = mainTime;
+	gameTime = std::chrono::steady_clock::duration::zero();
 }
 
 CGameStateRun::~CGameStateRun()
@@ -60,6 +67,8 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
+	cost = 30;
+
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
@@ -89,7 +98,9 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	}
 
 	game_framework::Reed reed;
+	game_framework::Skadi skadi;
 	operators.push_back(reed);
+	operators.push_back(skadi);
 	
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 	
@@ -100,36 +111,58 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	catch (std::exception& e) {
 		DBOUT("Error of enemy file open." << e.what());
 	}
-	/*
-	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+
+	//?H?U????J??H???{???X
 	auto& loadedEnemies = enemyManager.getEnemies();
 	for (auto& enemy : loadedEnemies) {
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}*/
 
-	//¥H¤U¬°­p®É¾¹
-	startTime = std::chrono::steady_clock::now();
-    currentTime = startTime;
+	//?H?U???p???
+	mainTime = std::chrono::steady_clock::now();
+	isGamePaused = false;
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
+	if (nChar == VK_SPACE) {
 
+		if (isGamePaused) {
+			ResumeGame();
+		}
+		else {
+			PauseGame();
+		}
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		operators[0].isPlacing = false;
-		operators[0].position.x = 1080;
-		operators[0].position.y = 720;
+		if (selOpIdx >= 0) {
+			operators[selOpIdx].isPlacing = false;
+			operators[selOpIdx].position.x = 1080;
+			operators[selOpIdx].position.y = 720;
+		}
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ?B?z???????@
 {
-	isDragging = true;
+	for (size_t i = 0; i < operators.size(); ++i) {						//?M??operator?M??click??????operator
+		if (operators[i].CheckIfSelected(point)) {	
+			selOpIdx = i; 
+
+			if (cost >= operators[selOpIdx].cost) {
+					DBOUT("The cost of operator is : " << operators[i].cost << endl);
+					isDragging = true;
+			}else {
+				DBOUT("The cost is not enough" << endl);
+			}
+			break; 
+		}
+	}
 }
 
 static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
@@ -150,36 +183,39 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging)
+	if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
-
-		if(operators[0].isPlacing == false){
-			if (nearestCheckpoint != nullptr && CanPlaceOperator(operators[0], *nearestCheckpoint)) {
-				operators[0].position.x = nearestCheckpoint->visualX -deviationX;
-				operators[0].position.y = nearestCheckpoint->visualY -deviationY;
-				operators[0].isPlacing = true;
+		if (nearestCheckpoint != nullptr) {
+			if (CanPlaceOperator(operators[selOpIdx], *nearestCheckpoint)) {
+				operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
+				operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
+				operators[selOpIdx].isPlacing = true;
+				cost -= operators[selOpIdx].cost;
 			}
 			else {
-				operators[0].position.x = 1080;
-				operators[0].position.y = 720;
-				DBOUT("The operator can't be deployed on this plot");
+				operators[selOpIdx].position.x = 1080;
+				operators[selOpIdx].position.y = 720;
+				DBOUT("The operator can't be placed here" << endl);
 			}
-		}
+		}	
 		isDragging = false;
+		selOpIdx = -1;
 	}
-
-	DBOUT("The class of operator is:" << operators[0].operatorClass << endl);
+	else if(isDragging){
+		isDragging = false;
+		selOpIdx = -1;
+	}
 }
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && operators[0].isPlacing == false)
+	if (isDragging && operators[selOpIdx].isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			operators[0].position.x = nearestCheckpoint->visualX -deviationX;
-			operators[0].position.y = nearestCheckpoint->visualY -deviationY;
+			operators[selOpIdx].position.x = nearestCheckpoint->visualX -deviationX;
+			operators[selOpIdx].position.y = nearestCheckpoint->visualY -deviationY;
 		}
 	}
 }
@@ -195,7 +231,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
-	//textShow();
+	textShow();
 	int locateFirst = 1150;
 
 	for (auto& op : operators) {
@@ -219,18 +255,48 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		firstEnemy->position.x -= 1;
 	}
 
-	//®É¶¡­pºâ
-	currentTime = std::chrono::steady_clock::now();
-	auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime).count();
-	if(elapsed % 100 == 0){
-		DBOUT("Elapsed time: " << elapsed << endl);
+	//???? ????b
+	UpdateGameTime();
+}
+
+
+void CGameStateRun::UpdateGameTime() {
+	if (!isGamePaused) {
+		auto now = std::chrono::steady_clock::now();
+		gameTime += now - lastUpdateTime;								// ?u???b????????n?C?????
+		lastUpdateTime = now;											// ??s lastUpdateTime ????e???
+
+		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
+		if (LastCostUpdate >= 500 && cost < 99) {
+			cost += 1; 
+			lastCostUpdateTime = now; 
+		}
 	}
 }
-/*void CGameStateRun::textShow() {
+
+// ????C???A????C?????????n
+void CGameStateRun::PauseGame() {
+	if (!isGamePaused) {
+		UpdateGameTime();												// ?T?O?b????e?C??????O??s??
+		isGamePaused = true;											// ?]?w?C??????????A
+	}
+}
+
+// ?q??????A??_?C???A???\?C??????A????n
+void CGameStateRun::ResumeGame() {
+	if (isGamePaused) {
+		isGamePaused = false;											// ?C?????A?O??????A
+		lastUpdateTime = std::chrono::steady_clock::now();				// ???m lastUpdateTime ???{?b
+	}
+}
+
+void CGameStateRun::textShow(){
 	CDC* pDC = CDDraw::GetBackCDC();
-	CTextDraw::ChangeFontLog(pDC, 10, "·L³n¥¿¶ÂÅé", RGB(0, 0, 0), 800);
-	CTextDraw::Print(pDC, 237, 128, "Cost:");
-}	*/
+	CTextDraw::ChangeFontLog(pDC, 40, "?L?n??????", RGB(255, 255, 255), 800);
+	std::string costStr = "Cost: " + std::to_string(cost);
+	CTextDraw::Print(pDC, 1100, 528, costStr.c_str());
+	CDDraw::ReleaseBackCDC();
+}
 
 Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
 {
@@ -249,12 +315,5 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 			}
 		}
 	}
-
-	//DBOUT("The name of this checkpoint:" << NearestCheckpoint->CKPTName << endl);
-	//DBOUT("The type of this checkpoint:" << NearestCheckpoint->CKPTType << endl);
-	//DBOUT("The type of this CKPT:" << typeid(NearestCheckpoint->CKPTType).name() << endl);
-
 	return NearestCheckpoint;
 }
-
-

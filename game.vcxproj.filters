@@ -144,9 +144,6 @@
     <Image Include="Resources\cg\mizuki.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\characters\operators\Reed\Reed.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp">
       <Filter>Resource Files</Filter>
     </Image>

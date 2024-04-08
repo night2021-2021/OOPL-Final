@@ -290,7 +290,6 @@
     <Image Include="Resources\characters\enimies\Bug_normal\frame_4.bmp" />
     <Image Include="Resources\characters\enimies\Bug_normal\frame_5.bmp" />
     <Image Include="Resources\characters\enimies\Bug_normal\frame_6.bmp" />
-    <Image Include="Resources\characters\operators\Reed\Reed.bmp" />
     <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp" />
     <Image Include="Resources\Game Framework.png" />
     <Image Include="resources\game.ico" />
