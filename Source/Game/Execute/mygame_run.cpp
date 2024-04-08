@@ -10,7 +10,6 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
-
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
@@ -148,9 +147,9 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ?B?z???????@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  
 {
-	for (size_t i = 0; i < operators.size(); ++i) {						//?M??operator?M??click??????operator
+	for (size_t i = 0; i < operators.size(); ++i) {						
 		if (operators[i].CheckIfSelected(point)) {	
 			selOpIdx = i; 
 
@@ -263,8 +262,8 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
-		gameTime += now - lastUpdateTime;								// ?u???b????????n?C?????
-		lastUpdateTime = now;											// ??s lastUpdateTime ????e???
+		gameTime += now - lastUpdateTime;								
+		lastUpdateTime = now;											
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
@@ -274,19 +273,19 @@ void CGameStateRun::UpdateGameTime() {
 	}
 }
 
-// ????C???A????C?????????n
+
 void CGameStateRun::PauseGame() {
 	if (!isGamePaused) {
-		UpdateGameTime();												// ?T?O?b????e?C??????O??s??
-		isGamePaused = true;											// ?]?w?C??????????A
+		UpdateGameTime();												
+		isGamePaused = true;											
 	}
 }
 
-// ?q??????A??_?C???A???\?C??????A????n
+
 void CGameStateRun::ResumeGame() {
 	if (isGamePaused) {
-		isGamePaused = false;											// ?C?????A?O??????A
-		lastUpdateTime = std::chrono::steady_clock::now();				// ???m lastUpdateTime ???{?b
+		isGamePaused = false;											
+		lastUpdateTime = std::chrono::steady_clock::now();				
 	}
 }
 
