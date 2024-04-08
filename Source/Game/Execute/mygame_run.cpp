@@ -261,7 +261,6 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		firstEnemy->position.x -= 1;
 	}
 
-	//???? ????b
 	UpdateGameTime();
 }
 
