@@ -114,6 +114,8 @@ namespace game_framework {
 		void textShow();
 		int cost;
 		int selectedOperatorIndex;
+		bool isDragging;
+		bool isConfirmingPlacement;
 		bool isGamePaused;										//time
 		std::chrono::steady_clock::time_point mainTime;
 		std::chrono::steady_clock::duration gameTime;

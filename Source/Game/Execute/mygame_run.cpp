@@ -39,7 +39,6 @@ using namespace game_framework;
 const int deviationX = 120;
 const int deviationY = 180;
 
-bool isDragging = false;
 int selOpIdx = -1;
 
 EnemyManager enemyManager;
@@ -68,7 +67,8 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
 {
 	cost = 30;
-
+	isDragging = false;
+	isConfirmingPlacement = false;
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
 
@@ -140,6 +140,30 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			PauseGame();
 		}
 	}
+
+	// 按下方向鍵來改變幹員的方向
+	if (selOpIdx != -1 && isConfirmingPlacement) {
+		switch (nChar) {
+		case VK_UP:
+			operators[selOpIdx].orientation = Orientation::Up;
+			break;
+		case VK_DOWN:
+			operators[selOpIdx].orientation = Orientation::Down;
+			break;
+		case VK_LEFT:
+			operators[selOpIdx].orientation = Orientation::Left;
+			break;
+		case VK_RIGHT:
+			operators[selOpIdx].orientation = Orientation::Right;
+			break;
+		case VK_RETURN:
+			isConfirmingPlacement = false;
+			operators[selOpIdx].isPlacing = true;
+			cost -= operators[selOpIdx].cost;
+			selOpIdx = -1;
+			break;
+		}
+	}
 }
 
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -154,19 +178,28 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
-	for (size_t i = 0; i < operators.size(); ++i) {						//遍歷operator尋找click對應的operator
-		if (operators[i].CheckIfSelected(point)) {
-			selOpIdx = i;
+	if (!isConfirmingPlacement) {
+		for (size_t i = 0; i < operators.size(); ++i) {						//遍歷operator尋找click對應的operator
+			if (operators[i].CheckIfSelected(point)) {
+				selOpIdx = i;
 
-			if (cost >= operators[selOpIdx].cost) {
-				DBOUT("The cost of operator is : " << operators[i].cost << endl);
-				isDragging = true;
+				if (cost >= operators[selOpIdx].cost) {
+					DBOUT("The cost of operator is : " << operators[i].cost << endl);
+					isDragging = true;
+				}
+				else {
+					DBOUT("The cost is not enough" << endl);
+				}
+				break;
 			}
-			else {
-				DBOUT("The cost is not enough" << endl);
-			}
-			break;
 		}
+	}
+	else {
+		operators[selOpIdx].position.x = 1080;
+		operators[selOpIdx].position.y = 720;
+		DBOUT("Placement canceled." << endl);
+		selOpIdx = -1;
+		isConfirmingPlacement = false;
 	}
 }
 
@@ -195,8 +228,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 			if (CanPlaceOperator(operators[selOpIdx], *nearestCheckpoint)) {
 				operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
 				operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
-				operators[selOpIdx].isPlacing = true;
-				cost -= operators[selOpIdx].cost;
+				isConfirmingPlacement = true;
 			}
 			else {
 				operators[selOpIdx].position.x = 1080;
@@ -205,7 +237,6 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 			}
 		}
 		isDragging = false;
-		selOpIdx = -1;
 	}
 	else if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == true) {
 		isDragging = false;

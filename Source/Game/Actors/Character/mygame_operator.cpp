@@ -21,7 +21,7 @@ namespace game_framework {
         int Width = image.GetWidth();
 
         CRect headRect(headLeft, headTop, headLeft + headWidth, headTop + headHeight);
-        CRect imageRect(Left, Top, Left + Width, Top + Height);
+        CRect imageRect(Left, Top + 100, Left + Width, Top + Height);    // 0.4 is the ratio of the head image height to the whole image height
 
         bool selectedHead = point.x >= headRect.left && point.x <= headRect.right && point.y >= headRect.top && point.y <= headRect.bottom;
         bool selectedImage = point.x >= imageRect.left && point.x <= imageRect.right && point.y >= imageRect.top && point.y <= imageRect.bottom;
