@@ -55,4 +55,32 @@ namespace game_framework {
             ++retreatCostIncreaseTimes; 
         }
     }
+
+    void Operator::AdjustAttackRange() {
+        for (auto& point : attackRange) {
+            int originalX = point.x;
+            int originalY = point.y;
+
+            switch (orientation) {
+            case Orientation::Up:                           // Rotate 270 degrees
+                point.x = originalY;
+                point.y = -originalX;
+                break;
+            case Orientation::Down:                         // Rotate 90 degrees
+                point.x = -originalY;
+                point.y = originalX;
+                break;
+            case Orientation::Left:                         // Rotate 180 degrees
+                point.x = -originalX;
+                point.y = -originalY;
+                break;
+            case Orientation::Right:                        // No rotation
+                default:
+                break;
+            }
+
+        point.x += logicX;
+        point.y += logicY;
+        }
+    }
 }

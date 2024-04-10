@@ -24,7 +24,12 @@ namespace game_framework
 
             headImage.LoadBitmapByString({ "resources/characters/operators/Skadi/Skadi_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
+
+            SetAttackRange();
         }
+
+        void SetAttackRange() override;
+        void Skill();
     };
 }
 

@@ -114,6 +114,8 @@ namespace game_framework {
 		void textShow();
 		int cost;
 		int selectedOperatorIndex;
+		int nearLogicX;
+		int nearLogicY;
 		bool isDragging;
 		bool isConfirmingPlacement;
 		bool isGamePaused;										//time

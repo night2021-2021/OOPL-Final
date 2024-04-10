@@ -90,8 +90,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
-
-		DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
+		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
@@ -146,20 +145,31 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		switch (nChar) {
 		case VK_UP:
 			operators[selOpIdx].orientation = Orientation::Up;
+			operators[selOpIdx].AdjustAttackRange();
 			break;
 		case VK_DOWN:
 			operators[selOpIdx].orientation = Orientation::Down;
+			operators[selOpIdx].AdjustAttackRange();
 			break;
 		case VK_LEFT:
 			operators[selOpIdx].orientation = Orientation::Left;
+			operators[selOpIdx].AdjustAttackRange();
 			break;
 		case VK_RIGHT:
 			operators[selOpIdx].orientation = Orientation::Right;
+			operators[selOpIdx].AdjustAttackRange();
 			break;
 		case VK_RETURN:
 			isConfirmingPlacement = false;
 			operators[selOpIdx].isPlacing = true;
 			cost -= operators[selOpIdx].cost;
+
+			DBOUT("Attack Range for Operator " << selOpIdx << ": ");
+			for (const auto& point : operators[selOpIdx].attackRange) {
+				DBOUT("(" << point.x << ", " << point.y << ") ");
+			}
+			DBOUT(endl);
+
 			selOpIdx = -1;
 			break;
 		}
@@ -228,6 +238,8 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 			if (CanPlaceOperator(operators[selOpIdx], *nearestCheckpoint)) {
 				operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
 				operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
+				operators[selOpIdx].logicX = nearLogicX;
+				operators[selOpIdx].logicY = nearLogicY;
 				isConfirmingPlacement = true;
 			}
 			else {
@@ -342,15 +354,20 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
 	auto& gameMap = gameMapManager.getGameMap();
+	nearLogicX = -1;
+	nearLogicY = -1;
 
 	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
-	for (auto& row : gameMap.checkpoint) {
-		for (auto& checkpoint : row) {
+	for (int y = 0; y < gameMap.height; ++y) {
+		for (int x = 0; x < gameMap.width; ++x) {
+			Checkpoint& checkpoint = gameMap.checkpoint[y][x];
 			double distance = std::sqrt(std::pow(checkpoint.visualX - point.x, 2) + std::pow(checkpoint.visualY - point.y, 2));
 			if (distance < minDistance) {
 				minDistance = distance;
 				NearestCheckpoint = &checkpoint;
+				nearLogicX = x; 
+				nearLogicY = y;
 			}
 		}
 	}

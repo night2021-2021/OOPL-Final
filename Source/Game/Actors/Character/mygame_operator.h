@@ -46,6 +46,7 @@ namespace game_framework
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
 		int cost;
+		int logicX, logicY;		//the position of the operator in the logic map
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;
@@ -70,6 +71,7 @@ namespace game_framework
 		//Define the operator's attack range	
 		std::vector<AttackRange> attackRange;
 		virtual void SetAttackRange() {}
+		void AdjustAttackRange();
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
