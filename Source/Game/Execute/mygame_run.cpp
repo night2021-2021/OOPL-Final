@@ -294,7 +294,7 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		firstEnemy->position.x -= 1;
 	}
 
-	//測試 時間軸
+	//時間軸
 	UpdateGameTime();
 }
 

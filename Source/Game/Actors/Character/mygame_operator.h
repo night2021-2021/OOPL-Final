@@ -4,6 +4,7 @@
 #include <afxwin.h> 
 #include "mygame_character.h"
 #include "../../../Library/gameutil.h"
+#include <vector>
 
 
 namespace game_framework 
@@ -30,6 +31,11 @@ namespace game_framework
 		Down,
 		Left,
 		Right
+	};
+
+	struct AttackRange
+	{
+		int x, y;
 	};
 
 	class Operator : public Character
@@ -61,6 +67,9 @@ namespace game_framework
 		static constexpr int costIncreaseAmount = 2;
 		void Retreat();
 
+		//Define the operator's attack range	
+		std::vector<AttackRange> attackRange;
+		virtual void SetAttackRange() {}
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);
