@@ -86,11 +86,11 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 		for (auto& row : gameMap.checkpoint) {
 			for (auto& checkpoint : row) {
-				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
+				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testmark.bmp" }, RGB(0, 0, 0));
 				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
-		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
+		//DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
@@ -381,7 +381,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 void CGameStateRun::ShowAttackRange() {
 	auto& selectedOperator = operators[selOpIdx];
 	auto& gameMap = gameMapManager.getGameMap();
-
+	
 	UnshowAttackRange();
 
 	for (const auto& rangePoint : selectedOperator.attackRange) {

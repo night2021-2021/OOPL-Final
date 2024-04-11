@@ -16,7 +16,8 @@ namespace game_framework
         int blockCount;
         int visualX, visualY;
         std::string CKPTType;       
-        std::string CKPTName;   //Height is Englsih, Width is Math    
+        std::string CKPTName;   //Height is Englsih, Width is Math   
+
         CMovingBitmap attackRangePoint;  //Attack range point
 
         Checkpoint() : walkable(false), placeable(false), occupied(false), enemyCount(0), blockCount(0) ,visualX(0), visualY(0){}
