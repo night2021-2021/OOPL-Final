@@ -39,8 +39,6 @@ using namespace game_framework;
 const int deviationX = 120;
 const int deviationY = 180;
 
-int selOpIdx = -1;
-
 EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
@@ -67,6 +65,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
 	cost = 30;
+	selOpIdx = -1;
 	isDragging = false;
 	isConfirmingPlacement = false;
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
@@ -85,8 +84,9 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 		auto& gameMap = gameMapManager.getGameMap();
 
-		for (const auto& row : gameMap.checkpoint) {
-			for (const auto& checkpoint : row) {
+		for (auto& row : gameMap.checkpoint) {
+			for (auto& checkpoint : row) {
+				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
 				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
@@ -146,18 +146,22 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		case VK_UP:
 			operators[selOpIdx].orientation = Orientation::Up;
 			operators[selOpIdx].AdjustAttackRange();
+			ShowAttackRange();
 			break;
 		case VK_DOWN:
 			operators[selOpIdx].orientation = Orientation::Down;
 			operators[selOpIdx].AdjustAttackRange();
+			ShowAttackRange();
 			break;
 		case VK_LEFT:
 			operators[selOpIdx].orientation = Orientation::Left;
 			operators[selOpIdx].AdjustAttackRange();
+			ShowAttackRange();
 			break;
 		case VK_RIGHT:
 			operators[selOpIdx].orientation = Orientation::Right;
 			operators[selOpIdx].AdjustAttackRange();
+			ShowAttackRange();
 			break;
 		case VK_RETURN:
 			isConfirmingPlacement = false;
@@ -186,7 +190,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ³B²z·Æ¹«ªº°Ê§@
 {
 	if (!isConfirmingPlacement) {
 		for (size_t i = 0; i < operators.size(); ++i) {						//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
@@ -372,4 +376,29 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 		}
 	}
 	return NearestCheckpoint;
+}
+
+void CGameStateRun::ShowAttackRange() {
+	auto& selectedOperator = operators[selOpIdx];
+	auto& gameMap = gameMapManager.getGameMap();
+
+	UnshowAttackRange();
+
+	for (const auto& rangePoint : selectedOperator.attackRange) {
+		//½T«O½d³ò¤ºªºÂI¦b¦a¹Ï½d³ò¤º
+		if (rangePoint.x >= 0 && rangePoint.x < gameMap.width && rangePoint.y >= 0 && rangePoint.y < gameMap.height) {
+			auto& checkpoint = gameMap.checkpoint[rangePoint.y][rangePoint.x];			//¥ýª½¦æ«á¾î¦C
+			checkpoint.attackRangePoint.SetTopLeft(checkpoint.visualX, checkpoint.visualY);
+			checkpoint.attackRangePoint.ShowBitmap();
+		}
+	}
+}
+
+void CGameStateRun::UnshowAttackRange() {
+	auto& gameMap = gameMapManager.getGameMap();
+	for (auto& row : gameMap.checkpoint) {
+		for (auto& checkpoint : row) {
+			checkpoint.attackRangePoint.UnshowBitmap(); 
+		}
+	}
 }

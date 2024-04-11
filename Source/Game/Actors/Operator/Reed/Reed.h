@@ -24,7 +24,12 @@ namespace game_framework
 
             headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
             position.SetPoint(1080, 720);
+
+            SetAttackRange();
         }
+
+        void SetAttackRange() override;
+        void Skill();
     };
 }
 

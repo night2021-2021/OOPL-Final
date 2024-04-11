@@ -70,6 +70,7 @@ namespace game_framework
 
 		//Define the operator's attack range	
 		std::vector<AttackRange> attackRange;
+		std::vector<AttackRange> originalAttackRange;
 		virtual void SetAttackRange() {}
 		void AdjustAttackRange();
 	};

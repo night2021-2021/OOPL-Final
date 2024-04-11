@@ -100,6 +100,9 @@ namespace game_framework {
 		void ResumeGame();										// 繼續遊戲
 		void UpdateGameTime();									// 更新遊戲時間
 
+		void ShowAttackRange();									// 顯示攻擊範圍
+		void UnshowAttackRange();								// 隱藏攻擊範圍
+
 	protected:
 		void OnMove();											// 移動遊戲元素
 		void OnShow();											// 顯示這個狀態的遊戲畫面
@@ -113,7 +116,7 @@ namespace game_framework {
 		GameMapManager gameMapManager;
 		void textShow();
 		int cost;
-		int selectedOperatorIndex;
+		int selOpIdx;
 		int nearLogicX;
 		int nearLogicY;
 		bool isDragging;

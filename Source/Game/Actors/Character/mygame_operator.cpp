@@ -57,6 +57,8 @@ namespace game_framework {
     }
 
     void Operator::AdjustAttackRange() {
+        attackRange = originalAttackRange;  
+
         for (auto& point : attackRange) {
             int originalX = point.x;
             int originalY = point.y;
@@ -78,9 +80,9 @@ namespace game_framework {
                 default:
                 break;
             }
-
-        point.x += logicX;
-        point.y += logicY;
+    
+            point.x += logicX;
+            point.y += logicY;                              //There are some problem with calculate
         }
     }
 }

@@ -56,6 +56,7 @@
     <ClCompile Include="Source\Game\Termination\mygame_over.cpp" />
     <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -164,6 +165,9 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\characters\enimies\Bug_normal\frame_6.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\mark\testMark.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

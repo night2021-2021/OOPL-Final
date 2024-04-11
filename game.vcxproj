@@ -247,6 +247,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
     <ClCompile Include="Source\Game\Execute\mygame_run.cpp" />
     <ClCompile Include="Source\Game\Initialization\mygame_initialize.cpp" />
@@ -299,6 +300,7 @@
     <Image Include="Resources\GAME_FRAMEWORK.ico" />
     <Image Include="resources\icon1.ico" />
     <Image Include="Resources\map\0_1.bmp" />
+    <Image Include="Resources\mark\testMark.bmp" />
     <Image Include="Resources\mizuki.bmp" />
     <Image Include="Resources\Reed.bmp" />
     <Image Include="resources\Toolbar.bmp" />
