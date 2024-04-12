@@ -250,7 +250,10 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 				operators[selOpIdx]->position.y = nearestCheckpoint->visualY - deviationY;
 				operators[selOpIdx]->logicX = nearLogicX;
 				operators[selOpIdx]->logicY = nearLogicY;
+
+				operators[selOpIdx]->AdjustAttackRange();
 				isConfirmingPlacement = true;
+				ShowAttackRange();
 			}
 			else {
 				operators[selOpIdx]->position.x = 1080;
@@ -310,9 +313,13 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		enemy->image.ShowBitmap();
 	}
 
+	if (isConfirmingPlacement && selOpIdx != -1) {
+		ShowAttackRange();
+	}
+
 	//測試 敵人的移動 成功
 	if (!enemies.empty()) {
-		auto& firstEnemy = enemies[0]; // 獲取第一位敵人的引用
+		auto& firstEnemy = enemies[0]; 
 		firstEnemy->position.x -= 1;
 	}
 
@@ -388,12 +395,9 @@ void CGameStateRun::ShowAttackRange() {
 	auto& selectedOperator = operators[selOpIdx];
 	auto& gameMap = gameMapManager.getGameMap();
 
-	UnshowAttackRange();
-
 	for (const auto& rangePoint : selectedOperator->attackRange) {
-		//確保範圍內的點在地圖範圍內
 		if (rangePoint.x >= 0 && rangePoint.x < gameMap.width && rangePoint.y >= 0 && rangePoint.y < gameMap.height) {
-			auto& checkpoint = gameMap.checkpoint[rangePoint.y][rangePoint.x];			//先直行後橫列
+			auto& checkpoint = gameMap.checkpoint[rangePoint.y][rangePoint.x];
 			checkpoint.attackRangePoint.SetTopLeft(checkpoint.visualX, checkpoint.visualY);
 			checkpoint.attackRangePoint.ShowBitmap();
 		}
@@ -404,7 +408,7 @@ void CGameStateRun::UnshowAttackRange() {
 	auto& gameMap = gameMapManager.getGameMap();
 	for (auto& row : gameMap.checkpoint) {
 		for (auto& checkpoint : row) {
-			checkpoint.attackRangePoint.UnshowBitmap(); 
+			checkpoint.attackRangePoint.UnshowBitmap();
 		}
 	}
 }
