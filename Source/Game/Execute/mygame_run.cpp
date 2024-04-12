@@ -96,14 +96,14 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		DBOUT("Error of file open." << e.what());
 	}
 
-	game_framework::Reed reed;
-	game_framework::Skadi skadi;
-	operators.push_back(reed);
-	operators.push_back(skadi);
+	//game_framework::Reed reed;
+	//game_framework::Skadi skadi;
+	operators.push_back(std::make_unique<Reed>());
+	operators.push_back(std::make_unique<Skadi>());
 
-	std::sort(operators.begin(), operators.end(), [](const Operator& a, const Operator& b)
+	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
 	{
-		return a.cost > b.cost;															
+		return a->cost > b->cost;															
 	});
 
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
@@ -144,32 +144,36 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 	if (selOpIdx != -1 && isConfirmingPlacement) {
 		switch (nChar) {
 		case VK_UP:
-			operators[selOpIdx].orientation = Orientation::Up;
-			operators[selOpIdx].AdjustAttackRange();
+			operators[selOpIdx]->orientation = Orientation::Up;
+			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_DOWN:
-			operators[selOpIdx].orientation = Orientation::Down;
-			operators[selOpIdx].AdjustAttackRange();
+			operators[selOpIdx]->orientation = Orientation::Down;
+			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_LEFT:
-			operators[selOpIdx].orientation = Orientation::Left;
-			operators[selOpIdx].AdjustAttackRange();
+			operators[selOpIdx]->orientation = Orientation::Left;
+			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_RIGHT:
-			operators[selOpIdx].orientation = Orientation::Right;
-			operators[selOpIdx].AdjustAttackRange();
+			operators[selOpIdx]->orientation = Orientation::Right;
+			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_RETURN:
 			isConfirmingPlacement = false;
-			operators[selOpIdx].isPlacing = true;
-			cost -= operators[selOpIdx].cost;
+			operators[selOpIdx]->isPlacing = true;
+			cost -= operators[selOpIdx]->cost;
 
 			DBOUT("Attack Range for Operator " << selOpIdx << ": ");
-			for (const auto& point : operators[selOpIdx].attackRange) {
+			for (const auto& point : operators[selOpIdx]->attackRange) {
 				DBOUT("(" << point.x << ", " << point.y << ") ");
 			}
 			DBOUT(endl);
@@ -184,8 +188,8 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
 		if (selOpIdx >= 0) {
-			cost += operators[selOpIdx].cost / 2;		//ºM°hªðÁÙ¤@¥bªº¶O¥Î
-			operators[selOpIdx].Retreat();
+			cost += operators[selOpIdx]->cost / 2;		//ºM°hªðÁÙ¤@¥bªº¶O¥Î
+			operators[selOpIdx]->Retreat();
 		}
 	}
 }
@@ -194,11 +198,11 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ³B²z·Æ¹«ªº°Ê§@
 {
 	if (!isConfirmingPlacement) {
 		for (size_t i = 0; i < operators.size(); ++i) {						//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
-			if (operators[i].CheckIfSelected(point)) {
+			if (operators[i]->CheckIfSelected(point)) {
 				selOpIdx = i;
 
-				if (cost >= operators[selOpIdx].cost) {
-					DBOUT("The cost of operator is : " << operators[i].cost << endl);
+				if (cost >= operators[selOpIdx]->cost) {
+					DBOUT("The cost of operator is : " << operators[i]->cost << endl);
 					isDragging = true;
 				}
 				else {
@@ -209,16 +213,18 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ³B²z·Æ¹«ªº°Ê§@
 		}
 	}
 	else {
-		operators[selOpIdx].position.x = 1080;
-		operators[selOpIdx].position.y = 720;
+		operators[selOpIdx]->position.x = 1080;
+		operators[selOpIdx]->position.y = 720;
 		DBOUT("Placement canceled." << endl);
 		selOpIdx = -1;
 		isConfirmingPlacement = false;
 	}
 }
 
-static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
-	switch (op.operatorClass) {
+static bool CanPlaceOperator(const Operator* op, const Checkpoint& cp) {
+	if(!op) return false;
+	
+	switch (op->operatorClass) {
 	case OperatorClass::Caster:
 	case OperatorClass::Medic:
 	case OperatorClass::Sniper:
@@ -235,26 +241,26 @@ static bool CanPlaceOperator(const Operator& op, const Checkpoint& cp) {
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == false)
+	if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			if (CanPlaceOperator(operators[selOpIdx], *nearestCheckpoint)) {
-				operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
-				operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
-				operators[selOpIdx].logicX = nearLogicX;
-				operators[selOpIdx].logicY = nearLogicY;
+			if (CanPlaceOperator(operators[selOpIdx].get(), *nearestCheckpoint)) {
+				operators[selOpIdx]->position.x = nearestCheckpoint->visualX - deviationX;
+				operators[selOpIdx]->position.y = nearestCheckpoint->visualY - deviationY;
+				operators[selOpIdx]->logicX = nearLogicX;
+				operators[selOpIdx]->logicY = nearLogicY;
 				isConfirmingPlacement = true;
 			}
 			else {
-				operators[selOpIdx].position.x = 1080;
-				operators[selOpIdx].position.y = 720;
+				operators[selOpIdx]->position.x = 1080;
+				operators[selOpIdx]->position.y = 720;
 				DBOUT("The operator can't be placed here" << endl);
 			}
 		}
 		isDragging = false;
 	}
-	else if (isDragging && selOpIdx != -1 && operators[selOpIdx].isPlacing == true) {
+	else if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == true) {
 		isDragging = false;
 	}
 	else if(isDragging){
@@ -265,12 +271,12 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && operators[selOpIdx].isPlacing == false)
+	if (isDragging && operators[selOpIdx]->isPlacing == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			operators[selOpIdx].position.x = nearestCheckpoint->visualX - deviationX;
-			operators[selOpIdx].position.y = nearestCheckpoint->visualY - deviationY;
+			operators[selOpIdx]->position.x = nearestCheckpoint->visualX - deviationX;
+			operators[selOpIdx]->position.y = nearestCheckpoint->visualY - deviationY;
 		}
 	}
 }
@@ -290,13 +296,13 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 	int locateFirst = 1150;
 
 	for (auto& op : operators) {
-		op.headImage.SetTopLeft(locateFirst, 605);
-		op.headImage.ShowBitmap();
+		op->headImage.SetTopLeft(locateFirst, 605);
+		op->headImage.ShowBitmap();
 		locateFirst -= 100;
 	}
 	for (auto& op : operators) {
-		op.image.SetTopLeft(op.position.x, op.position.y);
-		op.image.ShowBitmap();
+		op->image.SetTopLeft(op->position.x, op->position.y);
+		op->image.ShowBitmap();
 	}
 
 	for (auto& enemy : enemies) {
@@ -384,7 +390,7 @@ void CGameStateRun::ShowAttackRange() {
 
 	UnshowAttackRange();
 
-	for (const auto& rangePoint : selectedOperator.attackRange) {
+	for (const auto& rangePoint : selectedOperator->attackRange) {
 		//½T«O½d³ò¤ºªºÂI¦b¦a¹Ï½d³ò¤º
 		if (rangePoint.x >= 0 && rangePoint.x < gameMap.width && rangePoint.y >= 0 && rangePoint.y < gameMap.height) {
 			auto& checkpoint = gameMap.checkpoint[rangePoint.y][rangePoint.x];			//¥ýª½¦æ«á¾î¦C

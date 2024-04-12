@@ -58,6 +58,9 @@ namespace game_framework
 			HP = maxHp;
 		}
 
+		//Operator's orientation
+		virtual void LoadImagesForOrientation() {};
+
 		//Operator Selected
 		void SetHeadPosition(int x, int y);
 		bool CheckIfSelected(const CPoint& point);
