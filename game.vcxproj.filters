@@ -55,6 +55,9 @@
     <ClCompile Include="Source\Game\Initialization\mygame_initialize.cpp" />
     <ClCompile Include="Source\Game\Termination\mygame_over.cpp" />
     <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -100,6 +103,7 @@
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemy.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Exusiai\Exusiai.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
@@ -144,9 +148,6 @@
     <Image Include="Resources\cg\mizuki.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\characters\operators\Reed\Reed.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp">
       <Filter>Resource Files</Filter>
     </Image>
@@ -166,6 +167,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\characters\enimies\Bug_normal\frame_6.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\mark\testMark.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Resources\characters\operators\Reed\front\Reed_front_Idle\Reed_front_Idle_1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

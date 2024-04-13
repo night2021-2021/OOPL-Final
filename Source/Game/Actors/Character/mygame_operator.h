@@ -4,6 +4,7 @@
 #include <afxwin.h> 
 #include "mygame_character.h"
 #include "../../../Library/gameutil.h"
+#include <vector>
 
 
 namespace game_framework 
@@ -32,25 +33,61 @@ namespace game_framework
 		Right
 	};
 
+	struct AttackRange
+	{
+		int x, y;
+	};
+
 	class Operator : public Character
 	{
 	public:
 		CMovingBitmap image;
+		CMovingBitmap rightIdleImage;
+		CMovingBitmap leftIdleImage;
+		CMovingBitmap backIdleImage;
 		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
 		int cost;
+		int SP;
+		int maxSP;
+		int logicX, logicY;		//the position of the operator in the logic map
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int MAX_HP, int ATK, int DEF, int BLOCKS, int COST, float AS, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-        : Character(MAX_HP, ATK, DEF, AS), blockCounts(0), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
+		Operator(int maxHp, int atk, int def, int blocks, int cost, int SP, int maxSP, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSP(maxSP), SP(SP), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
 		{
-			HP = MAX_HP; 
+			HP = maxHp;
 		}
 
+		//Operator's Load Images
+		virtual void LoadImages() {};
+		virtual void LoadIdleImagesForDirection(const char* subfolder, CMovingBitmap& imageObject, int imageCount) {};
+
+		//Operator's Skill
+		virtual void Skill() {};
+
+		//Operator's orientation
+		virtual void ChangeImagesByOrientation();
+
+		//Operator Selected
+		void SetHeadPosition(int x, int y);
+		bool CheckIfSelected(const CPoint& point);
+
+		//Add cost if retreat
+		int retreatCostIncreaseTimes = 0;
+		static constexpr int maxRetreatCostIncrease = 3;
+		static constexpr int costIncreaseAmount = 2;
+		void Retreat();
+
+		//Define the operator's attack range	
+		std::vector<AttackRange> attackRange;
+		std::vector<AttackRange> originalAttackRange;
+		virtual void SetAttackRange() {}
+		void AdjustAttackRange();
 	};
 
 	std::ostream& operator<<(std::ostream& os, const OperatorClass& opClass);

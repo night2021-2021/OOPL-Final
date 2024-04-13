@@ -27,14 +27,8 @@ void CGameStateInit::OnInit()
 	// 開始載入資料
 	//
 	loadbackground();
-	ShowInitProgress(33, "Initialize...");    // loading進度為33%
-	Sleep(200);
-
-	loadbackground();
-
+	ShowInitProgress(33, "Initialize...");    
 	ShowInitProgress(66, "Initialize...");
-
-	Sleep(100);                // 放慢，以便看清楚進度，實際遊戲請刪除此Sleep
 	//
 	// 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
 	//

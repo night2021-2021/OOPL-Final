@@ -100,6 +100,9 @@ namespace game_framework {
 		void ResumeGame();										// 繼續遊戲
 		void UpdateGameTime();									// 更新遊戲時間
 
+		void ShowAttackRange();									// 顯示攻擊範圍
+		void UnshowAttackRange();								// 隱藏攻擊範圍
+
 	protected:
 		void OnMove();											// 移動遊戲元素
 		void OnShow();											// 顯示這個狀態的遊戲畫面
@@ -107,12 +110,17 @@ namespace game_framework {
 	private:
 		CMovingBitmap background;
 		CMovingBitmap character;
-		std::vector<Operator> operators;
+		std::vector<std::unique_ptr<Operator>> operators;
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
 		void textShow();
 		int cost;
+		int selOpIdx;
+		int nearLogicX;
+		int nearLogicY;
+		bool isDragging;
+		bool isConfirmingPlacement;
 		bool isGamePaused;										//time
 		std::chrono::steady_clock::time_point mainTime;
 		std::chrono::steady_clock::duration gameTime;
