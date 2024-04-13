@@ -42,24 +42,36 @@ namespace game_framework
 	{
 	public:
 		CMovingBitmap image;
+		CMovingBitmap rightIdleImage;
+		CMovingBitmap leftIdleImage;
+		CMovingBitmap backIdleImage;
 		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
 		int cost;
+		int SP;
+		int maxSP;
 		int logicX, logicY;		//the position of the operator in the logic map
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int maxHp, int atk, int def, int blocks, int cost, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
+		Operator(int maxHp, int atk, int def, int blocks, int cost, int SP, int maxSP, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSP(maxSP), SP(SP), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
 		{
 			HP = maxHp;
 		}
 
+		//Operator's Load Images
+		virtual void LoadImages() {};
+		virtual void LoadIdleImagesForDirection(const char* subfolder, CMovingBitmap& imageObject, int imageCount) {};
+
+		//Operator's Skill
+		virtual void Skill() {};
+
 		//Operator's orientation
-		virtual void LoadImagesForOrientation() {};
+		virtual void ChangeImagesByOrientation();
 
 		//Operator Selected
 		void SetHeadPosition(int x, int y);

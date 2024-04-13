@@ -11,6 +11,8 @@
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
+
+#include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -34,7 +36,7 @@
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
-// ?o??class???C?????C????????A?D?n???C???{?????b?o??
+// 這個class為遊戲的遊戲執行物件，主要的遊戲程式都在這裡
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 120;
 const int deviationY = 180;
@@ -57,12 +59,12 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()                            // ????C??????
+void CGameStateRun::OnMove()                            // 移動遊戲元素
 {
 
 }
 
-void CGameStateRun::OnInit()                              // ?C???????ι?γ]?w
+void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
 {
 	cost = 30;
 	selOpIdx = -1;
@@ -86,25 +88,24 @@ void CGameStateRun::OnInit()                              // ?C???????ι?γ]?w
 
 		for (auto& row : gameMap.checkpoint) {
 			for (auto& checkpoint : row) {
-				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testmark.bmp" }, RGB(0, 0, 0));
+				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
 				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
 			}
 		}
-		//DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//?T?{?a???O?????m?A?PFindNearestCheckpoint????
+		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//確認地圖於記憶體位置，與FindNearestCheckpoint對應
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
 	}
 
-	//game_framework::Reed reed;
-	//game_framework::Skadi skadi;
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
+	operators.push_back(std::make_unique<Exusiai>());
 
 	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
-	{
-		return a->cost > b->cost;															
-	});
+		{
+			return a->cost > b->cost;
+		});
 
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 
@@ -116,14 +117,14 @@ void CGameStateRun::OnInit()                              // ?C???????ι?γ]?w
 		DBOUT("Error of enemy file open." << e.what());
 	}
 
-	//?H?U????J??H???{???X
+	//以下為讀入敵人的程式碼
 	auto& loadedEnemies = enemyManager.getEnemies();
 	for (auto& enemy : loadedEnemies) {
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
 
-	//?H?U???p???
+	//以下為計時器
 	mainTime = std::chrono::steady_clock::now();
 	isGamePaused = false;
 }
@@ -140,34 +141,34 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
-	// ???U??V??????F??????V
+	// 按下方向鍵來改變幹員的方向
 	if (selOpIdx != -1 && isConfirmingPlacement) {
 		switch (nChar) {
 		case VK_UP:
 			operators[selOpIdx]->orientation = Orientation::Up;
-			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_DOWN:
 			operators[selOpIdx]->orientation = Orientation::Down;
-			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_LEFT:
 			operators[selOpIdx]->orientation = Orientation::Left;
-			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 		case VK_RIGHT:
 			operators[selOpIdx]->orientation = Orientation::Right;
-			operators[selOpIdx]->LoadImagesForOrientation();
+			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
-		case VK_RETURN:
+		case VK_RETURN:											//確認放置
 			isConfirmingPlacement = false;
 			operators[selOpIdx]->isPlacing = true;
 			cost -= operators[selOpIdx]->cost;
@@ -188,16 +189,17 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
 		if (selOpIdx >= 0) {
-			cost += operators[selOpIdx]->cost / 2;		//?M?h????@?b???O??
+			cost += operators[selOpIdx]->cost / 2;		//撤退返還一半的費用
+			if(cost >= 99) cost = 99;
 			operators[selOpIdx]->Retreat();
 		}
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ?B?z???????@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// 處理滑鼠的動作
 {
 	if (!isConfirmingPlacement) {
-		for (size_t i = 0; i < operators.size(); ++i) {						//?M??operator?M??click??????operator
+		for (size_t i = 0; i < operators.size(); ++i) {						//遍歷operator尋找click對應的operator
 			if (operators[i]->CheckIfSelected(point)) {
 				selOpIdx = i;
 
@@ -222,8 +224,8 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ?B?z???????@
 }
 
 static bool CanPlaceOperator(const Operator* op, const Checkpoint& cp) {
-	if(!op) return false;
-	
+	if (!op) return false;
+
 	switch (op->operatorClass) {
 	case OperatorClass::Caster:
 	case OperatorClass::Medic:
@@ -239,7 +241,7 @@ static bool CanPlaceOperator(const Operator* op, const Checkpoint& cp) {
 	}
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ?B?z???????@
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 {
 	if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == false)
 	{
@@ -266,13 +268,13 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ?B?z???????@
 	else if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == true) {
 		isDragging = false;
 	}
-	else if(isDragging){
+	else if (isDragging) {
 		isDragging = false;
 		selOpIdx = -1;
 	}
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ?B?z???????@
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 {
 	if (isDragging && operators[selOpIdx]->isPlacing == false)
 	{
@@ -284,15 +286,15 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ?B?z???????@
 	}
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ?B?z???????@
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ?B?z???????@
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 {
 }
 
-void CGameStateRun::OnShow()									// ???C???e??	
+void CGameStateRun::OnShow()									// 顯示遊戲畫面	
 {
 	background.ShowBitmap();
 	textShow();
@@ -317,13 +319,13 @@ void CGameStateRun::OnShow()									// ???C???e??
 		ShowAttackRange();
 	}
 
-	//???? ??H?????? ???\
+	//測試 敵人的移動 成功
 	if (!enemies.empty()) {
-		auto& firstEnemy = enemies[0]; 
+		auto& firstEnemy = enemies[0];
 		firstEnemy->position.x -= 1;
 	}
 
-	//????b
+	//時間軸
 	UpdateGameTime();
 }
 
@@ -331,8 +333,8 @@ void CGameStateRun::OnShow()									// ???C???e??
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
-		gameTime += now - lastUpdateTime;								// ?u???b????????n?C?????
-		lastUpdateTime = now;											// ??s lastUpdateTime ????e???
+		gameTime += now - lastUpdateTime;								// 只有在未暫停時累積遊戲時間
+		lastUpdateTime = now;											// 更新 lastUpdateTime 為目前時間
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
@@ -342,31 +344,31 @@ void CGameStateRun::UpdateGameTime() {
 	}
 }
 
-// ????C???A????C?????????n
+// 暫停遊戲，停止遊戲時間的累積
 void CGameStateRun::PauseGame() {
 	if (!isGamePaused) {
-		UpdateGameTime();												// ?T?O?b????e?C??????O??s??
-		isGamePaused = true;											// ?]?w?C??????????A
+		UpdateGameTime();												// 確保在暫停前遊戲時間是最新的
+		isGamePaused = true;											// 設定遊戲為暫停狀態
 	}
 }
 
-// ?q??????A??_?C???A???\?C??????A????n
+// 從暫停狀態恢復遊戲，允許遊戲時間再次累積
 void CGameStateRun::ResumeGame() {
 	if (isGamePaused) {
-		isGamePaused = false;											// ?C?????A?O??????A
-		lastUpdateTime = std::chrono::steady_clock::now();				// ???m lastUpdateTime ???{?b
+		isGamePaused = false;											// 遊戲不再是暫停狀態
+		lastUpdateTime = std::chrono::steady_clock::now();				// 重置 lastUpdateTime 為現在
 	}
 }
 
 void CGameStateRun::textShow() {
 	CDC* pDC = CDDraw::GetBackCDC();
-	CTextDraw::ChangeFontLog(pDC, 40, "?L?n??????", RGB(255, 255, 255), 800);
+	CTextDraw::ChangeFontLog(pDC, 40, "微軟正黑體", RGB(255, 255, 255), 800);
 	std::string costStr = "Cost: " + std::to_string(cost);
 	CTextDraw::Print(pDC, 1100, 528, costStr.c_str());
 	CDDraw::ReleaseBackCDC();
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ??X???checkpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// 找出最近的checkpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
@@ -374,7 +376,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ??X???checkpo
 	nearLogicX = -1;
 	nearLogicY = -1;
 
-	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//?T?{?a???O?????m?A?POnInit????
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//確認地圖於記憶體位置，與OnInit對應
 
 	for (int y = 0; y < gameMap.height; ++y) {
 		for (int x = 0; x < gameMap.width; ++x) {
@@ -383,7 +385,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ??X???checkpo
 			if (distance < minDistance) {
 				minDistance = distance;
 				NearestCheckpoint = &checkpoint;
-				nearLogicX = x; 
+				nearLogicX = x;
 				nearLogicY = y;
 			}
 		}
@@ -398,7 +400,7 @@ void CGameStateRun::ShowAttackRange() {
 	for (const auto& rangePoint : selectedOperator->attackRange) {
 		if (rangePoint.x >= 0 && rangePoint.x < gameMap.width && rangePoint.y >= 0 && rangePoint.y < gameMap.height) {
 			auto& checkpoint = gameMap.checkpoint[rangePoint.y][rangePoint.x];
-			checkpoint.attackRangePoint.SetTopLeft(checkpoint.visualX, checkpoint.visualY);
+			checkpoint.attackRangePoint.SetTopLeft(checkpoint.visualX -20, checkpoint.visualY -20);
 			checkpoint.attackRangePoint.ShowBitmap();
 		}
 	}

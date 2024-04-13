@@ -247,6 +247,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
     <ClCompile Include="Source\Game\Execute\mygame_run.cpp" />
@@ -268,6 +269,7 @@
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_operator.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Exusiai\Exusiai.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapAndCheckpoint.h" />
@@ -292,6 +294,7 @@
     <Image Include="Resources\characters\enimies\Bug_normal\frame_4.bmp" />
     <Image Include="Resources\characters\enimies\Bug_normal\frame_5.bmp" />
     <Image Include="Resources\characters\enimies\Bug_normal\frame_6.bmp" />
+    <Image Include="Resources\characters\operators\Reed\front\Reed_front_Idle\Reed_front_Idle_1.bmp" />
     <Image Include="Resources\characters\operators\Reed\Reed_Head.bmp" />
     <Image Include="Resources\Game Framework.png" />
     <Image Include="resources\game.ico" />

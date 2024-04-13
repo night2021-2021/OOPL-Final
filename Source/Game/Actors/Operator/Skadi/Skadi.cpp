@@ -12,42 +12,32 @@ namespace game_framework {
         originalAttackRange = attackRange;
     }
 
-    void Skadi::LoadImagesForOrientation() {
+    void Skadi::LoadImages() {
+
+        LoadIdleImagesForDirection("front", rightIdleImage, 47);
+        LoadIdleImagesForDirection("left", leftIdleImage, 47);
+        LoadIdleImagesForDirection("back", backIdleImage, 26);
+
+    }
+
+    void Skadi::LoadIdleImagesForDirection(const char* subfolder, CMovingBitmap& imageObject, int imageCount) {
         std::vector<std::string> imagePaths;
         char buffer[128];
-
-        const char* subfolder = "";
-        int imageCount = 0; 
         imagePaths.clear();
-
-        switch (orientation) {
-        case Orientation::Up:
-            subfolder = "back";
-            imageCount = 26; 
-            break;
-        case Orientation::Down:
-			subfolder = "front";
-			imageCount = 47; 
-			break;
-        case Orientation::Left:
-            subfolder = "front";
-			imageCount = 47; 
-			break;  
-        case Orientation::Right:
-            subfolder = "front";
-            imageCount = 47; 
-            break;
-        }
 
         for (int i = 1; i <= imageCount; ++i) {
             sprintf(buffer, "resources/characters/operators/Skadi/%s/Skadi_%s_Idle/Skadi_%s_Idle_%d.bmp", subfolder, subfolder, subfolder, i);
             imagePaths.push_back(std::string(buffer));
         }
 
-        image = CMovingBitmap();
-        image.LoadBitmapByString(imagePaths, RGB(255, 255, 255));
-        image.SetAnimation(10, false); 
+        imageObject.LoadBitmapByString(imagePaths, RGB(255, 255, 255));
+        imageObject.SetAnimation(10, false);
     }
 
-    void Skadi::Skill() {}
+    void Skadi::Skill() {
+        if (SP = maxSP) {
+            SP = 0;
+            ATK += static_cast<int>(ATK * 0.5);
+        }
+    }
 };

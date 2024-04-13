@@ -21,7 +21,7 @@ namespace game_framework {
         int Width = image.GetWidth();
 
         CRect headRect(headLeft, headTop, headLeft + headWidth, headTop + headHeight);
-        CRect imageRect(Left, Top + 100, Left + Width, Top + Height);    // 0.4 is the ratio of the head image height to the whole image height
+        CRect imageRect(Left + 60, Top + 100, Left + Width - 70, Top + Height);    
 
         bool selectedHead = point.x >= headRect.left && point.x <= headRect.right && point.y >= headRect.top && point.y <= headRect.bottom;
         bool selectedImage = point.x >= imageRect.left && point.x <= imageRect.right && point.y >= imageRect.top && point.y <= imageRect.bottom;
@@ -83,6 +83,23 @@ namespace game_framework {
     
             point.x += logicX;
             point.y += logicY;                              //There are some problem with calculate
+        }
+    }
+
+    void Operator::ChangeImagesByOrientation() {
+        switch (orientation) {
+        case Orientation::Up:
+            image = backIdleImage;
+            break;
+        case Orientation::Down:
+            image = rightIdleImage;
+            break;
+        case Orientation::Left:
+            image = leftIdleImage;
+            break;
+        case Orientation::Right:
+            image = rightIdleImage;
+            break;
         }
     }
 }
