@@ -48,7 +48,7 @@ CGameStateRun::CGameStateRun(CGame* g) : CGameState(g)
 {
 	mainTime = std::chrono::steady_clock::now();
 	lastUpdateTime = mainTime;
-	gameTime = std::chrono::steady_clock::duration::zero();
+	gameTime = std::chrono::steady_clock::duration::zero();		//¹w­p§R°£
 }
 
 CGameStateRun::~CGameStateRun()
@@ -67,12 +67,12 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
 	cost = 30;
-	selOpIdx = -1;
+	selOpIdx = -1;										  //Selected Operator Index
 	isDragging = false;
 	isConfirmingPlacement = false;
+
 	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
 	background.SetTopLeft(0, 0);
-
 
 	std::string logicMapPath = "resources/map/mapJSON/0_1.json";
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
@@ -119,6 +119,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
 	auto& loadedEnemies = enemyManager.getEnemies();
+
 	for (auto& enemy : loadedEnemies) {
 		enemies.push_back(enemy);
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
@@ -132,7 +133,6 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_SPACE) {
-
 		if (isGamePaused) {
 			ResumeGame();
 		}
@@ -150,24 +150,28 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
+
 		case VK_DOWN:
 			operators[selOpIdx]->orientation = Orientation::Down;
 			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
+
 		case VK_LEFT:
 			operators[selOpIdx]->orientation = Orientation::Left;
 			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
+
 		case VK_RIGHT:
 			operators[selOpIdx]->orientation = Orientation::Right;
 			operators[selOpIdx]->ChangeImagesByOrientation();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
+
 		case VK_RETURN:											//½T»{©ñ¸m
 			isConfirmingPlacement = false;
 			operators[selOpIdx]->isPlacing = true;
@@ -328,7 +332,6 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 	//®É¶¡¶b
 	UpdateGameTime();
 }
-
 
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
