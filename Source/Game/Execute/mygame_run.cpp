@@ -121,7 +121,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	auto& loadedEnemies = enemyManager.getEnemies();
 
 	for (auto& enemy : loadedEnemies) {
+		
+		vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
+		enemy->position.x = temp[0];
+		enemy->position.y = temp[1];
 		enemies.push_back(enemy);
+
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
 
@@ -316,17 +321,72 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 
 	for (auto& enemy : enemies) {
 		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		enemy->image.ShowBitmap();
+		if(enemy->isDead == false){
+			enemy->image.ShowBitmap();
+		}
+		
 	}
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
 	}
 
+
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
+	
 	if (!enemies.empty()) {
-		auto& firstEnemy = enemies[0];
-		firstEnemy->position.x -= 1;
+		for(auto& enemy : enemies)
+		{
+			// auto& firstEnemy = enemies[0];
+			// firstEnemy->position.x -= 1;
+			
+			vector<int> originalPosition, nowXY, nextPosition;
+			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
+			nowXY = FindNearestXY(enemy->position);	
+			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+			int originalPixelX = originalPosition[0];
+			int originalPixelY = originalPosition[1];
+			int nowLogicX = nowXY[0];
+			int nowLogicY = nowXY[1];
+			int nextPixelX = nextPosition[0];
+			int nextPixelY = nextPosition[1];
+
+			int centerX = (originalPixelX + nextPixelX) / 2;
+			int centerY = (originalPixelY + nextPixelY) / 2;
+
+			if (enemy->position.x != nextPixelX){
+				if (enemy->position.x > nextPixelX){ // ­n©¹¥ª¨«
+					enemy->position.x -= 1;
+				}
+				else{   //­n©¹¥ª¨«
+					enemy->position.x += 1;
+				}
+			}
+
+			if (enemy->position.y != nextPixelY){
+				if (enemy->position.y > nextPixelY){ // ­n©¹¤W¨«
+					enemy->position.y -= 1;
+				}
+				else{
+					enemy->position.y += 1;
+				}
+			}
+
+			int index = enemy->positionIndex;
+			int stepSize = enemy->trajectory.size();
+
+			if (index + 1 == stepSize - 1 && enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
+			{
+				enemy->image.UnshowBitmap();
+				enemy->isDead = true;
+			}
+			else if( enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
+			{
+				enemy->positionIndex += 1;
+			}
+		}
+
 	}
 
 	//®É¶¡¶b
@@ -394,6 +454,42 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 		}
 	}
 	return NearestCheckpoint;
+}
+
+vector<int> CGameStateRun::FindNearestXY(CPoint point)		// §ä¥X³Ìªñªºcheckpointªºx y(logic)
+{
+	double minDistance = (std::numeric_limits<double>::max)();
+	auto& gameMap = gameMapManager.getGameMap();
+	nearLogicX = -1;
+	nearLogicY = -1;	
+
+	for (int y = 0; y < gameMap.height; ++y) {
+		for (int x = 0; x < gameMap.width; ++x) {
+			Checkpoint& checkpoint = gameMap.checkpoint[y][x];
+			double distance = std::sqrt(std::pow(checkpoint.visualX - point.x, 2) + std::pow(checkpoint.visualY - point.y, 2));
+			if (distance < minDistance) {
+				minDistance = distance;
+				nearLogicX = x;
+				nearLogicY = y;
+			}
+		}
+	}
+
+	vector <int> result;
+	result.push_back(nearLogicX);
+	result.push_back(nearLogicY);
+	return result;
+}
+
+vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// §ä¥X³o­Ólogicªºpixel
+{
+	double minDistance = (std::numeric_limits<double>::max)();
+	auto& gameMap = gameMapManager.getGameMap();
+	vector<int> result;
+
+	result.push_back(gameMap.checkpoint[logicY][logicX].visualX - deviationX);
+	result.push_back(gameMap.checkpoint[logicY][logicX].visualY - deviationY);
+	return result;
 }
 
 void CGameStateRun::ShowAttackRange() {
