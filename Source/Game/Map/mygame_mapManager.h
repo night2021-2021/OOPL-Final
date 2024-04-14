@@ -67,14 +67,12 @@ namespace game_framework {
                 std::string checkpointName = checkpointJson["Checkpoint"];
                 int visualX = checkpointJson["x"];
                 int visualY = checkpointJson["y"];
-                DBOUT("VisualX is :" << visualX << ", and the visualY is :" << visualY << endl);
 
                 for (auto& row : gameMap.checkpoint) {
                     for (auto& checkpoint : row) {
                         if (checkpoint.CKPTName == checkpointName) {
                             checkpoint.visualX = visualX;
                             checkpoint.visualY = visualY;
-                            DBOUT("Updated checkpoint: " << checkpointName << " to (" << visualX << ", " << visualY << ")\n");      //check if the visual checkpoint is updated
                             break; 
                         }
                     }
