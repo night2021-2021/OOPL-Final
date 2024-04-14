@@ -55,7 +55,7 @@ namespace game_framework {
                 float ms = item["MS"];
                 int sp = item["SP"];
                 int blockCounts = item["BlockCounts"];
-                std::vector<std::string> trajectory = item["Trajectory"].get<std::vector<std::string>>();
+                std::vector<std::vector<int>> trajectory = item["Trajectory"].get<std::vector<std::vector<int>>>(); // 0 ¬Oªì©l¦ì¸m
                 EnemyType enemyType = stringToEnemyType(item["type"].get<std::string>());
 
                 if (enemyType == EnemyType::BUG_NORMAL) {

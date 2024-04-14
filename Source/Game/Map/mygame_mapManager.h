@@ -22,6 +22,8 @@ namespace game_framework {
     private:
 		GameMap gameMap;
     public:
+
+
         void loadLogicMapFromJson(const std::string& logicJsonFilePath) {
             std::ifstream logicFile(logicJsonFilePath);
             if (!logicFile.is_open()) {
@@ -83,6 +85,7 @@ namespace game_framework {
         GameMap& getGameMap() {
             return this->gameMap;
         }
+
     };
 }
 

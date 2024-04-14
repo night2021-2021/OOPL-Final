@@ -14,7 +14,7 @@ namespace game_framework
         bool occupied;              
         int enemyCount;
         int blockCount;
-        int visualX, visualY;
+        int visualX, visualY;   //pixel
         std::string CKPTType;       
         std::string CKPTName;   //Height is Englsih, Width is Math   
 

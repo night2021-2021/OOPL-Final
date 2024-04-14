@@ -58,6 +58,7 @@
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
+    <ClCompile Include="Source\Game\Actors\Character\mygame_enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">

@@ -54,7 +54,7 @@ namespace game_framework
 		int cost;
 		int SP;
 		int maxSP;
-		int logicX, logicY;		//the position of the operator in the logic map
+		int logicX, logicY;	 	//the position of the operator in the logic map (0, 0)
 		bool isPlacing;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;

@@ -70,8 +70,42 @@ namespace game_framework {
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		void loadbackground();
-		CMovingBitmap background;
+		void loadfirstbackground();
+		void loadsecondbackground();
+
+		int state = 0; 	//0: 水月  1:星空  2:遊戲開始
+		CMovingBitmap firstbackground;
+		CMovingBitmap secondbackground;
+		CMovingBitmap button1;
+		CMovingBitmap button2;
+		CMovingBitmap button3;
+		CMovingBitmap button4;
+		CMovingBitmap button5;
+		CMovingBitmap button6;
+		CMovingBitmap button7;
+		CMovingBitmap button8;
+		CMovingBitmap button9;
+		CMovingBitmap button10;
+		CMovingBitmap button11;
+		CMovingBitmap button12;
+		CMovingBitmap button13;
+		CMovingBitmap button14;
+		CMovingBitmap button15;
+		CMovingBitmap button16;
+		CMovingBitmap button17;
+		CMovingBitmap button18;
+		CMovingBitmap button19;
+		CMovingBitmap button20;
+		CMovingBitmap button21;
+		CMovingBitmap button22;
+		CMovingBitmap button23;
+		CMovingBitmap button24;
+		CMovingBitmap button25;
+		CMovingBitmap button26;
+		CMovingBitmap button27;
+		CMovingBitmap button28;
+		CMovingBitmap button29;
+		CMovingBitmap button30;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -101,6 +135,10 @@ namespace game_framework {
 
 		void ShowAttackRange();									// 顯示攻擊範圍
 		void UnshowAttackRange();								// 隱藏攻擊範圍
+
+
+		vector<int> FindNearestXY(CPoint point);	// 找出最近的checkpoint的x y(logic)
+		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
 
 	protected:
 		void OnMove();											// 移動遊戲元素
