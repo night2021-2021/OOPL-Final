@@ -11,7 +11,6 @@
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
-
 #include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
@@ -59,16 +58,9 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()                              // ¦POnShow()¡A¤]¬OÀH®É³£¦b¶i¦æªº¡A¥Î¨Ó³B²z¹CÀ¸ªº¹B§@
+void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 {
-	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
-	if (!enemies.empty()) {
-		auto& firstEnemy = enemies[0];
-		firstEnemy->position.x -= 1;
-	}
 
-	//®É¶¡¶b
-	UpdateGameTime();
 }
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
@@ -128,7 +120,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	auto& loadedEnemies = enemyManager.getEnemies();
 
 	for (auto& enemy : loadedEnemies) {
+		
+		vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
+		enemy->position.x = temp[0];
+		enemy->position.y = temp[1];
 		enemies.push_back(enemy);
+
 		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
 
@@ -199,7 +196,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		if (selOpIdx >= 0 && !isConfirmingPlacement) {
+		if (selOpIdx >= 0) {
 			cost += operators[selOpIdx]->cost / 2;		//ºM°hªðÁÙ¤@¥bªº¶O¥Î
 			if(cost >= 99) cost = 99;
 			operators[selOpIdx]->Retreat();
@@ -305,7 +302,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
+void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
 	textShow();
@@ -323,12 +320,34 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 
 	for (auto& enemy : enemies) {
 		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		enemy->image.ShowBitmap();
+		if(enemy->isDead == false){
+			enemy->image.ShowBitmap();
+		}
+		
 	}
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
 	}
+
+
+	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
+	
+	if (!enemies.empty()) {
+		for(auto& enemy : enemies)
+		{
+			// auto& firstEnemy = enemies[0];
+			// firstEnemy->position.x -= 1;
+			vector<int> originalPosition, nextPosition;  // pixel
+			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
+			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+			enemy->Move(originalPosition, nextPosition);
+		}
+	}
+
+	//®É¶¡¶b
+	UpdateGameTime();
 }
 
 void CGameStateRun::UpdateGameTime() {
@@ -338,7 +357,7 @@ void CGameStateRun::UpdateGameTime() {
 		lastUpdateTime = now;											// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
-		if (LastCostUpdate >= 1000 && cost < 99) {
+		if (LastCostUpdate >= 500 && cost < 99) {
 			cost += 1;
 			lastCostUpdateTime = now;
 		}
@@ -376,7 +395,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 	auto& gameMap = gameMapManager.getGameMap();
 	nearLogicX = -1;
 	nearLogicY = -1;
-	
+
 	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
 	for (int y = 0; y < gameMap.height; ++y) {
@@ -392,6 +411,18 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 		}
 	}
 	return NearestCheckpoint;
+}
+
+
+vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// §ä¥X³o­Ólogicªºpixel
+{
+	double minDistance = (std::numeric_limits<double>::max)();
+	auto& gameMap = gameMapManager.getGameMap();
+	vector<int> result;
+
+	result.push_back(gameMap.checkpoint[logicY][logicX].visualX - deviationX);
+	result.push_back(gameMap.checkpoint[logicY][logicX].visualY - deviationY);
+	return result;
 }
 
 void CGameStateRun::ShowAttackRange() {
