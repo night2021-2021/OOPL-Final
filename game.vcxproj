@@ -246,6 +246,7 @@
     <ClCompile Include="Source\Core\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Source\Game\Actors\Character\mygame_enemy.cpp" />
     <ClCompile Include="Source\Game\Actors\Character\mygame_operator.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />

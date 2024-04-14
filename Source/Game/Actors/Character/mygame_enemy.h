@@ -37,6 +37,7 @@ namespace game_framework {
 			HP = MAX_HP;
 			positionIndex = 1;
 		};
+		void Move(std::vector<int> originalPosition, std::vector<int> nextPosition);
 	};
 }
 

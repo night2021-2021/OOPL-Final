@@ -340,51 +340,10 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		{
 			// auto& firstEnemy = enemies[0];
 			// firstEnemy->position.x -= 1;
-			
 			vector<int> originalPosition, nowXY, nextPosition;
 			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-			nowXY = FindNearestXY(enemy->position);	
 			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
-			int originalPixelX = originalPosition[0];
-			int originalPixelY = originalPosition[1];
-			int nowLogicX = nowXY[0];
-			int nowLogicY = nowXY[1];
-			int nextPixelX = nextPosition[0];
-			int nextPixelY = nextPosition[1];
-
-			int centerX = (originalPixelX + nextPixelX) / 2;
-			int centerY = (originalPixelY + nextPixelY) / 2;
-
-			if (enemy->position.x != nextPixelX){
-				if (enemy->position.x > nextPixelX){ // 要往左走
-					enemy->position.x -= 1;
-				}
-				else{   //要往左走
-					enemy->position.x += 1;
-				}
-			}
-
-			if (enemy->position.y != nextPixelY){
-				if (enemy->position.y > nextPixelY){ // 要往上走
-					enemy->position.y -= 1;
-				}
-				else{
-					enemy->position.y += 1;
-				}
-			}
-
-			int index = enemy->positionIndex;
-			int stepSize = enemy->trajectory.size();
-
-			if (index + 1 == stepSize - 1 && enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
-			{
-				enemy->image.UnshowBitmap();
-				enemy->isDead = true;
-			}
-			else if( enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
-			{
-				enemy->positionIndex += 1;
-			}
+			enemy->Move(originalPosition, nextPosition);
 		}
 
 	}
