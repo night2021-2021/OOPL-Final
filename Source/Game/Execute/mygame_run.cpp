@@ -376,7 +376,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// 找出最近的che
 	auto& gameMap = gameMapManager.getGameMap();
 	nearLogicX = -1;
 	nearLogicY = -1;
-
+	
 	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//確認地圖於記憶體位置，與OnInit對應
 
 	for (int y = 0; y < gameMap.height; ++y) {
