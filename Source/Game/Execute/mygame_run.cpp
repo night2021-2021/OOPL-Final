@@ -59,9 +59,16 @@ void CGameStateRun::OnBeginState()
 {
 }
 
-void CGameStateRun::OnMove()                            // 移動遊戲元素
+void CGameStateRun::OnMove()                              // 同OnShow()，也是隨時都在進行的，用來處理遊戲的運作
 {
+	//測試 敵人的移動 成功
+	if (!enemies.empty()) {
+		auto& firstEnemy = enemies[0];
+		firstEnemy->position.x -= 1;
+	}
 
+	//時間軸
+	UpdateGameTime();
 }
 
 void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
@@ -192,7 +199,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		if (selOpIdx >= 0) {
+		if (selOpIdx >= 0 && !isConfirmingPlacement) {
 			cost += operators[selOpIdx]->cost / 2;		//撤退返還一半的費用
 			if(cost >= 99) cost = 99;
 			operators[selOpIdx]->Retreat();
@@ -298,7 +305,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 {
 }
 
-void CGameStateRun::OnShow()									// 顯示遊戲畫面	
+void CGameStateRun::OnShow()								 // 顯示遊戲畫面	
 {
 	background.ShowBitmap();
 	textShow();
@@ -322,15 +329,6 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
 	}
-
-	//測試 敵人的移動 成功
-	if (!enemies.empty()) {
-		auto& firstEnemy = enemies[0];
-		firstEnemy->position.x -= 1;
-	}
-
-	//時間軸
-	UpdateGameTime();
 }
 
 void CGameStateRun::UpdateGameTime() {
@@ -340,7 +338,7 @@ void CGameStateRun::UpdateGameTime() {
 		lastUpdateTime = now;											// 更新 lastUpdateTime 為目前時間
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
-		if (LastCostUpdate >= 500 && cost < 99) {
+		if (LastCostUpdate >= 1000 && cost < 99) {
 			cost += 1;
 			lastCostUpdateTime = now;
 		}

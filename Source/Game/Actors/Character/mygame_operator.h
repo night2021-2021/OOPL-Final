@@ -45,6 +45,9 @@ namespace game_framework
 		CMovingBitmap rightIdleImage;
 		CMovingBitmap leftIdleImage;
 		CMovingBitmap backIdleImage;
+		CMovingBitmap rightAttackImage;
+		CMovingBitmap leftAttackImage;
+		CMovingBitmap backAttackImage;
 		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy

@@ -306,7 +306,6 @@
     <Image Include="Resources\mark\testMark.bmp" />
     <Image Include="Resources\mizuki.bmp" />
     <Image Include="Resources\Reed.bmp" />
-    <Image Include="resources\Toolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
