@@ -71,9 +71,7 @@ namespace game_framework {
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		void loadbackground();
-		CMovingBitmap logo;								// csie的logo
 		CMovingBitmap background;
-		CMovingBitmap character;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -94,6 +92,7 @@ namespace game_framework {
 		void OnMouseMove(UINT nFlags, CPoint point);			// 處理滑鼠的動作 
 		void OnRButtonDown(UINT nFlags, CPoint point); 		 	// 處理滑鼠的動作
 		void OnRButtonUp(UINT nFlags, CPoint point);			// 處理滑鼠的動作
+
 		Checkpoint* FindNearestCheckpoint(CPoint point);		// 找出最近的checkpoint
 
 		void PauseGame();										// 暫停遊戲
@@ -109,7 +108,6 @@ namespace game_framework {
 
 	private:
 		CMovingBitmap background;
-		CMovingBitmap character;
 		std::vector<std::unique_ptr<Operator>> operators;
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		

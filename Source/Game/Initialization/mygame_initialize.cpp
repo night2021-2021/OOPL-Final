@@ -23,9 +23,6 @@ void CGameStateInit::OnInit()
 	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
 	//
 	ShowInitProgress(0, "Start Initialize...");    // 一開始的loading進度為0%
-	//
-	// 開始載入資料
-	//
 	loadbackground();
 	ShowInitProgress(33, "Initialize...");    
 	ShowInitProgress(66, "Initialize...");
