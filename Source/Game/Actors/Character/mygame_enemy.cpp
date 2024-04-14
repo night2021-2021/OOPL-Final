@@ -12,14 +12,14 @@ namespace  game_framework {
         int nextPixelX = nextPosition[0];
         int nextPixelY = nextPosition[1];
 
-        int centerX = (originalPixelX + nextPixelX) / 2;
-        int centerY = (originalPixelY + nextPixelY) / 2;
+        // int centerX = (originalPixelX + nextPixelX) / 2; //兩個檢查點的中間
+        // int centerY = (originalPixelY + nextPixelY) / 2;
 
         if (this->position.x != nextPixelX){
             if (this->position.x > nextPixelX){ // 要往左走
                 this->position.x -= 1;
             }
-            else{   //要往左走
+            else{   //要往右走
                 this->position.x += 1;
             }
         }

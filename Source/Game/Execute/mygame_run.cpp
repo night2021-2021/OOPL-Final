@@ -340,12 +340,11 @@ void CGameStateRun::OnShow()									// 顯示遊戲畫面
 		{
 			// auto& firstEnemy = enemies[0];
 			// firstEnemy->position.x -= 1;
-			vector<int> originalPosition, nowXY, nextPosition;
+			vector<int> originalPosition, nextPosition;  // pixel
 			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
 			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
 			enemy->Move(originalPosition, nextPosition);
 		}
-
 	}
 
 	//時間軸
@@ -415,30 +414,6 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// 找出最近的che
 	return NearestCheckpoint;
 }
 
-vector<int> CGameStateRun::FindNearestXY(CPoint point)		// 找出最近的checkpoint的x y(logic)
-{
-	double minDistance = (std::numeric_limits<double>::max)();
-	auto& gameMap = gameMapManager.getGameMap();
-	nearLogicX = -1;
-	nearLogicY = -1;	
-
-	for (int y = 0; y < gameMap.height; ++y) {
-		for (int x = 0; x < gameMap.width; ++x) {
-			Checkpoint& checkpoint = gameMap.checkpoint[y][x];
-			double distance = std::sqrt(std::pow(checkpoint.visualX - point.x, 2) + std::pow(checkpoint.visualY - point.y, 2));
-			if (distance < minDistance) {
-				minDistance = distance;
-				nearLogicX = x;
-				nearLogicY = y;
-			}
-		}
-	}
-
-	vector <int> result;
-	result.push_back(nearLogicX);
-	result.push_back(nearLogicY);
-	return result;
-}
 
 vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// 找出這個logic的pixel
 {
