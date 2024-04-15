@@ -82,7 +82,7 @@ namespace game_framework {
             }
     
             point.x += logicX;
-            point.y += logicY;                              //There are some problem with calculate
+            point.y += logicY;                             
         }
     }
 

@@ -136,8 +136,6 @@ namespace game_framework {
 		void ShowAttackRange();									// 顯示攻擊範圍
 		void UnshowAttackRange();								// 隱藏攻擊範圍
 
-
-		vector<int> FindNearestXY(CPoint point);	// 找出最近的checkpoint的x y(logic)
 		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
 
 	protected:

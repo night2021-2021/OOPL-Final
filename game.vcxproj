@@ -252,6 +252,7 @@
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
     <ClCompile Include="Source\Game\Execute\mygame_run.cpp" />
+    <ClCompile Include="Source\Game\Execute\objectInteraction.cpp" />
     <ClCompile Include="Source\Game\Initialization\mygame_initialize.cpp" />
     <ClCompile Include="Source\Game\Termination\mygame_over.cpp" />
     <ClCompile Include="Source\Library\audio.cpp" />
@@ -273,6 +274,7 @@
     <ClInclude Include="Source\Game\Actors\Operator\Exusiai\Exusiai.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
+    <ClInclude Include="Source\Game\Execute\objectInteraction.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapAndCheckpoint.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
     <ClInclude Include="Source\Game\nlohmann\json.hpp" />

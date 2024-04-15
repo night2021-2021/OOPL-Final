@@ -1,22 +1,40 @@
 #include "objectInteraction.h"
-#include "../mygame.h"
+#include "../Actors/Character/mygame_operator.h"
+#include "../Actors/Character/mygame_enemy.h"
 #include <memory>
 
 
-namespace gaem_framework
+namespace game_framework
 {
-    void PerformAttacks(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies) {
-        for (auto& op : operators) {
-            for (auto& en : enemies) {
-                if (IsWithinRange(op.get(), en.get())) {
-                    int damage = CalculateDamage(op.get(), en.get());
-                    en->reduceHP(damage);                           // Assuming Enemy has a method reduceHP
-                    if (en->isDead()) {                             // Assuming Enemy has a method isDead to check health
-                        en->handleDeath();                          // Handle enemy death inside Enemy class
-                    }
+    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies) {
+
+        for (auto& operatorPtr : operators) {
+            for (auto& enemyPtr : enemies) {
+                if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
+
+                    int damage = DamageCount(operatorPtr.get(), enemyPtr.get());
+
                 }
             }
         }
     }
 
+    bool ObjectInteraction::RangeCheck(const Operator* op, const Enemy* enemy) {
+
+        auto& enemyPos = enemy->trajectory[enemy->positionIndex];
+        int enemyX = enemyPos[0];
+        int enemyY = enemyPos[1];
+
+        for (const auto& range : op->attackRange) {
+            if (range.x == enemyX && range.y == enemyY) {
+                return true;
+            }
+        }
+
+        return false;
+	}
+
+    int ObjectInteraction::DamageCount(const Operator* op, const Enemy* enemy) {
+        return op->ATK - enemy->DEF;
+    }
 }

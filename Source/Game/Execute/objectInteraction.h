@@ -10,15 +10,14 @@ namespace game_framework
 
     public:
     
-        void PerformAttacks(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies);
+        void AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies);
 
 
     private:
 
-        bool IsWithinRange(const Operator* op, const Enemy* enemy);
+        bool RangeCheck(const Operator* op, const Enemy* enemy);
 
-        int CalculateDamage(const Operator* op, const Enemy* enemy);
+        int DamageCount(const Operator* op, const Enemy* enemy);
 
     };
-
 }
