@@ -82,24 +82,53 @@ namespace game_framework {
             }
     
             point.x += logicX;
-            point.y += logicY;                              //There are some problem with calculate
+            point.y += logicY;                             
         }
     }
 
-    void Operator::ChangeImagesByOrientation() {
-        switch (orientation) {
-        case Orientation::Up:
-            image = backIdleImage;
+    void Operator::ChangeImages() {
+        switch (operatorStatus) {
+        case OperatorState::IDLE:
+            switch (orientation) {
+            case Orientation::Up:
+                image = backIdleImage;
+                break;
+            case Orientation::Down:
+                image = frontIdleImage;  
+                break;
+            case Orientation::Left:
+                image = leftIdleImage;
+                break;
+            case Orientation::Right:
+                image = frontIdleImage;
+                break;
+            }
             break;
-        case Orientation::Down:
-            image = rightIdleImage;
+        case OperatorState::ATTACK:
+            switch (orientation) {
+            case Orientation::Up:
+                image = backAttackImage;  
+                break;
+            case Orientation::Down:
+                image = frontAttackImage;  
+                break;
+            case Orientation::Left:
+                image = leftAttackImage;  
+                break;
+            case Orientation::Right:
+                image = frontAttackImage;  
+                break;
+            }
             break;
-        case Orientation::Left:
-            image = leftIdleImage;
-            break;
-        case Orientation::Right:
-            image = rightIdleImage;
-            break;
+        }
+    }
+
+    void Operator::ChangeOperatorState(OperatorState newState)
+    {
+        if (operatorStatus != newState)
+        {
+            operatorStatus = newState;
+            ChangeImages();
         }
     }
 }

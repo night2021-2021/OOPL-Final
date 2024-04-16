@@ -16,11 +16,11 @@ namespace game_framework
             LoadImages();
             SetAttackRange();
 
-            image = rightIdleImage;
+            image = frontIdleImage;
         }
 
         void LoadImages() override;
-        void LoadIdleImagesForDirection(const char* subfolder, CMovingBitmap& imageObject, int imageCount) override;
+        void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) override;
         void SetAttackRange() override;
         void Skill() override;
     };

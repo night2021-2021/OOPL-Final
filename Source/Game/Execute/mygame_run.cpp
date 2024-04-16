@@ -11,16 +11,15 @@
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
-
 #include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
+#include "objectInteraction.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
 #include <vector>
 #include <limits>
 #include <iostream>
 #include <chrono>
-#include <thread>
 #include <Windows.h>
 #include <sstream>
 #include <algorithm>	
@@ -61,7 +60,17 @@ void CGameStateRun::OnBeginState()
 
 void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 {
-
+	if (!enemies.empty()) {
+		for (auto& enemy : enemies)
+		{
+			vector<int> originalPosition, nextPosition;  // pixel
+			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
+			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+			enemy->Move(originalPosition, nextPosition);
+			//DBOUT("The Enemy"<< enemy->ID <<" is walk to" << enemy->trajectory[enemy->positionIndex][0] << "," << enemy->trajectory[enemy->positionIndex][1] << endl);
+		}
+		RemoveDeadEnemy();
+	}
 }
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
@@ -89,7 +98,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		for (auto& row : gameMap.checkpoint) {
 			for (auto& checkpoint : row) {
 				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
-				DBOUT("Checkpoint In main program: visualX: " << checkpoint.visualX << ", visualY: " << checkpoint.visualY << endl);
+
 			}
 		}
 		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
@@ -102,10 +111,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Exusiai>());
 
-	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
-		{
-			return a->cost > b->cost;
-		});
+	SortOperator();
 
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 
@@ -151,28 +157,28 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		switch (nChar) {
 		case VK_UP:
 			operators[selOpIdx]->orientation = Orientation::Up;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_DOWN:
 			operators[selOpIdx]->orientation = Orientation::Down;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_LEFT:
 			operators[selOpIdx]->orientation = Orientation::Left;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_RIGHT:
 			operators[selOpIdx]->orientation = Orientation::Right;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
@@ -198,17 +204,17 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
 		if (selOpIdx >= 0) {
-			cost += operators[selOpIdx]->cost / 2;		//ºM°hªðÁÙ¤@¥bªº¶O¥Î
+			cost += operators[selOpIdx]->cost / 2;								//ºM°hªðÁÙ¤@¥bªº¶O¥Î
 			if(cost >= 99) cost = 99;
 			operators[selOpIdx]->Retreat();
 		}
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)		// ³B²z·Æ¹«ªº°Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)					// ³B²z·Æ¹«ªº°Ê§@
 {
 	if (!isConfirmingPlacement) {
-		for (size_t i = 0; i < operators.size(); ++i) {						//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
+		for (size_t i = 0; i < operators.size(); ++i) {							//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
 			if (operators[i]->CheckIfSelected(point)) {
 				selOpIdx = i;
 
@@ -303,7 +309,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±	
+void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
 	textShow();
@@ -324,69 +330,10 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 		if(enemy->isDead == false){
 			enemy->image.ShowBitmap();
 		}
-		
 	}
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
-	}
-
-
-	// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	//´ú¸Õ ¼Ä¤Hªº²¾°Ê ¦¨¥\
-	
-	if (!enemies.empty()) {
-		for(auto& enemy : enemies)
-		{
-			// auto& firstEnemy = enemies[0];
-			// firstEnemy->position.x -= 1;
-			
-			vector<int> originalPosition, nowXY, nextPosition;
-			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-			nowXY = FindNearestXY(enemy->position);	
-			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
-			int originalPixelX = originalPosition[0];
-			int originalPixelY = originalPosition[1];
-			int nowLogicX = nowXY[0];
-			int nowLogicY = nowXY[1];
-			int nextPixelX = nextPosition[0];
-			int nextPixelY = nextPosition[1];
-
-			int centerX = (originalPixelX + nextPixelX) / 2;
-			int centerY = (originalPixelY + nextPixelY) / 2;
-
-			if (enemy->position.x != nextPixelX){
-				if (enemy->position.x > nextPixelX){ // ­n©¹¥ª¨«
-					enemy->position.x -= 1;
-				}
-				else{   //­n©¹¥ª¨«
-					enemy->position.x += 1;
-				}
-			}
-
-			if (enemy->position.y != nextPixelY){
-				if (enemy->position.y > nextPixelY){ // ­n©¹¤W¨«
-					enemy->position.y -= 1;
-				}
-				else{
-					enemy->position.y += 1;
-				}
-			}
-
-			int index = enemy->positionIndex;
-			int stepSize = enemy->trajectory.size();
-
-			if (index + 1 == stepSize - 1 && enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
-			{
-				enemy->image.UnshowBitmap();
-				enemy->isDead = true;
-			}
-			else if( enemy->position.x == nextPixelX && enemy->position.y == nextPixelY)
-			{
-				enemy->positionIndex += 1;
-			}
-		}
-
 	}
 
 	//®É¶¡¶b
@@ -396,14 +343,17 @@ void CGameStateRun::OnShow()									// Åã¥Ü¹CÀ¸µe­±
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
-		gameTime += now - lastUpdateTime;								// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
-		lastUpdateTime = now;											// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
+		std::chrono::duration<float, std::milli> deltaTime = now - lastUpdateTime;
+		gameTime += deltaTime;							// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
+		lastUpdateTime = now;							// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
 			cost += 1;
 			lastCostUpdateTime = now;
 		}
+
+		objectInteraction.AttackPerform(operators, enemies, deltaTime.count() / 1000.0f);
 	}
 }
 
@@ -456,30 +406,6 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 	return NearestCheckpoint;
 }
 
-vector<int> CGameStateRun::FindNearestXY(CPoint point)		// §ä¥X³Ìªñªºcheckpointªºx y(logic)
-{
-	double minDistance = (std::numeric_limits<double>::max)();
-	auto& gameMap = gameMapManager.getGameMap();
-	nearLogicX = -1;
-	nearLogicY = -1;	
-
-	for (int y = 0; y < gameMap.height; ++y) {
-		for (int x = 0; x < gameMap.width; ++x) {
-			Checkpoint& checkpoint = gameMap.checkpoint[y][x];
-			double distance = std::sqrt(std::pow(checkpoint.visualX - point.x, 2) + std::pow(checkpoint.visualY - point.y, 2));
-			if (distance < minDistance) {
-				minDistance = distance;
-				nearLogicX = x;
-				nearLogicY = y;
-			}
-		}
-	}
-
-	vector <int> result;
-	result.push_back(nearLogicX);
-	result.push_back(nearLogicY);
-	return result;
-}
 
 vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// §ä¥X³o­Ólogicªºpixel
 {
@@ -512,4 +438,29 @@ void CGameStateRun::UnshowAttackRange() {
 			checkpoint.attackRangePoint.UnshowBitmap();
 		}
 	}
+}
+
+void CGameStateRun::RemoveDeadEnemy()				//²¾°£¦º¤`ªº¼Ä¤H
+{
+	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
+		return enemy->enemyState == EnemyState::DEAD;
+		}), enemies.end());
+
+}
+
+void CGameStateRun::RemoveDeadOperator()			//²¾°£¦º¤`ªº·F­û
+{
+	operators.erase(std::remove_if(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& op) {
+		return op->operatorStatus == OperatorState::DEAD;
+		}), operators.end());
+
+	SortOperator();
+}
+
+void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
+{
+	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
+		{
+			return a->cost > b->cost;
+		});
 }

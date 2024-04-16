@@ -7,7 +7,7 @@
 
 namespace game_framework
 {
-    class Checkpoint {
+    class Checkpoint {          //A checkpoint is a single point on the map, which has lots peremeter   
     public:
         bool walkable;              
         bool placeable;             
@@ -27,7 +27,7 @@ namespace game_framework
         
     };
 
-    class GameMap {
+    class GameMap {             //A game map is a 2D array of Checkpoints
     public:
         int width, height;
         std::vector<std::vector<Checkpoint>> checkpoint;       

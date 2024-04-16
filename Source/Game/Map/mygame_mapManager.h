@@ -67,14 +67,12 @@ namespace game_framework {
                 std::string checkpointName = checkpointJson["Checkpoint"];
                 int visualX = checkpointJson["x"];
                 int visualY = checkpointJson["y"];
-                DBOUT("VisualX is :" << visualX << ", and the visualY is :" << visualY << endl);
 
                 for (auto& row : gameMap.checkpoint) {
                     for (auto& checkpoint : row) {
                         if (checkpoint.CKPTName == checkpointName) {
                             checkpoint.visualX = visualX;
                             checkpoint.visualY = visualY;
-                            DBOUT("Updated checkpoint: " << checkpointName << " to (" << visualX << ", " << visualY << ")\n");      //check if the visual checkpoint is updated
                             break; 
                         }
                     }
@@ -86,35 +84,6 @@ namespace game_framework {
             return this->gameMap;
         }
 
-        // vector<int> getPointFromLogic(int logicX, int logicY)
-        // {
-        //     std::ifstream visualFile(visualJsonFilePath);
-        //     if (!visualFile.is_open()) {
-        //         DBOUT("Failed to open file: " << visualJsonFilePath << "\n");        //Check if the file is not opened
-        //         throw std::runtime_error("Cannot open file: " + visualJsonFilePath);
-		// 	}
-
-		// 	nlohmann::json visualJson;
-        //     visualFile >> visualJson;
-
-        //     for (const auto& checkpointJson : visualJson) {
-        //         std::string checkpointName = checkpointJson["Checkpoint"];
-        //         int visualX = checkpointJson["x"];
-        //         int visualY = checkpointJson["y"];
-        //         DBOUT("VisualX is :" << visualX << ", and the visualY is :" << visualY << endl);
-
-        //         for (auto& row : gameMap.checkpoint) {
-        //             for (auto& checkpoint : row) {
-        //                 if (checkpoint.CKPTName == checkpointName) {
-        //                     checkpoint.visualX = visualX;
-        //                     checkpoint.visualY = visualY;
-        //                     DBOUT("Updated checkpoint: " << checkpointName << " to (" << visualX << ", " << visualY << ")\n");      //check if the visual checkpoint is updated
-        //                     break; 
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
     };
 }
 

@@ -58,6 +58,7 @@
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
+    <ClCompile Include="Source\Game\Actors\Character\mygame_enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -111,9 +112,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\Toolbar.bmp">
-      <Filter>Resource Files</Filter>
-    </Image>
     <Image Include="resources\game.ico">
       <Filter>Resource Files</Filter>
     </Image>

@@ -42,36 +42,40 @@ namespace game_framework
 	{
 	public:
 		CMovingBitmap image;
-		CMovingBitmap rightIdleImage;
+		CMovingBitmap frontIdleImage;
 		CMovingBitmap leftIdleImage;
 		CMovingBitmap backIdleImage;
+		CMovingBitmap frontAttackImage;
+		CMovingBitmap leftAttackImage;
+		CMovingBitmap backAttackImage;
 		CMovingBitmap headImage;
 		CPoint position;
 		int blockCounts;		//the number of blocks that the operator can block the enemy
 		int cost;
-		int SP;
-		int maxSP;
+		int sp;
+		int maxSp;
 		int logicX, logicY;	 	//the position of the operator in the logic map (0, 0)
 		bool isPlacing;
+		float attackCD;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int maxHp, int atk, int def, int blocks, int cost, int SP, int maxSP, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSP(maxSP), SP(SP), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori)
+		Operator(int maxHp, int atk, int def, int blocks, int cost, int sp, int maxSP, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
+			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSp(maxSP), sp(sp), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori), attackCD(0.0f)
 		{
-			HP = maxHp;
 		}
 
 		//Operator's Load Images
 		virtual void LoadImages() {};
-		virtual void LoadIdleImagesForDirection(const char* subfolder, CMovingBitmap& imageObject, int imageCount) {};
+		virtual void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {};
 
 		//Operator's Skill
 		virtual void Skill() {};
 
-		//Operator's orientation
-		virtual void ChangeImagesByOrientation();
+		//Operator's setting
+		virtual void ChangeImages();
+		void ChangeOperatorState(OperatorState newState);
 
 		//Operator Selected
 		void SetHeadPosition(int x, int y);

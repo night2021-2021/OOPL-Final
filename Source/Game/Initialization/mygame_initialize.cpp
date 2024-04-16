@@ -200,8 +200,6 @@ void CGameStateInit::OnShow()
 		button29.ShowBitmap();
 		button30.ShowBitmap();
 	}
-	
-
 }
 
 
