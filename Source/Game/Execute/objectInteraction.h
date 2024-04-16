@@ -1,7 +1,7 @@
 #pragma once
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Character/mygame_enemy.h"
-#include "../mygame.h"
+#include <memory>
 #include <vector>
 
 namespace game_framework 
@@ -10,7 +10,7 @@ namespace game_framework
 
     public:
     
-        void AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies);
+        void AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime);
 
 
     private:
@@ -18,6 +18,8 @@ namespace game_framework
         bool RangeCheck(const Operator* op, const Enemy* enemy);
 
         int DamageCount(const Operator* op, const Enemy* enemy);
+
+        void DamagePerform(int damage, Enemy* enemy);
 
     };
 }

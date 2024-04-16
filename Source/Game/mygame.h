@@ -42,6 +42,7 @@
 #include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include "../Game/Execute/objectInteraction.h"
 #include <chrono>
 
 namespace game_framework {
@@ -132,7 +133,7 @@ namespace game_framework {
 		void PauseGame();										// 暫停遊戲
 		void ResumeGame();										// 繼續遊戲
 		void UpdateGameTime();									// 更新遊戲時間
-
+		
 		void ShowAttackRange();									// 顯示攻擊範圍
 		void UnshowAttackRange();								// 隱藏攻擊範圍
 
@@ -148,6 +149,7 @@ namespace game_framework {
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
+		ObjectInteraction objectInteraction;
 		void textShow();
 		int cost;
 		int selOpIdx;
@@ -157,9 +159,12 @@ namespace game_framework {
 		bool isConfirmingPlacement;
 		bool isGamePaused;										//time
 		std::chrono::steady_clock::time_point mainTime;
-		std::chrono::steady_clock::duration gameTime;
+		std::chrono::duration<float, std::milli> gameTime;
 		std::chrono::steady_clock::time_point lastUpdateTime;
 		std::chrono::steady_clock::time_point lastCostUpdateTime;
+		void RemoveDeadEnemy();
+		void RemoveDeadOperator();
+		void SortOperator();	
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

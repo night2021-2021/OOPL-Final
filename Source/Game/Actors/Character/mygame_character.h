@@ -7,14 +7,14 @@ namespace game_framework
     class Character
     {
         public:
-            int maxHP;
-            int HP;
-            int ATK;
-            int DEF;
-            float AttackSpeed;
+            int maxHp;
+            int hp;
+            int atk;
+            int def;
+            float attackSpeed;
 
             Character(int maxHp, int atk, int def, float attackSpeed)
-            : maxHP(maxHp), HP(maxHp), ATK(atk), DEF(def), AttackSpeed(attackSpeed) {}
+            : maxHp(maxHp), hp(maxHp), atk(atk), def(def), attackSpeed(attackSpeed) {}
 
             virtual ~Character() {}
     };

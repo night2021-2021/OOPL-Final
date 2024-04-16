@@ -35,12 +35,17 @@ namespace  game_framework {
 
         if (index + 1 == stepSize - 1 && this->position.x == nextPixelX && this->position.y == nextPixelY)
         {
-            this->image.UnshowBitmap();
-            this->isDead = true;
+            Dead();
         }
         else if( this->position.x == nextPixelX && this->position.y == nextPixelY)
         {
             this->positionIndex += 1;
         }
+	}
+
+    void Enemy::Dead() {
+		this->image.UnshowBitmap();
+        this->enemyState = EnemyState::DEAD;
+		this->isDead = true;
 	}
 }

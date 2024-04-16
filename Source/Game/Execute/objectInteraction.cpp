@@ -1,20 +1,42 @@
+#include "StdAfx.h"
 #include "objectInteraction.h"
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Character/mygame_enemy.h"
 #include <memory>
+#include <sstream>
 
+#define DBOUT( s )            \
+{                             \
+   std::ostringstream os_;    \
+   os_ << s;                  \
+   OutputDebugString( os_.str().c_str() );  \
+}	
 
 namespace game_framework
 {
-    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies) {
-
+    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime) {
         for (auto& operatorPtr : operators) {
-            for (auto& enemyPtr : enemies) {
-                if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
+            if (!operatorPtr->isPlacing)
+            {
+				continue;
+			}
 
-                    int damage = DamageCount(operatorPtr.get(), enemyPtr.get());
-
+            operatorPtr->attackCD += deltaTime;
+            if (operatorPtr->attackCD >= operatorPtr->attackSpeed) {
+                bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK
+                for (auto& enemyPtr : enemies) {      
+                    if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
+                        operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
+                        int damage = DamageCount(operatorPtr.get(), enemyPtr.get());
+                        DamagePerform(damage, enemyPtr.get());
+                        operatorPtr->attackCD = 0.0f;
+                        isAttack = true;
+                        break;
+                    }
                 }
+                if (!isAttack) {
+					operatorPtr->ChangeOperatorState(OperatorState::IDLE);
+				}
             }
         }
     }
@@ -35,6 +57,16 @@ namespace game_framework
 	}
 
     int ObjectInteraction::DamageCount(const Operator* op, const Enemy* enemy) {
-        return op->ATK - enemy->DEF;
+        return op->atk - enemy->def;
+    }
+
+    void ObjectInteraction::DamagePerform(int damage,Enemy* enemy) {
+        if (enemy->hp > 0) {
+            enemy->hp -= damage;
+        }
+        else {
+            enemy->Dead();
+        }
+        DBOUT("The enemy index" << enemy->ID << "'s HP is :" << enemy->hp << endl);
     }
 }

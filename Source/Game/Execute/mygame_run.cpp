@@ -13,13 +13,13 @@
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
+#include "objectInteraction.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
 #include <vector>
 #include <limits>
 #include <iostream>
 #include <chrono>
-#include <thread>
 #include <Windows.h>
 #include <sstream>
 #include <algorithm>	
@@ -69,6 +69,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 			enemy->Move(originalPosition, nextPosition);
 			//DBOUT("The Enemy"<< enemy->ID <<" is walk to" << enemy->trajectory[enemy->positionIndex][0] << "," << enemy->trajectory[enemy->positionIndex][1] << endl);
 		}
+		RemoveDeadEnemy();
 	}
 }
 
@@ -110,10 +111,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Exusiai>());
 
-	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
-		{
-			return a->cost > b->cost;
-		});
+	SortOperator();
 
 	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
 
@@ -159,28 +157,28 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		switch (nChar) {
 		case VK_UP:
 			operators[selOpIdx]->orientation = Orientation::Up;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_DOWN:
 			operators[selOpIdx]->orientation = Orientation::Down;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_LEFT:
 			operators[selOpIdx]->orientation = Orientation::Left;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
 
 		case VK_RIGHT:
 			operators[selOpIdx]->orientation = Orientation::Right;
-			operators[selOpIdx]->ChangeImagesByOrientation();
+			operators[selOpIdx]->ChangeImages();
 			operators[selOpIdx]->AdjustAttackRange();
 			ShowAttackRange();
 			break;
@@ -332,7 +330,6 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 		if(enemy->isDead == false){
 			enemy->image.ShowBitmap();
 		}
-		
 	}
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
@@ -346,14 +343,17 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
-		gameTime += now - lastUpdateTime;								// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
-		lastUpdateTime = now;											// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
+		std::chrono::duration<float, std::milli> deltaTime = now - lastUpdateTime;
+		gameTime += deltaTime;							// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
+		lastUpdateTime = now;							// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
 			cost += 1;
 			lastCostUpdateTime = now;
 		}
+
+		objectInteraction.AttackPerform(operators, enemies, deltaTime.count() / 1000.0f);
 	}
 }
 
@@ -438,4 +438,29 @@ void CGameStateRun::UnshowAttackRange() {
 			checkpoint.attackRangePoint.UnshowBitmap();
 		}
 	}
+}
+
+void CGameStateRun::RemoveDeadEnemy()				//²¾°£¦º¤`ªº¼Ä¤H
+{
+	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
+		return enemy->enemyState == EnemyState::DEAD;
+		}), enemies.end());
+
+}
+
+void CGameStateRun::RemoveDeadOperator()			//²¾°£¦º¤`ªº·F­û
+{
+	operators.erase(std::remove_if(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& op) {
+		return op->operatorStatus == OperatorState::DEAD;
+		}), operators.end());
+
+	SortOperator();
+}
+
+void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
+{
+	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
+		{
+			return a->cost > b->cost;
+		});
 }
