@@ -23,7 +23,7 @@ namespace game_framework
 
             operatorPtr->attackCD += deltaTime;
             if (operatorPtr->attackCD >= operatorPtr->attackSpeed) {
-                bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK
+                bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK    (Operator can cattack and only attack one enemy at same time.)
                 for (auto& enemyPtr : enemies) {      
                     if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
@@ -67,6 +67,6 @@ namespace game_framework
         else {
             enemy->Dead();
         }
-        DBOUT("The enemy index" << enemy->ID << "'s HP is :" << enemy->hp << endl);
+        //DBOUT("The enemy index" << enemy->ID << "'s HP is :" << enemy->hp << endl);
     }
 }

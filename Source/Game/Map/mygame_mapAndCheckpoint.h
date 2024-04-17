@@ -15,15 +15,16 @@ namespace game_framework
         int enemyCount;
         int blockCount;
         int visualX, visualY;   //pixel
+        int logicX, logicY;     //logic
         std::string CKPTType;       
         std::string CKPTName;   //Height is Englsih, Width is Math   
 
         CMovingBitmap attackRangePoint;  //Attack range point
 
-        Checkpoint() : walkable(false), placeable(false), occupied(false), enemyCount(0), blockCount(0) ,visualX(0), visualY(0){}
+        Checkpoint() : walkable(false), placeable(false), occupied(false), enemyCount(0), blockCount(0) ,visualX(0), visualY(0), logicX(0), logicY(0){}       //Default constructor
 
-        Checkpoint(bool w, bool p, std::string t, std::string n) 
-            : walkable(w), placeable(p), occupied(false), enemyCount(0), blockCount(0), visualX(0), visualY(0), CKPTType(t), CKPTName(n) {}
+        Checkpoint(bool w, bool p, std::string t, std::string n, int lx, int ly)
+            : walkable(w), placeable(p), occupied(false), enemyCount(0), blockCount(0), visualX(0), visualY(0), logicX(lx), logicY(ly), CKPTType(t), CKPTName(n) {}	   //Constructor
         
     };
 

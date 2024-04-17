@@ -6,7 +6,6 @@
 namespace  game_framework {
     void Enemy::Move(std::vector<int> originalPosition, std::vector<int> nextPosition){
 		
-        
         int originalPixelX = originalPosition[0];
         int originalPixelY = originalPosition[1];
         int nextPixelX = nextPosition[0];

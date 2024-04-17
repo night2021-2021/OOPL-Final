@@ -25,6 +25,7 @@ namespace game_framework {
 		EnemyType enemyType;  
 		EnemyState enemyState; 
 		bool isDead = false;
+		bool isBlocked = false;
 
 
 		int positionIndex;	//現在走到哪裡(trajectory的index)

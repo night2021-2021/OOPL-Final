@@ -63,12 +63,33 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 	if (!enemies.empty()) {
 		for (auto& enemy : enemies)
 		{
-			vector<int> originalPosition, nextPosition;  // pixel
-			originalPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-			nextPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
-			enemy->Move(originalPosition, nextPosition);
-			//DBOUT("The Enemy"<< enemy->ID <<" is walk to" << enemy->trajectory[enemy->positionIndex][0] << "," << enemy->trajectory[enemy->positionIndex][1] << endl);
+			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;  // pixel
+			originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
+
+			originalVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
+			nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+
+			Checkpoint& currentCheckpoint = gameMapManager.getGameMap().checkpoint[originalLogicPosition[1]][originalLogicPosition[0]];
+			
+			if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {
+				if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {
+					currentCheckpoint.enemyCount -= enemy->blockCount;
+					enemy->isBlocked = false;
+
+				}
+				else if (enemy->isBlocked == false) {
+					enemy->Move(originalVisualPosition, nextVisualPosition);
+				}
+			}
+			else {
+				if (!enemy->isBlocked) {
+					currentCheckpoint.enemyCount += enemy->blockCount;
+					enemy->isBlocked = true;
+					DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies." << endl);
+				}
+			}
 		}
+
 		RemoveDeadEnemy();
 	}
 }
@@ -188,14 +209,19 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			operators[selOpIdx]->isPlacing = true;
 			cost -= operators[selOpIdx]->cost;
 
+			Checkpoint* placedCheckpoint = &gameMapManager.getGameMap().checkpoint[nearLogicY][nearLogicX];
+			loadCKPTInfoByOperator(placedCheckpoint, *operators[selOpIdx]);
+
+			selOpIdx = -1;
+			break;
+			
+			/*
 			DBOUT("Attack Range for Operator " << selOpIdx << ": ");
 			for (const auto& point : operators[selOpIdx]->attackRange) {
 				DBOUT("(" << point.x << ", " << point.y << ") ");
 			}
-			DBOUT(endl);
+			DBOUT(endl);*/
 
-			selOpIdx = -1;
-			break;
 		}
 	}
 }
@@ -262,7 +288,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
-			if (CanPlaceOperator(operators[selOpIdx].get(), *nearestCheckpoint)) {
+			if (!nearestCheckpoint -> occupied && CanPlaceOperator(operators[selOpIdx].get(), *nearestCheckpoint)) {
 				operators[selOpIdx]->position.x = nearestCheckpoint->visualX - deviationX;
 				operators[selOpIdx]->position.y = nearestCheckpoint->visualY - deviationY;
 				operators[selOpIdx]->logicX = nearLogicX;
@@ -463,4 +489,12 @@ void CGameStateRun::SortOperator()					//排序幹員
 		{
 			return a->cost > b->cost;
 		});
+}
+
+void CGameStateRun::loadCKPTInfoByOperator(Checkpoint* checkpoint, const Operator& op) {	// 更新checkpoint的資訊	
+	if (checkpoint) {
+		checkpoint->occupied = true;  
+		checkpoint->blockCount += op.blockCounts;  
+		DBOUT("The CKPT " << checkpoint->logicX << "," << checkpoint->logicY << " has blockCounts " << checkpoint->blockCount << endl);
+	}
 }
