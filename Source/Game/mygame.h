@@ -42,6 +42,7 @@
 #include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include "../Game/Map/mygame_checkpointManager.h"
 #include "../Game/Execute/objectInteraction.h"
 #include <chrono>
 
@@ -153,6 +154,7 @@ namespace game_framework {
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
 		ObjectInteraction objectInteraction;
+		std::unique_ptr<CheckpointManager> checkpointManager;
 		void textShow();
 		int cost;
 		int selOpIdx;

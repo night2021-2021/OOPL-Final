@@ -14,7 +14,7 @@
 
 namespace game_framework
 {
-    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime) {
+    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime, CheckpointManager& checkpointManager) {
         for (auto& operatorPtr : operators) {
             if (!operatorPtr->isPlacing)
             {
@@ -28,7 +28,7 @@ namespace game_framework
                     if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
                         int damage = DamageCount(operatorPtr.get(), enemyPtr.get());
-                        DamagePerform(damage, enemyPtr.get());
+                        DamagePerform(damage, enemyPtr.get(), checkpointManager);
                         operatorPtr->attackCD = 0.0f;
                         isAttack = true;
                         break;
@@ -60,12 +60,12 @@ namespace game_framework
         return op->atk - enemy->def;
     }
 
-    void ObjectInteraction::DamagePerform(int damage,Enemy* enemy) {
+    void ObjectInteraction::DamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
         if (enemy->hp > 0) {
             enemy->hp -= damage;
         }
         else {
-            enemy->Dead();
+            enemy->Dead(checkpointManager);
         }
         //DBOUT("The enemy index" << enemy->ID << "'s HP is :" << enemy->hp << endl);
     }

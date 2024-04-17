@@ -236,6 +236,7 @@
     <None Include="readme.md" />
     <None Include="Resources\gamecurs.cur" />
     <None Include="Resources\GAME.RC2" />
+    <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
   </ItemGroup>
   <ItemGroup>
@@ -275,6 +276,7 @@
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
     <ClInclude Include="Source\Game\Execute\objectInteraction.h" />
+    <ClInclude Include="Source\Game\Map\mygame_checkpointManager.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapAndCheckpoint.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapManager.h" />
     <ClInclude Include="Source\Game\nlohmann\json.hpp" />

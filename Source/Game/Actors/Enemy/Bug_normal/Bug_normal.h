@@ -7,8 +7,8 @@ namespace game_framework
 	class Bug_normal : public Enemy
 	{
 	public:
-        Bug_normal(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, EnemyState STATE)
-            : Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE)
+        Bug_normal(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, EnemyState STATE, int TIME)
+            : Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE, TIME)
 		{
             image.LoadBitmapByString({
                 "resources/characters/enimies/Bug_normal/frame_01.bmp",

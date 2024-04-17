@@ -55,11 +55,12 @@ namespace game_framework {
                 float ms = item["MS"];
                 int sp = item["SP"];
                 int blockCounts = item["BlockCounts"];
-                std::vector<std::vector<int>> trajectory = item["Trajectory"].get<std::vector<std::vector<int>>>(); // 0 是初始位置
+                std::vector<std::vector<int>> trajectory = item["Trajectory"].get<std::vector<std::vector<int>>>();                 // 0 是初始位置
                 EnemyType enemyType = stringToEnemyType(item["type"].get<std::string>());
+                int time = item["time"];
 
                 if (enemyType == EnemyType::BUG_NORMAL) {
-                    auto enemy = std::make_shared<Bug_normal>(id, maxHp, atk, def, sp, blockCounts, as, ms, trajectory, EnemyType::BUG_NORMAL, EnemyState::IDLE);
+                    auto enemy = std::make_shared<Bug_normal>(id, maxHp, atk, def, sp, blockCounts, as, ms, trajectory, EnemyType::BUG_NORMAL, EnemyState::IDLE, time);
                     enemies.push_back(enemy);
                     DBOUT("Created BUG_NORMAL enemy with ID: " << id << std::endl);
                 }

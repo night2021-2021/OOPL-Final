@@ -13,7 +13,6 @@
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
-#include "objectInteraction.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
 #include <vector>
@@ -43,6 +42,7 @@ const int deviationY = 180;
 EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
+
 CGameStateRun::CGameStateRun(CGame* g) : CGameState(g)
 {
 	mainTime = std::chrono::steady_clock::now();
@@ -64,32 +64,35 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 		for (auto& enemy : enemies)
 		{
 			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;  // pixel
-			originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
 
-			originalVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-			nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+			if (enemy->positionIndex + 1 < enemy->trajectory.size()) {
+				originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
+				originalVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
+				nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
 
-			Checkpoint& currentCheckpoint = gameMapManager.getGameMap().checkpoint[originalLogicPosition[1]][originalLogicPosition[0]];
-			
-			if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {
-				if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {
-					currentCheckpoint.enemyCount -= enemy->blockCount;
-					enemy->isBlocked = false;
+				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
 
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {
+					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {
+						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
+						enemy->isBlocked = false;
+
+					}
+					else if (enemy->isBlocked == false) {
+						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
+						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
+						enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
+					}
 				}
-				else if (enemy->isBlocked == false) {
-					enemy->Move(originalVisualPosition, nextVisualPosition);
-				}
-			}
-			else {
-				if (!enemy->isBlocked) {
-					currentCheckpoint.enemyCount += enemy->blockCount;
-					enemy->isBlocked = true;
-					DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies." << endl);
+				else {
+					if (!enemy->isBlocked && !enemy->isDead) {
+						checkpointManager->registerEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
+						enemy->isBlocked = true;
+						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemie : "<< enemy->ID << endl);
+					}
 				}
 			}
 		}
-
 		RemoveDeadEnemy();
 	}
 }
@@ -122,6 +125,8 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 			}
 		}
+
+		checkpointManager = std::make_unique<CheckpointManager>(gameMapManager.getGameMap());
 		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
@@ -379,7 +384,17 @@ void CGameStateRun::UpdateGameTime() {
 			lastCostUpdateTime = now;
 		}
 
-		objectInteraction.AttackPerform(operators, enemies, deltaTime.count() / 1000.0f);
+		objectInteraction.AttackPerform(operators, enemies, deltaTime.count() / 1000.0f, *checkpointManager);
+
+		/*
+		for (auto& enemy : enemies) {
+			if (!enemy->isActive && gameTime.count() >= enemy->entryTime * 1000) {  
+				enemy->isActive = true;
+				enemy->EnterGame();												// °²³]§A¦³¤@­Ó EnterGame ¤èªk¨Ó³B²z¼Ä¤H¶i³õªºÅÞ¿è
+				DBOUT("Enemy with ID " << enemy->ID << " has entered the game at " << gameTime.count() << "ms." << std::endl);
+			}
+		}
+		*/
 	}
 }
 

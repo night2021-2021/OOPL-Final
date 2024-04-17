@@ -25,6 +25,7 @@
     <None Include=".gitignore" />
     <None Include="readme.md" />
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
+    <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Library\audio.cpp">
@@ -59,6 +60,7 @@
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
     <ClCompile Include="Source\Game\Actors\Character\mygame_enemy.cpp" />
+    <ClCompile Include="Source\Game\Execute\objectInteraction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -105,6 +107,8 @@
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Character\mygame_enemyManager.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Exusiai\Exusiai.h" />
+    <ClInclude Include="Source\Game\Execute\objectInteraction.h" />
+    <ClInclude Include="Source\Game\Map\mygame_checkpointManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
