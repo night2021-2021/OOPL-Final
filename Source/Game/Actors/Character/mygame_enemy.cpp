@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <vector>
 #include "../Library/gameutil.h"
+
 #include "mygame_enemy.h"
 
 namespace  game_framework {
@@ -11,34 +12,20 @@ namespace  game_framework {
         int nextPixelX = nextPosition[0];
         int nextPixelY = nextPosition[1];
 
-        if (this->position.x != nextPixelX){
-            if (this->position.x > nextPixelX){ // 要往左走
-                this->position.x -= 1;
-            }
-            else{   //要往右走
-                this->position.x += 1;
-            }
+        if (this->position.x != nextPixelX) {
+            this->position.x += (this->position.x > nextPixelX) ? -1 : 1;           //Turn left or right
         }
 
-        if (this->position.y != nextPixelY){
-            if (this->position.y > nextPixelY){ // 要往上走
-                this->position.y -= 1;
-            }
-            else{
-                this->position.y += 1;
-            }
+        if (this->position.y != nextPixelY) {
+            this->position.y += (this->position.y > nextPixelY) ? -1 : 1;           //Turn up or down
         }
 
-        int index = this->positionIndex;
-        int stepSize = this->trajectory.size();
-
-        if (index + 1 == stepSize - 1 && this->position.x == nextPixelX && this->position.y == nextPixelY)
-        {
-            Dead();
-        }
-        else if( this->position.x == nextPixelX && this->position.y == nextPixelY)
-        {
-            this->positionIndex += 1;
+        if (this->position.x == nextPixelX && this->position.y == nextPixelY) {
+            if (this->positionIndex + 1 == this->trajectory.size() - 1) {
+                Dead();  
+            } else {
+                this->positionIndex += 1;  
+            }
         }
 	}
 

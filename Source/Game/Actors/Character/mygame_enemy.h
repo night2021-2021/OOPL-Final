@@ -16,21 +16,19 @@ namespace game_framework {
 	{
 	public:
 		CMovingBitmap image;	
-		CPoint position;	//真正的座標 (pixel)
+		CPoint position;	//The real position(pixel)
 		int ID;
 		int sp;
 		int blockCount;	
 		float moveSpeed;
-		std::vector<std::vector<int>> trajectory; // 移動路線
+		std::vector<std::vector<int>> trajectory; 		// Moveing path
 		EnemyType enemyType;  
 		EnemyState enemyState; 
 		bool isDead = false;
 		bool isBlocked = false;
 
 
-		int positionIndex;	//現在走到哪裡(trajectory的index)
-
-
+		int positionIndex;				//The index of the current position in the trajectory
 
 		Enemy(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE)
 			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE)
