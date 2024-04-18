@@ -8,7 +8,7 @@ namespace game_framework
     {
     public:
         Exusiai()
-        : Operator(1060, 375, 126, 1, 11, 0, 4, 1.0f, OperatorClass::Sniper) {
+        : Operator(1060, 375, 126, 1, 11, 0, 4, 1.0f, OperatorClass::Sniper, "Exusiai") {
 
             headImage.LoadBitmapByString({ "resources/characters/operators/Exusiai/Exusiai_Head.bmp" }, RGB(0, 0 ,0));
             position.SetPoint(1080, 720);

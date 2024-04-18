@@ -11,6 +11,7 @@
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
+#include"../Actors/Operator/Saria/Saria.h"
 #include "../Actors/Operator/Exusiai/Exusiai.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
@@ -71,24 +72,24 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 				nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
 
 				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
+				enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
 
-				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {
-					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {			//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
+					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//­Y¼Ä¤H³Qªý¾×¡A¥BblockCountÂk¹s¡A«h¸Ñ°£ªý¾×	
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
-
 					}
-					else if (enemy->isBlocked == false) {
+					else if (enemy->isBlocked == false) {												//­Y¼Ä¤H¥¼³Qªý¾×¡A«h²¾°Ê
 						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
 						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
-						enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
+						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
 				else {
-					if (!enemy->isBlocked && !enemy->isDead) {
+					if (!enemy->isBlocked && !enemy->isDead) {											//­Y¼Ä¤H¥¼³Qªý¾×¡A¥B¥¼¦º¤`¡A«hªý¾×¼Ä¤H
 						checkpointManager->registerEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = true;
-						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemie : "<< enemy->ID << endl);
+						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: "<< currentCheckpoint.blockCount << endl);
 					}
 				}
 			}
@@ -135,11 +136,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
+	operators.push_back(std::make_unique<Saria>());
 	operators.push_back(std::make_unique<Exusiai>());
 
 	SortOperator();
 
-	std::string enemyPath = "resources/map/enemyJSON/0-1_Enemy.JSON";
+	std::string enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 
 	try {
 		enemyManager.loadEnemyFromJson(enemyPath);
@@ -153,17 +155,14 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	auto& loadedEnemies = enemyManager.getEnemies();
 
 	for (auto& enemy : loadedEnemies) {
-		
 		vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
 		enemy->position.x = temp[0];
 		enemy->position.y = temp[1];
 		enemies.push_back(enemy);
-
-		DBOUT("Displaying enemies count in OnInit: " << enemies.size() << endl);
 	}
 
 	//¥H¤U¬°­p®É¾¹
-	mainTime = std::chrono::steady_clock::now();
+	mainTime = std::chrono::steady_clock::now();					//¤p°ÝÃD¡A¦b¿ïÃö¤¶­±´N·|±Ò°Ê¡A»Ý½Õ¾ã¡C
 	isGamePaused = false;
 }
 
@@ -211,22 +210,17 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 		case VK_RETURN:											//½T»{©ñ¸m
 			isConfirmingPlacement = false;
-			operators[selOpIdx]->isPlacing = true;
+			operators[selOpIdx]->isPlaced = true;
+			operators[selOpIdx]->isAlive = true;	
 			cost -= operators[selOpIdx]->cost;
 
-			Checkpoint* placedCheckpoint = &gameMapManager.getGameMap().checkpoint[nearLogicY][nearLogicX];
-			loadCKPTInfoByOperator(placedCheckpoint, *operators[selOpIdx]);
+			int logicX = operators[selOpIdx]->logicX;
+			int logicY = operators[selOpIdx]->logicY;
+			
+			checkpointManager->registerOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
 
 			selOpIdx = -1;
 			break;
-			
-			/*
-			DBOUT("Attack Range for Operator " << selOpIdx << ": ");
-			for (const auto& point : operators[selOpIdx]->attackRange) {
-				DBOUT("(" << point.x << ", " << point.y << ") ");
-			}
-			DBOUT(endl);*/
-
 		}
 	}
 }
@@ -237,7 +231,15 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 		if (selOpIdx >= 0) {
 			cost += operators[selOpIdx]->cost / 2;								//ºM°hªðÁÙ¤@¥bªº¶O¥Î
 			if(cost >= 99) cost = 99;
-			operators[selOpIdx]->Retreat();
+			
+			int logicX = operators[selOpIdx]->logicX;
+			int logicY = operators[selOpIdx]->logicY;
+
+			operators[selOpIdx]->ChangeOperatorState(OperatorState::IDLE);
+			operators[selOpIdx]->Retreat(*checkpointManager);
+			checkpointManager->unregisterOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
+
+			selOpIdx = -1;
 		}
 	}
 }
@@ -249,7 +251,7 @@ void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)					// ³B²z·Æ¹«ªº°Ê
 			if (operators[i]->CheckIfSelected(point)) {
 				selOpIdx = i;
 
-				if (cost >= operators[selOpIdx]->cost) {
+				if (cost >= operators[selOpIdx]->cost && operators[selOpIdx]->isPlaceable == true) {
 					DBOUT("The cost of operator is : " << operators[i]->cost << endl);
 					isDragging = true;
 				}
@@ -289,7 +291,7 @@ static bool CanPlaceOperator(const Operator* op, const Checkpoint& cp) {
 
 void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == false)
+	if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlaced == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
@@ -311,7 +313,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 		}
 		isDragging = false;
 	}
-	else if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlacing == true) {
+	else if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlaced == true) {
 		isDragging = false;
 	}
 	else if (isDragging) {
@@ -322,7 +324,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 
 void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
-	if (isDragging && operators[selOpIdx]->isPlacing == false)
+	if (isDragging && operators[selOpIdx]->isPlaced == false)
 	{
 		Checkpoint* nearestCheckpoint = FindNearestCheckpoint(point);
 		if (nearestCheckpoint != nullptr) {
@@ -358,7 +360,7 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 
 	for (auto& enemy : enemies) {
 		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		if(enemy->isDead == false){
+		if(enemy->isDead == false && enemy->isActive == true){
 			enemy->image.ShowBitmap();
 		}
 	}
@@ -384,17 +386,23 @@ void CGameStateRun::UpdateGameTime() {
 			lastCostUpdateTime = now;
 		}
 
-		objectInteraction.AttackPerform(operators, enemies, deltaTime.count() / 1000.0f, *checkpointManager);
-
-		/*
+		objectInteraction.OperatorAttackPerform(operators, enemies, deltaTime.count() / 1000.0f, *checkpointManager);
+		
 		for (auto& enemy : enemies) {
 			if (!enemy->isActive && gameTime.count() >= enemy->entryTime * 1000) {  
 				enemy->isActive = true;
-				enemy->EnterGame();												// °²³]§A¦³¤@­Ó EnterGame ¤èªk¨Ó³B²z¼Ä¤H¶i³õªºÅÞ¿è
-				DBOUT("Enemy with ID " << enemy->ID << " has entered the game at " << gameTime.count() << "ms." << std::endl);
+				enemy->EnterGame();												
 			}
 		}
-		*/
+
+		objectInteraction.EnemyAttackPerform(enemies, operators, deltaTime.count() / 1000.0f, *checkpointManager);
+
+		for (auto& op : operators) {
+			if (!op->isPlaceable) {
+				op->DeployCD(deltaTime.count() / 1000.0f);
+				DBOUT("Operator code : " << op->operatorName << " need " << op->DeployTime - op->DeployTimer << " to redeploed." << endl)
+			}
+		}
 	}
 }
 
@@ -489,27 +497,10 @@ void CGameStateRun::RemoveDeadEnemy()				//²¾°£¦º¤`ªº¼Ä¤H
 
 }
 
-void CGameStateRun::RemoveDeadOperator()			//²¾°£¦º¤`ªº·F­û
-{
-	operators.erase(std::remove_if(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& op) {
-		return op->operatorStatus == OperatorState::DEAD;
-		}), operators.end());
-
-	SortOperator();
-}
-
 void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
 {
 	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
 		{
 			return a->cost > b->cost;
 		});
-}
-
-void CGameStateRun::loadCKPTInfoByOperator(Checkpoint* checkpoint, const Operator& op) {	// §ó·scheckpointªº¸ê°T	
-	if (checkpoint) {
-		checkpoint->occupied = true;  
-		checkpoint->blockCount += op.blockCounts;  
-		DBOUT("The CKPT " << checkpoint->logicX << "," << checkpoint->logicY << " has blockCounts " << checkpoint->blockCount << endl);
-	}
 }

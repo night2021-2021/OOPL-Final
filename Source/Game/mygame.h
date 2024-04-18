@@ -140,9 +140,6 @@ namespace game_framework {
 
 		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
 
-		void loadCKPTInfoByOperator(Checkpoint* checkpoint, const Operator& op); // 更新checkpoint的資訊
-
-
 	protected:
 		void OnMove();											// 移動遊戲元素
 		void OnShow();											// 顯示這個狀態的遊戲畫面
@@ -167,8 +164,8 @@ namespace game_framework {
 		std::chrono::duration<float, std::milli> gameTime;
 		std::chrono::steady_clock::time_point lastUpdateTime;
 		std::chrono::steady_clock::time_point lastCostUpdateTime;
+
 		void RemoveDeadEnemy();
-		void RemoveDeadOperator();
 		void SortOperator();	
 	};
 

@@ -8,7 +8,7 @@ namespace game_framework
     {
     public:
         Reed()
-        : Operator(1135, 362, 109, 1, 12, 10, 35, 2.85f, OperatorClass::Medic) {
+        : Operator(1135, 362, 109, 1, 12, 10, 35, 1.85f, OperatorClass::Medic, "Reed") {
 
             headImage.LoadBitmapByString({ "resources/characters/operators/Reed/Reed_Head.bmp" }, RGB(255, 255, 255));
             position.SetPoint(1080, 720);

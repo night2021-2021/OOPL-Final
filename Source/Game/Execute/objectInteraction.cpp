@@ -14,9 +14,9 @@
 
 namespace game_framework
 {
-    void ObjectInteraction::AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime, CheckpointManager& checkpointManager) {
+    void ObjectInteraction::OperatorAttackPerform(std::vector<std::unique_ptr<Operator>>& operators, std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime, CheckpointManager& checkpointManager) {
         for (auto& operatorPtr : operators) {
-            if (!operatorPtr->isPlacing)
+            if (!operatorPtr->isPlaced)
             {
 				continue;
 			}
@@ -25,10 +25,10 @@ namespace game_framework
             if (operatorPtr->attackCD >= operatorPtr->attackSpeed) {
                 bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK    (Operator can cattack and only attack one enemy at same time.)
                 for (auto& enemyPtr : enemies) {      
-                    if (RangeCheck(operatorPtr.get(), enemyPtr.get())) {
+                    if (OperatorRangeCheck(operatorPtr.get(), enemyPtr.get())) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
-                        int damage = DamageCount(operatorPtr.get(), enemyPtr.get());
-                        DamagePerform(damage, enemyPtr.get(), checkpointManager);
+                        int damage = OperatorDamageCount(operatorPtr.get(), enemyPtr.get());
+                        OperatorDamagePerform(damage, enemyPtr.get(), checkpointManager);
                         operatorPtr->attackCD = 0.0f;
                         isAttack = true;
                         break;
@@ -41,7 +41,7 @@ namespace game_framework
         }
     }
 
-    bool ObjectInteraction::RangeCheck(const Operator* op, const Enemy* enemy) {
+    bool ObjectInteraction::OperatorRangeCheck(const Operator* op, const Enemy* enemy) {
 
         auto& enemyPos = enemy->trajectory[enemy->positionIndex];
         int enemyX = enemyPos[0];
@@ -56,17 +56,62 @@ namespace game_framework
         return false;
 	}
 
-    int ObjectInteraction::DamageCount(const Operator* op, const Enemy* enemy) {
-        return op->atk - enemy->def;
+    int ObjectInteraction::OperatorDamageCount(const Operator* op, const Enemy* enemy) {
+        return max(op->atk - enemy->def, 1);
     }
 
-    void ObjectInteraction::DamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
+    void ObjectInteraction::OperatorDamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
         if (enemy->hp > 0) {
             enemy->hp -= damage;
         }
         else {
             enemy->Dead(checkpointManager);
         }
-        //DBOUT("The enemy index" << enemy->ID << "'s HP is :" << enemy->hp << endl);
+        DBOUT("The enemy index " << enemy->ID << "'s HP is :" << enemy->hp << endl);
     }
+
+    //The operator attack enemy
+    //-----------------------------------------------------------------------------------------------------------
+    //The enemy attack operator
+
+    void ObjectInteraction::EnemyAttackPerform(std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Operator>>& operators, float deltaTime, CheckpointManager& checkpointManager) {
+        for (auto& enemyPtr : enemies) {
+            if (enemyPtr->isDead || !enemyPtr->isActive) continue;             //Jump loop while enemy dead or not active                                  
+
+            enemyPtr->attackCD += deltaTime;
+            if (enemyPtr->attackCD >= enemyPtr->attackSpeed) {
+                for (auto& operatorPtr : operators) {
+                    if (EnemyRangeCheck(operatorPtr.get(), enemyPtr.get())) {                  
+                        enemyPtr->ChangeEnemyState(EnemyState::ATTACK);                 
+                        int damage = EnemyDamageCount(operatorPtr.get(), enemyPtr.get());      
+                        EnemyDamagePerform(damage, operatorPtr.get(), checkpointManager);
+                        enemyPtr->attackCD = 0.0f;                                      
+                        break;                                                          
+                    }
+                }
+            }
+        }
+    }
+
+    bool ObjectInteraction::EnemyRangeCheck(const Operator* op, const Enemy* enemy) {
+        if (op->logicX == enemy->logicX && op->logicY == enemy->logicY && op->isPlaced)
+            return true;
+        return false;
+    }
+
+    int ObjectInteraction::EnemyDamageCount(const Operator* op, const Enemy* enemy) {
+        return max(enemy->atk - op->def, 1);
+    }
+
+    void ObjectInteraction::EnemyDamagePerform(int damage, Operator* op, CheckpointManager& checkpointManager) {
+        if (op->isAlive) {
+            if (op->hp > 0) {
+			    op->hp -= damage;
+		    }
+            else {
+			    op->Retreat(checkpointManager);
+		    }
+            DBOUT("The operator's HP is :" << op->hp << endl);
+        }
+	}
 }

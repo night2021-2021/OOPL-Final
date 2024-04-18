@@ -16,13 +16,16 @@ namespace game_framework {
 	class Enemy : public Character 
 	{
 	public:
-		CMovingBitmap image;	
+		CMovingBitmap image;
+		CMovingBitmap MoveImage;
+		CMovingBitmap AttackImage;
 		CPoint position;				//The real position(pixel)
 		int ID;
 		int sp;
 		int blockCount;	
 		int logicX, logicY;					//The logic position in the map
 		float moveSpeed;
+		float attackCD;
 		std::vector<std::vector<int>> trajectory; 		// Moving path
 		EnemyType enemyType;  
 		EnemyState enemyState; 
@@ -34,7 +37,7 @@ namespace game_framework {
 		size_t  positionIndex;				//The index of the current position in the trajectory
 
 		Enemy(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, int TIME)
-			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE), entryTime(TIME)
+			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE), entryTime(TIME), attackCD(0)
 		{
 			hp = MAX_HP;
 			positionIndex = 1;
@@ -43,6 +46,12 @@ namespace game_framework {
 		void EnterGame();
 		void Move(std::vector<int> originalPosition, std::vector<int> nextPosition, CheckpointManager& checkpointManager);
 		void Dead(CheckpointManager& checkpointManager);
+		void ChangeEnemyState(EnemyState newState);
+		void ChangeImages();
+
+		//Enemy's Load Images
+		virtual void LoadImages() {};
+		virtual void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {};
 	};
 }
 

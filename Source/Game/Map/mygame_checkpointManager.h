@@ -6,14 +6,24 @@ namespace game_framework {
     public:
         CheckpointManager(GameMap& gameMap) : gameMap(gameMap) {}
 
-        void registerEnemyAtCheckpoint(int x, int y, int blockCount) {
+        void registerEnemyAtCheckpoint(int x, int y, int enemyBlockCount) {
             Checkpoint& checkpoint = this->gameMap.checkpoint[y][x];
-            checkpoint.enemyCount += blockCount;
+            checkpoint.enemyCount += enemyBlockCount;
         }
 
-        void unregisterEnemyAtCheckpoint(int x, int y, int blockCount) {
+        void unregisterEnemyAtCheckpoint(int x, int y, int enemyBlockCount) {
             Checkpoint& checkpoint = this->gameMap.checkpoint[y][x];
-            checkpoint.enemyCount -= blockCount;
+            if(checkpoint.enemyCount > 0)checkpoint.enemyCount -= enemyBlockCount;
+        }
+
+        void registerOperatorAtCheckpoint(int x, int y, int operatorBlockCount) {
+            Checkpoint& checkpoint = this->gameMap.checkpoint[y][x];
+            checkpoint.blockCount += operatorBlockCount;
+        }
+
+        void unregisterOperatorAtCheckpoint(int x, int y, int operatorBlockCount) {
+            Checkpoint& checkpoint = this->gameMap.checkpoint[y][x];
+            checkpoint.blockCount -= operatorBlockCount;
         }
 
         Checkpoint& getCheckpoint(int x, int y) {

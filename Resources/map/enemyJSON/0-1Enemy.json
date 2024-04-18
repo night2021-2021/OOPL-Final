@@ -261,7 +261,7 @@
           "time": 46
       },
       {
-        "ID": 10,
+        "ID": 11,
         "MaxHP": 1650,
         "ATK": 200,
         "DEF": 100,
@@ -287,7 +287,7 @@
             [1, 1],
             [0, 1]
         ],
-        "type": "SOLDIER_NORMAL",
+        "type": "BUG_NORMAL",
         "time": 55
     }
   ]

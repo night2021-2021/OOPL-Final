@@ -3,6 +3,8 @@
 
 #include <string>
 #include <vector>
+
+#include "../Library/gameutil.h"
 #include "../nlohmann/json.hpp"
 
 namespace game_framework
@@ -13,7 +15,7 @@ namespace game_framework
         bool placeable;             
         bool occupied;              
         int enemyCount;
-        int blockCount;
+        int blockCount;         //operator block count
         int visualX, visualY;   //pixel
         int logicX, logicY;     //logic
         std::string CKPTType;       
