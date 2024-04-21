@@ -1032,5 +1032,4 @@ namespace game_framework {
 		OnMove();
 		OnShow();
 	}
-
 }

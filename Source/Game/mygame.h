@@ -48,6 +48,12 @@
 
 namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
+	// 地圖選擇指標
+	/////////////////////////////////////////////////////////////////////////////
+
+	extern int selectedMapIndex;
+	
+	/////////////////////////////////////////////////////////////////////////////
 	// Constants
 	/////////////////////////////////////////////////////////////////////////////
 
@@ -68,6 +74,7 @@ namespace game_framework {
 		void OnInit();  								// 遊戲的初值及圖形設定
 		void OnBeginState();							// 設定每次重玩所需的變數
 		void OnKeyUp(UINT, UINT, UINT); 				// 處理鍵盤Up的動作
+		void OnMouseMove(UINT nFlags, CPoint point);			// 處理滑鼠的動作 
 		void OnLButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -78,36 +85,7 @@ namespace game_framework {
 		int state = 0; 	//0: 水月  1:星空  2:遊戲開始
 		CMovingBitmap firstbackground;
 		CMovingBitmap secondbackground;
-		CMovingBitmap button1;
-		CMovingBitmap button2;
-		CMovingBitmap button3;
-		CMovingBitmap button4;
-		CMovingBitmap button5;
-		CMovingBitmap button6;
-		CMovingBitmap button7;
-		CMovingBitmap button8;
-		CMovingBitmap button9;
-		CMovingBitmap button10;
-		CMovingBitmap button11;
-		CMovingBitmap button12;
-		CMovingBitmap button13;
-		CMovingBitmap button14;
-		CMovingBitmap button15;
-		CMovingBitmap button16;
-		CMovingBitmap button17;
-		CMovingBitmap button18;
-		CMovingBitmap button19;
-		CMovingBitmap button20;
-		CMovingBitmap button21;
-		CMovingBitmap button22;
-		CMovingBitmap button23;
-		CMovingBitmap button24;
-		CMovingBitmap button25;
-		CMovingBitmap button26;
-		CMovingBitmap button27;
-		CMovingBitmap button28;
-		CMovingBitmap button29;
-		CMovingBitmap button30;
+		CMovingBitmap buttons[30];
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

@@ -40,6 +40,7 @@ using namespace game_framework;
 const int deviationX = 120;
 const int deviationY = 180;
 
+
 EnemyManager enemyManager;
 GameMapManager gameMapManager;
 
@@ -53,10 +54,14 @@ CGameStateRun::CGameStateRun(CGame* g) : CGameState(g)
 
 CGameStateRun::~CGameStateRun()
 {
+
 }
 
 void CGameStateRun::OnBeginState()
 {
+	//¥H¤U¬°­p®É¾¹
+	mainTime = std::chrono::steady_clock::now();					
+	isGamePaused = false;
 }
 
 void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
@@ -74,7 +79,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
 				enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
 
-				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {			//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {					//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
 					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//­Y¼Ä¤H³Qªý¾×¡A¥BblockCountÂk¹s¡A«h¸Ñ°£ªý¾×	
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
@@ -161,9 +166,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		enemies.push_back(enemy);
 	}
 
-	//¥H¤U¬°­p®É¾¹
-	mainTime = std::chrono::steady_clock::now();					//¤p°ÝÃD¡A¦b¿ïÃö¤¶­±´N·|±Ò°Ê¡A»Ý½Õ¾ã¡C
-	isGamePaused = false;
+
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
