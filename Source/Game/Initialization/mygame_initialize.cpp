@@ -82,13 +82,13 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 		for (int i = 0; i < 30; ++i) {
 			int row = i / 6;
 			int col = i % 6;
-			int x = topX + col * (buttonWidth + 25);
-			int y = topY + row * (buttonHeight + 25);
+			int x = topX + col * buttonWidth;
+			int y = topY + row * buttonHeight;
 
-			if (point.x >= x && point.x <= x + buttonWidth &&
-				point.y >= y && point.y <= y + buttonHeight) {
-				selectedMapIndex = i;  // 設置地圖索引
-				GotoGameState(GAME_STATE_RUN);  // 切換至 GAME_STATE_RUN
+			if (point.x >= x && point.x <= x + buttonWidth - 50 &&
+				point.y >= y && point.y <= y + buttonHeight - 50) {
+				selectedMapIndex = i;									// 設置地圖索引
+				GotoGameState(GAME_STATE_RUN);							// 切換至 GAME_STATE_RUN
 				DBOUT("You choose the " << selectedMapIndex + 1 << " maps. " << endl);
 				return;
 			}

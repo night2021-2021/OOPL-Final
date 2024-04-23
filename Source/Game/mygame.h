@@ -44,6 +44,7 @@
 #include "../Game/Map/mygame_mapManager.h"
 #include "../Game/Map/mygame_checkpointManager.h"
 #include "../Game/Execute/objectInteraction.h"
+#include "Execute/mygame_text.h"
 #include <chrono>
 
 namespace game_framework {
@@ -124,13 +125,13 @@ namespace game_framework {
 
 	private:
 		CMovingBitmap background;
+		TextRenderer textRenderer;
 		std::vector<std::unique_ptr<Operator>> operators;
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
 		ObjectInteraction objectInteraction;
 		std::unique_ptr<CheckpointManager> checkpointManager;
-		void textShow();
 		int cost;
 		int selOpIdx;
 		int nearLogicX;

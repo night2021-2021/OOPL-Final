@@ -278,6 +278,7 @@
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Saria\Saria.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
+    <ClInclude Include="Source\Game\Execute\mygame_text.h" />
     <ClInclude Include="Source\Game\Execute\objectInteraction.h" />
     <ClInclude Include="Source\Game\Map\mygame_checkpointManager.h" />
     <ClInclude Include="Source\Game\Map\mygame_mapAndCheckpoint.h" />

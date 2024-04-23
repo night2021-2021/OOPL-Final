@@ -23,6 +23,7 @@
 #include <Windows.h>
 #include <sstream>
 #include <algorithm>	
+#include <iomanip>
 
 #define NOMINMAX
 #define DBOUT( s )            \
@@ -166,7 +167,8 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		enemies.push_back(enemy);
 	}
 
-
+	//ªì©l¤Æ¤å¦r
+	textRenderer.Init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -345,11 +347,19 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
+static std::string formatFloat(float value) {
+	std::ostringstream stream;
+	stream << std::fixed << std::setprecision(2) << value;
+	return stream.str();
+}
+
 void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
-	textShow();
+	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528);
+
 	int locateFirst = 1150;
+	int locateSecond = 1150;
 
 	for (auto& op : operators) {
 		op->headImage.SetTopLeft(locateFirst, 605);
@@ -370,6 +380,15 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
+	}
+
+	for (auto& op : operators) {
+		if (!op->isAlive) {
+			float remainingTime = op->DeployTime - op->DeployTimer;
+			std::string timeText = formatFloat(remainingTime);
+			textRenderer.ShowText(timeText, locateSecond, 605);
+		}
+		locateSecond -= 100;
 	}
 
 	//®É¶¡¶b
@@ -423,14 +442,6 @@ void CGameStateRun::ResumeGame() {
 		isGamePaused = false;											// ¹CÀ¸¤£¦A¬O¼È°±ª¬ºA
 		lastUpdateTime = std::chrono::steady_clock::now();				// ­«¸m lastUpdateTime ¬°²{¦b
 	}
-}
-
-void CGameStateRun::textShow() {
-	CDC* pDC = CDDraw::GetBackCDC();
-	CTextDraw::ChangeFontLog(pDC, 40, "·L³n¥¿¶ÂÅé", RGB(255, 255, 255), 800);
-	std::string costStr = "Cost: " + std::to_string(cost);
-	CTextDraw::Print(pDC, 1100, 528, costStr.c_str());
-	CDDraw::ReleaseBackCDC();
 }
 
 Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
@@ -507,3 +518,5 @@ void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
 			return a->cost > b->cost;
 		});
 }
+
+
