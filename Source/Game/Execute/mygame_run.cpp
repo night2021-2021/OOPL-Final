@@ -166,9 +166,6 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		enemy->position.y = temp[1];
 		enemies.push_back(enemy);
 	}
-
-	//ªì©l¤Æ¤å¦r
-	textRenderer.Init();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -349,7 +346,7 @@ void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 
 static std::string formatFloat(float value) {
 	std::ostringstream stream;
-	stream << std::fixed << std::setprecision(2) << value;
+	stream << std::fixed << std::setprecision(1) << value;
 	return stream.str();
 }
 
@@ -383,10 +380,13 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 	}
 
 	for (auto& op : operators) {
-		if (!op->isAlive) {
+		if (!op->isAlive && op->DeployTimer != 0) {
 			float remainingTime = op->DeployTime - op->DeployTimer;
 			std::string timeText = formatFloat(remainingTime);
 			textRenderer.ShowText(timeText, locateSecond, 605);
+		}
+		else if (!op->isAlive && op->DeployTimer == 0) {
+			textRenderer.ShowText(" ", locateSecond, 605);
 		}
 		locateSecond -= 100;
 	}

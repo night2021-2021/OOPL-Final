@@ -36,7 +36,6 @@ void CGameStateInit::OnInit()
 	loadsecondbackground();
 	state = 0;
 	ShowInitProgress(33, "Initialize...");    
-	ShowInitProgress(66, "Initialize...");
 	//
 	// 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
 	//
@@ -107,7 +106,7 @@ void CGameStateInit::OnShow()
 	{
 		firstbackground.ShowBitmap();
 	}
-	else if(state == 1)
+	else if(state >= 1)
 	{
 		secondbackground.ShowBitmap();
 		for (int i = 0; i < 30; i++) {

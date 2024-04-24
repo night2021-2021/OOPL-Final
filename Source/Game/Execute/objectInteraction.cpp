@@ -25,7 +25,7 @@ namespace game_framework
             if (operatorPtr->attackCD >= operatorPtr->attackSpeed) {
                 bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK    (Operator can cattack and only attack one enemy at same time.)
                 for (auto& enemyPtr : enemies) {      
-                    if (OperatorRangeCheck(operatorPtr.get(), enemyPtr.get())) {
+                    if (OperatorRangeCheck(operatorPtr.get(), enemyPtr.get()) && !enemyPtr->isDead) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
                         int damage = OperatorDamageCount(operatorPtr.get(), enemyPtr.get());
                         OperatorDamagePerform(damage, enemyPtr.get(), checkpointManager);
