@@ -152,19 +152,18 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	try {
 		enemyManager.loadEnemyFromJson(enemyPath);
 		DBOUT("Success of enemy file open." << endl);
+		//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+		auto& loadedEnemies = enemyManager.getEnemies();
+
+		for (auto& enemy : loadedEnemies) {
+			vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
+			enemy->position.x = temp[0];
+			enemy->position.y = temp[1];
+			enemies.push_back(enemy);
+		}
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of enemy file open." << e.what());
-	}
-
-	//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
-	auto& loadedEnemies = enemyManager.getEnemies();
-
-	for (auto& enemy : loadedEnemies) {
-		vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
-		enemy->position.x = temp[0];
-		enemy->position.y = temp[1];
-		enemies.push_back(enemy);
 	}
 }
 
@@ -422,7 +421,6 @@ void CGameStateRun::UpdateGameTime() {
 		for (auto& op : operators) {
 			if (!op->isPlaceable) {
 				op->DeployCD(deltaTime.count() / 1000.0f);
-				DBOUT("Operator code : " << op->operatorName << " need " << op->DeployTime - op->DeployTimer << " to redeploed." << endl)
 			}
 		}
 	}
