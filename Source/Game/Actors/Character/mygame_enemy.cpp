@@ -30,6 +30,7 @@ namespace  game_framework {
             if (this->position.x == nextPixelX && this->position.y == nextPixelY) {     //If the enemy reaches the next position
                 if (this->positionIndex + 1 == this->trajectory.size() - 1) {		    //Go to blue door 
                     Dead(checkpointManager);
+                    onReachBlueDoor();
 
                 } else {
                     this->logicX = this->trajectory[this->positionIndex + 1][0];
@@ -41,7 +42,6 @@ namespace  game_framework {
 	}
 
     void Enemy::Dead(CheckpointManager& checkpointManager) {
-		//this->image.UnshowBitmap();
         this->enemyState = EnemyState::DEAD;
 		this->isDead = true;
         checkpointManager.unregisterEnemyAtCheckpoint(this->logicX, this->logicY, this->blockCount);

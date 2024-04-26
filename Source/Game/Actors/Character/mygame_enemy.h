@@ -6,6 +6,7 @@
 #include "../Game/Map/mygame_checkpointManager.h"
 #include "../../../Library/gameutil.h"
 #include <vector>
+#include <functional>
 
 namespace game_framework {
 
@@ -52,6 +53,9 @@ namespace game_framework {
 		//Enemy's Load Images
 		virtual void LoadImages() {};
 		virtual void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {};
+		
+		//While enemy reach blue door
+		std::function<void()> onReachBlueDoor;
 	};
 }
 
