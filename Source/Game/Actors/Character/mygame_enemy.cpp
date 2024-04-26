@@ -41,7 +41,7 @@ namespace  game_framework {
 	}
 
     void Enemy::Dead(CheckpointManager& checkpointManager) {
-		this->image.UnshowBitmap();
+		//this->image.UnshowBitmap();
         this->enemyState = EnemyState::DEAD;
 		this->isDead = true;
         checkpointManager.unregisterEnemyAtCheckpoint(this->logicX, this->logicY, this->blockCount);

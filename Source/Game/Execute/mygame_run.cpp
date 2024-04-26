@@ -422,7 +422,7 @@ void CGameStateRun::UpdateGameTime() {
 		for (auto& op : operators) {
 			if (!op->isPlaceable) {
 				op->DeployCD(deltaTime.count() / 1000.0f);
-				DBOUT("Operator code : " << op->operatorName << " need " << op->DeployTime - op->DeployTimer << " to redeploed." << endl)
+				//DBOUT("Operator code : " << op->operatorName << " need " << op->DeployTime - op->DeployTimer << " to redeploed." << endl)
 			}
 		}
 	}
