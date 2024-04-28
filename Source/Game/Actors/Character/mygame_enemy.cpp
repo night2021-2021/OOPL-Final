@@ -71,4 +71,8 @@ namespace  game_framework {
 			break;
 		}
 	}
+
+	void Enemy::onReachBlueDoor() {
+
+	}
 }
