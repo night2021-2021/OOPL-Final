@@ -55,7 +55,7 @@ namespace game_framework {
 		virtual void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {};
 		
 		//While enemy reach blue door
-		std::function<void()> onReachBlueDoor;
+		void onReachBlueDoor();
 	};
 }
 

@@ -27,8 +27,10 @@ namespace game_framework
                 for (auto& enemyPtr : enemies) {      
                     if (OperatorRangeCheck(operatorPtr.get(), enemyPtr.get()) && !enemyPtr->isDead) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
+
                         int damage = OperatorDamageCount(operatorPtr.get(), enemyPtr.get());
                         OperatorDamagePerform(damage, enemyPtr.get(), checkpointManager);
+
                         operatorPtr->attackCD = 0.0f;
                         isAttack = true;
                         break;
@@ -62,12 +64,9 @@ namespace game_framework
 
     void ObjectInteraction::OperatorDamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
         DBOUT("The enemy index " << enemy->ID << "'s HP is :" << enemy->hp << endl);
-        if (enemy->hp > 0) {
-            enemy->hp -= damage;
-        }
-        else {
+		enemy->hp -= damage;
+        if (enemy->hp <= 0) 
             enemy->Dead(checkpointManager);
-        }
     }
 
     //The operator attack enemy

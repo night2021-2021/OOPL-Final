@@ -43,6 +43,7 @@ namespace  game_framework {
 
     void Enemy::Dead(CheckpointManager& checkpointManager) {
         this->enemyState = EnemyState::DEAD;
+		this->isActive = false; 
 		this->isDead = true;
         checkpointManager.unregisterEnemyAtCheckpoint(this->logicX, this->logicY, this->blockCount);
 	}
@@ -70,5 +71,9 @@ namespace  game_framework {
 		case EnemyState::DEAD:
 			break;
 		}
+	}
+
+	void Enemy::onReachBlueDoor() {
+
 	}
 }
