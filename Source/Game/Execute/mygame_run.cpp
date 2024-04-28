@@ -36,7 +36,7 @@
 using namespace game_framework;
 
 /////////////////////////////////////////////////////////////////////////////
-// ï¿½oï¿½ï¿½classï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½æª«ï¿½ï¿½Aï¿½Dï¿½nï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½oï¿½ï¿½
+// ³o­Óclass¬°¹CÀ¸ªº¹CÀ¸°õ¦æª«¥ó¡A¥D­nªº¹CÀ¸µ{¦¡³£¦b³o¸Ì
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 120;
 const int deviationY = 180;
@@ -50,7 +50,7 @@ CGameStateRun::CGameStateRun(CGame* g) : CGameState(g)
 {
 	mainTime = std::chrono::steady_clock::now();
 	lastUpdateTime = mainTime;
-	gameTime = std::chrono::steady_clock::duration::zero();		//ï¿½wï¿½pï¿½Rï¿½ï¿½
+	gameTime = std::chrono::steady_clock::duration::zero();		//¹w­p§R°£
 }
 
 CGameStateRun::~CGameStateRun()
@@ -60,12 +60,12 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
-	//ï¿½Hï¿½Uï¿½ï¿½ï¿½pï¿½É¾ï¿½
+	//¥H¤U¬°­p®É¾¹
 	mainTime = std::chrono::steady_clock::now();					
 	isGamePaused = false;
 }
 
-void CGameStateRun::OnMove()                            // ï¿½ï¿½ï¿½Ê¹Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 {
 	if (!enemies.empty()) {
 		for (auto& enemy : enemies)
@@ -80,19 +80,19 @@ void CGameStateRun::OnMove()                            // ï¿½ï¿½ï¿½Ê¹Cï¿½ï¿½ï¿½
 				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
 				enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
 
-				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {					//ï¿½Yï¿½ï¿½checkpointï¿½ï¿½blockCount - enemyCount <= 0ï¿½Aï¿½hï¿½Ä¤Hï¿½iï¿½Hï¿½qï¿½L
-					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//ï¿½Yï¿½Ä¤Hï¿½Qï¿½ï¿½ï¿½×¡Aï¿½BblockCountï¿½kï¿½sï¿½Aï¿½hï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½	
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {					//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
+					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//­Y¼Ä¤H³Qªý¾×¡A¥BblockCountÂk¹s¡A«h¸Ñ°£ªý¾×	
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
 					}
-					else if (enemy->isBlocked == false) {												//ï¿½Yï¿½Ä¤Hï¿½ï¿½ï¿½Qï¿½ï¿½ï¿½×¡Aï¿½hï¿½ï¿½ï¿½ï¿½
+					else if (enemy->isBlocked == false) {												//­Y¼Ä¤H¥¼³Qªý¾×¡A«h²¾°Ê
 						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
 						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
 				else {
-					if (!enemy->isBlocked && !enemy->isDead) {											//ï¿½Yï¿½Ä¤Hï¿½ï¿½ï¿½Qï¿½ï¿½ï¿½×¡Aï¿½Bï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Aï¿½hï¿½ï¿½ï¿½×¼Ä¤H
+					if (!enemy->isBlocked && !enemy->isDead) {											//­Y¼Ä¤H¥¼³Qªý¾×¡A¥B¥¼¦º¤`¡A«hªý¾×¼Ä¤H
 						checkpointManager->registerEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = true;
 						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: "<< currentCheckpoint.blockCount << endl);
@@ -104,7 +104,7 @@ void CGameStateRun::OnMove()                            // ï¿½ï¿½ï¿½Ê¹Cï¿½ï¿½ï¿½
 	}
 }
 
-void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¤Î¹Ï§Î³]ï¿½w
+void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
 {
 	cost = 30;
 	selOpIdx = -1;										  //Selected Operator Index
@@ -134,7 +134,7 @@ void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 
 		checkpointManager = std::make_unique<CheckpointManager>(gameMapManager.getGameMap());
-		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½PFindNearestCheckpointï¿½ï¿½ï¿½ï¿½
+		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of file open." << e.what());
@@ -152,19 +152,21 @@ void CGameStateRun::OnInit()                              // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½
 	try {
 		enemyManager.loadEnemyFromJson(enemyPath);
 		DBOUT("Success of enemy file open." << endl);
-		//ï¿½Hï¿½Uï¿½ï¿½Åªï¿½Jï¿½Ä¤Hï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½X
-		auto& loadedEnemies = enemyManager.getEnemies();
+        //¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+        auto& loadedEnemies = enemyManager.getEnemies();
 
-		for (auto& enemy : loadedEnemies) {
-			vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
-			enemy->position.x = temp[0];
-			enemy->position.y = temp[1];
-			enemies.push_back(enemy);
-		}
+        for (auto& enemy : loadedEnemies) {
+            vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
+            enemy->position.x = temp[0];
+            enemy->position.y = temp[1];
+            enemies.push_back(enemy);
+        }
 	}
 	catch (std::exception& e) {
 		DBOUT("Error of enemy file open." << e.what());
 	}
+
+	
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -178,7 +180,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 		}
 	}
 
-	// ï¿½ï¿½ï¿½Uï¿½ï¿½Vï¿½ï¿½Ó§ï¿½ï¿½Ü·Fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½V
+	// «ö¤U¤è¦VÁä¨Ó§ïÅÜ·F­ûªº¤è¦V
 	if (selOpIdx != -1 && isConfirmingPlacement) {
 		switch (nChar) {
 		case VK_UP:
@@ -209,7 +211,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			ShowAttackRange();
 			break;
 
-		case VK_RETURN:											//ï¿½Tï¿½{ï¿½ï¿½m
+		case VK_RETURN:											//½T»{©ñ¸m
 			isConfirmingPlacement = false;
 			operators[selOpIdx]->isPlaced = true;
 			operators[selOpIdx]->isAlive = true;	
@@ -230,7 +232,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
 		if (selOpIdx >= 0) {
-			cost += operators[selOpIdx]->cost / 2;								//ï¿½Mï¿½hï¿½ï¿½ï¿½Ù¤@ï¿½bï¿½ï¿½ï¿½Oï¿½ï¿½
+			cost += operators[selOpIdx]->cost / 2;								//ºM°hªðÁÙ¤@¥bªº¶O¥Î
 			if(cost >= 99) cost = 99;
 			
 			int logicX = operators[selOpIdx]->logicX;
@@ -245,10 +247,10 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 	}
 }
 
-void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)					// ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnLButtonDown(UINT nFlags, CPoint point)					// ³B²z·Æ¹«ªº°Ê§@
 {
 	if (!isConfirmingPlacement) {
-		for (size_t i = 0; i < operators.size(); ++i) {							//ï¿½Mï¿½ï¿½operatorï¿½Mï¿½ï¿½clickï¿½ï¿½ï¿½ï¿½ï¿½ï¿½operator
+		for (size_t i = 0; i < operators.size(); ++i) {							//¹M¾úoperator´M§äclick¹ïÀ³ªºoperator
 			if (operators[i]->CheckIfSelected(point)) {
 				selOpIdx = i;
 
@@ -290,7 +292,7 @@ static bool CanPlaceOperator(const Operator* op, const Checkpoint& cp) {
 	}
 }
 
-void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging && selOpIdx != -1 && operators[selOpIdx]->isPlaced == false)
 	{
@@ -323,7 +325,7 @@ void CGameStateRun::OnLButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿
 	}
 }
 
-void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 	if (isDragging && operators[selOpIdx]->isPlaced == false)
 	{
@@ -335,11 +337,11 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿
 	}
 }
 
-void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
-void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ï¿½Bï¿½zï¿½Æ¹ï¿½ï¿½ï¿½ï¿½Ê§@
+void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 {
 }
 
@@ -349,7 +351,7 @@ static std::string formatFloat(float value) {
 	return stream.str();
 }
 
-void CGameStateRun::OnShow()								 // ï¿½ï¿½Ü¹Cï¿½ï¿½ï¿½eï¿½ï¿½	
+void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
 	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528);
@@ -390,7 +392,7 @@ void CGameStateRun::OnShow()								 // ï¿½ï¿½Ü¹Cï¿½ï¿½ï¿½eï¿½ï¿½
 		locateSecond -= 100;
 	}
 
-	//ï¿½É¶ï¿½ï¿½b
+	//®É¶¡¶b
 	UpdateGameTime();
 }
 
@@ -398,8 +400,8 @@ void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
 		std::chrono::duration<float, std::milli> deltaTime = now - lastUpdateTime;
-		gameTime += deltaTime;							// ï¿½uï¿½ï¿½ï¿½bï¿½ï¿½ï¿½È°ï¿½ï¿½É²Ö¿nï¿½Cï¿½ï¿½ï¿½É¶ï¿½
-		lastUpdateTime = now;							// ï¿½ï¿½s lastUpdateTime ï¿½ï¿½ï¿½Ø«eï¿½É¶ï¿½
+		gameTime += deltaTime;							// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
+		lastUpdateTime = now;							// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
@@ -421,28 +423,29 @@ void CGameStateRun::UpdateGameTime() {
 		for (auto& op : operators) {
 			if (!op->isPlaceable) {
 				op->DeployCD(deltaTime.count() / 1000.0f);
+				//DBOUT("Operator code : " << op->operatorName << " need " << op->DeployTime - op->DeployTimer << " to redeploed." << endl)
 			}
 		}
 	}
 }
 
-// ï¿½È°ï¿½ï¿½Cï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½ï¿½Ö¿n
+// ¼È°±¹CÀ¸¡A°±¤î¹CÀ¸®É¶¡ªº²Ö¿n
 void CGameStateRun::PauseGame() {
 	if (!isGamePaused) {
-		UpdateGameTime();												// ï¿½Tï¿½Oï¿½bï¿½È°ï¿½ï¿½eï¿½Cï¿½ï¿½ï¿½É¶ï¿½ï¿½Oï¿½Ì·sï¿½ï¿½
-		isGamePaused = true;											// ï¿½]ï¿½wï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½È°ï¿½ï¿½ï¿½ï¿½A
+		UpdateGameTime();												// ½T«O¦b¼È°±«e¹CÀ¸®É¶¡¬O³Ì·sªº
+		isGamePaused = true;											// ³]©w¹CÀ¸¬°¼È°±ª¬ºA
 	}
 }
 
-// ï¿½qï¿½È°ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½_ï¿½Cï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½\ï¿½Cï¿½ï¿½ï¿½É¶ï¿½ï¿½Aï¿½ï¿½ï¿½Ö¿n
+// ±q¼È°±ª¬ºA«ì´_¹CÀ¸¡A¤¹³\¹CÀ¸®É¶¡¦A¦¸²Ö¿n
 void CGameStateRun::ResumeGame() {
 	if (isGamePaused) {
-		isGamePaused = false;											// ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Oï¿½È°ï¿½ï¿½ï¿½ï¿½A
-		lastUpdateTime = std::chrono::steady_clock::now();				// ï¿½ï¿½ï¿½m lastUpdateTime ï¿½ï¿½ï¿½{ï¿½b
+		isGamePaused = false;											// ¹CÀ¸¤£¦A¬O¼È°±ª¬ºA
+		lastUpdateTime = std::chrono::steady_clock::now();				// ­«¸m lastUpdateTime ¬°²{¦b
 	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ï¿½ï¿½Xï¿½Ìªï¿½checkpoint	
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
@@ -450,7 +453,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ï¿½ï¿½Xï¿½Ìªï
 	nearLogicX = -1;
 	nearLogicY = -1;
 
-	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//ï¿½Tï¿½{ï¿½aï¿½Ï©ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Aï¿½POnInitï¿½ï¿½ï¿½ï¿½
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
 	for (int y = 0; y < gameMap.height; ++y) {
 		for (int x = 0; x < gameMap.width; ++x) {
@@ -468,7 +471,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// ï¿½ï¿½Xï¿½Ìªï
 }
 
 
-vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// ï¿½ï¿½Xï¿½oï¿½ï¿½logicï¿½ï¿½pixel
+vector<int> CGameStateRun::FindPixelFromLogic(int logicX, int logicY)		// §ä¥X³o­Ólogicªºpixel
 {
 	double minDistance = (std::numeric_limits<double>::max)();
 	auto& gameMap = gameMapManager.getGameMap();
@@ -501,7 +504,7 @@ void CGameStateRun::UnshowAttackRange() {
 	}
 }
 
-void CGameStateRun::RemoveDeadEnemy()				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½Ä¤H
+void CGameStateRun::RemoveDeadEnemy()				//²¾°£¦º¤`ªº¼Ä¤H
 {
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
 		return enemy->enemyState == EnemyState::DEAD;
@@ -509,12 +512,10 @@ void CGameStateRun::RemoveDeadEnemy()				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½Ä¤H
 
 }
 
-void CGameStateRun::SortOperator()					//ï¿½Æ§Ç·Fï¿½ï¿½
+void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
 {
 	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
 		{
 			return a->cost > b->cost;
 		});
 }
-
-
