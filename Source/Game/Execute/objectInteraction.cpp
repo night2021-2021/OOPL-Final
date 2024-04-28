@@ -61,11 +61,11 @@ namespace game_framework
     }
 
     void ObjectInteraction::OperatorDamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
-        DBOUT("The enemy index " << enemy->ID << "'s HP is :" << enemy->hp << endl);
         enemy->hp -= damage;
         if (enemy->hp <= 0) {
             enemy->Dead(checkpointManager);
         }
+        DBOUT("The enemy index " << enemy->ID << "'s HP is :" << enemy->hp << ". And It's " << enemy->enemyState << endl);
     }
 
     //The operator attack enemy
