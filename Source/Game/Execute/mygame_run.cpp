@@ -85,7 +85,7 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
 					}
-					else if (enemy->isBlocked == false) {												//若敵人未被阻擋，則移動
+					else if (enemy->isBlocked == false && !enemy->isDead) {												//若敵人未被阻擋，則移動	//這裡加了敵人死亡才能繼續執行的條件
 						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
 						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
