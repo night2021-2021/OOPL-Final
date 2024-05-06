@@ -40,6 +40,12 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 120;
 const int deviationY = 180;
+int enemyCount = 0;
+int life = 3;
+
+TextFormat CGameStateRun::costTextFormat(40, RGB(255, 255, 255), 300, "Segoe UI");
+TextFormat CGameStateRun::lifeTextFormat(40, RGB(255, 255, 255), 500, "Segoe UI");
+TextFormat CGameStateRun::remainTextFormat(50, RGB(255, 255, 255), 500, "Segoe UI");
 
 
 EnemyManager enemyManager;
@@ -166,7 +172,7 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 		DBOUT("Error of enemy file open." << e.what());
 	}
 
-	
+	enemyCount = enemies.size();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -354,7 +360,8 @@ static std::string formatFloat(float value) {
 void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
 {
 	background.ShowBitmap();
-	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528);
+	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528, costTextFormat);
+	
 
 	int locateFirst = 1150;
 	int locateSecond = 1150;
@@ -376,6 +383,8 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 		}
 	}
 
+	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount), 600, 0, lifeTextFormat);
+
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
 	}
@@ -384,10 +393,10 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 		if (!op->isAlive && op->DeployTimer != 0) {
 			float remainingTime = op->DeployTime - op->DeployTimer;
 			std::string timeText = formatFloat(remainingTime);
-			textRenderer.ShowText(timeText, locateSecond, 605);
+			textRenderer.ShowText(timeText, locateSecond + 25, 630, remainTextFormat);
 		}
 		else if (!op->isAlive && op->DeployTimer == 0) {
-			textRenderer.ShowText(" ", locateSecond, 605);
+			textRenderer.ShowText(" ", locateSecond + 25, 630, remainTextFormat);
 		}
 		locateSecond -= 100;
 	}
