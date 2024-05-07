@@ -376,6 +376,8 @@ void CGameStateRun::OnShow()								 // 顯示遊戲畫面
 		}
 	}
 
+	//當敵人受到傷害貼上受傷特效
+
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
 	}
