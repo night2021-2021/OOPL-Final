@@ -119,6 +119,16 @@ namespace game_framework {
 
 		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
 
+		static TextFormat costTextFormat;						// 用來顯示cost的文字格式
+		static TextFormat lifeTextFormat;						// 用來顯示life的文字格式
+		static TextFormat remainTextFormat;						// 用來顯示remain(再部屬時間)的文字格式
+
+		static int lifePoint;									// 生命值
+
+		static void decreaseLifePoint() {						// 減少生命值
+			if(lifePoint>0)lifePoint--;
+		}						
+
 	protected:
 		void OnMove();											// 移動遊戲元素
 		void OnShow();											// 顯示這個狀態的遊戲畫面
@@ -126,6 +136,8 @@ namespace game_framework {
 	private:
 		CMovingBitmap background;
 		TextRenderer textRenderer;
+		TextFormat defaultTextFormat;
+		
 		std::vector<std::unique_ptr<Operator>> operators;
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
