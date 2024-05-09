@@ -69,6 +69,20 @@ void CGameStateRun::OnBeginState()
 	//以下為計時器
 	mainTime = std::chrono::steady_clock::now();					
 	isGamePaused = false;
+
+	//以下為音效
+	/*
+	CAudio* audio = CAudio::Instance();
+	if (audio != nullptr) {
+		unsigned int soundId = 0;
+		if (audio->Load(soundId, "resources/music/ost/0_1.mp3")) {
+			audio->Play(soundId, true);
+		}
+		else {
+			std::cerr << "Failed to load audio." << std::endl;
+		}
+	}
+	*/
 }
 
 void CGameStateRun::OnMove()                            // 移動遊戲元素
