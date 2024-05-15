@@ -71,7 +71,6 @@ void CGameStateRun::OnBeginState()
 	isGamePaused = false;
 
 	//以下為音效
-	/*
 	CAudio* audio = CAudio::Instance();
 	if (audio != nullptr) {
 		unsigned int soundId = 0;
@@ -82,7 +81,7 @@ void CGameStateRun::OnBeginState()
 			std::cerr << "Failed to load audio." << std::endl;
 		}
 	}
-	*/
+	
 }
 
 void CGameStateRun::OnMove()                            // 移動遊戲元素
@@ -120,6 +119,7 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 				}
 			}
 		}
+		DecreaseLife();
 		RemoveDeadEnemy();
 	}
 }
@@ -526,13 +526,29 @@ void CGameStateRun::UnshowAttackRange() {
 	}
 }
 
+void CGameStateRun::DecreaseLife() {				//進藍門-1HP
+	auto blueDoorEnemyIt = std::find_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
+		return enemy->enemyState == EnemyState::BLUE_DOOR;
+		});
+
+	if (blueDoorEnemyIt != enemies.end()) {
+
+		(*blueDoorEnemyIt)->enemyState = EnemyState::DEAD;
+		--life;
+		DBOUT("所累挖多卡納! " << life << endl);
+	}
+
+	if (life <= 0) {
+		GotoGameState(GAME_STATE_OVER);
+	}
+}
+
 
 void CGameStateRun::RemoveDeadEnemy()				//移除死亡的敵人
 {
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
 		return enemy->enemyState == EnemyState::DEAD;
 		}), enemies.end());
-
 }
 
 void CGameStateRun::SortOperator()					//排序幹員

@@ -10,7 +10,7 @@
 
 namespace game_framework {
 
-	enum EnemyState { IDLE, MOVE, ATTACK, DEAD };
+	enum EnemyState { IDLE, MOVE, ATTACK, DEAD, BLUE_DOOR };
 
 	enum EnemyType { BUG_NORMAL };
 
@@ -55,7 +55,7 @@ namespace game_framework {
 		virtual void LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {};
 		
 		//While enemy reach blue door
-		void onReachBlueDoor();
+		void onReachBlueDoor(CheckpointManager& checkpointManager);
 	};
 }
 

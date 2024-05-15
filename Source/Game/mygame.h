@@ -157,6 +157,7 @@ namespace game_framework {
 		std::chrono::steady_clock::time_point lastCostUpdateTime;
 
 		void RemoveDeadEnemy();
+		void DecreaseLife();
 		void SortOperator();	
 	};
 
