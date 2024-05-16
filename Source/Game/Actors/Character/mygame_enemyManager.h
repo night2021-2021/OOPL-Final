@@ -1,5 +1,6 @@
 #include "../../nlohmann/json.hpp"
 #include "mygame_enemy.h"
+
 #include <string>
 #include <fstream>
 #include <iostream>
@@ -25,6 +26,8 @@ namespace game_framework {
             switch (type) {
             case EnemyType::BUG_NORMAL:
                 return "BUG_NORMAL";
+            case EnemyType::GIANT_NORMAL:
+                return "GIANT_NORMAL";
             default:
                 return "Unknown Type";
             }
@@ -32,6 +35,7 @@ namespace game_framework {
 
         EnemyType stringToEnemyType(const std::string& typeStr) {
             if (typeStr == "BUG_NORMAL") return EnemyType::BUG_NORMAL;
+            if (typeStr == "GIANT_NORMAL") return EnemyType::GIANT_NORMAL;
             throw std::runtime_error("Unknown enemy type: " + typeStr);
         }   
 
@@ -63,6 +67,10 @@ namespace game_framework {
                     auto enemy = std::make_shared<Bug_normal>(id, maxHp, atk, def, sp, blockCounts, as, ms, trajectory, EnemyType::BUG_NORMAL, EnemyState::IDLE, time);
                     enemies.push_back(enemy);
                     DBOUT("Created BUG_NORMAL enemy with ID: " << id << std::endl);
+                }else if(enemyType == EnemyType::GIANT_NORMAL) {
+                    auto enemy = std::make_shared<Giant_normal>(id, maxHp, atk, def, sp, blockCounts, as, ms, trajectory, EnemyType::GIANT_NORMAL, EnemyState::IDLE, time);
+                    enemies.push_back(enemy);
+                    DBOUT("Created GIANT_NORMAL enemy with ID: " << id << std::endl);
                 }
             }
         }

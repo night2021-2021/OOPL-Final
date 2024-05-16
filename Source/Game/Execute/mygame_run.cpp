@@ -8,6 +8,7 @@
 #include "../Actors/Character/mygame_operator.h"
 #include "../Actors/Character/mygame_enemy.h"
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
+#include "../Actors/Enemy/Giant_normal/Giant_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"

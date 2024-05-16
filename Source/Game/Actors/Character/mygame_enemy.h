@@ -12,7 +12,7 @@ namespace game_framework {
 
 	enum EnemyState { IDLE, MOVE, ATTACK, DEAD, BLUE_DOOR };
 
-	enum EnemyType { BUG_NORMAL };
+	enum EnemyType { BUG_NORMAL, GIANT_NORMAL };
 
 	class Enemy : public Character 
 	{
