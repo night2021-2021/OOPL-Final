@@ -45,6 +45,7 @@ int enemyCount = 0;
 int life = 3;
 
 TextFormat CGameStateRun::costTextFormat(40, RGB(255, 255, 255), 300, "Segoe UI");
+TextFormat CGameStateRun::operatorCostFormat(40, RGB(255, 255, 255), 500, "Segoe UI");
 TextFormat CGameStateRun::lifeTextFormat(40, RGB(255, 255, 255), 500, "Segoe UI");
 TextFormat CGameStateRun::remainTextFormat(50, RGB(255, 255, 255), 500, "Segoe UI");
 
@@ -71,7 +72,20 @@ void CGameStateRun::OnBeginState()
 	mainTime = std::chrono::steady_clock::now();					
 	isGamePaused = false;
 
-	//¥H¤U¬°­µ®Ä
+	//¥H¤UÅª¦a¹Ï
+	/*
+	std::string gameMapPaths;
+	if (selectedMapIndex == 1) {
+		gameMapPaths = "resources/map/mapJSON/0-1.json";
+	}
+	else if (selectedMapIndex == 2) {
+		gameMapPaths = "resources/map/mapJSON/0-2.json";
+	}
+	else {
+		gameMapPaths = "resources/map/mapJSON/0-1.json";
+	}*/
+
+	//¥H¤U¬°­µ®Ä(¥Ø«e°ÝÃD:¨C­Ó­µ®Ä¶È¯àload¤@¦¸)
 	CAudio* audio = CAudio::Instance();
 	if (audio != nullptr) {
 		unsigned int soundId = 0;
@@ -123,6 +137,9 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 		DecreaseLife();
 		RemoveDeadEnemy();
 	}
+	else {
+		GotoGameState(GAME_STATE_OVER);
+	}
 }
 
 void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©w
@@ -132,10 +149,10 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	isDragging = false;
 	isConfirmingPlacement = false;
 
-	background.LoadBitmapByString({ "resources/map/0_1.bmp" });
+	background.LoadBitmapByString({ "resources/map/0-1.bmp" });
 	background.SetTopLeft(0, 0);
 
-	std::string logicMapPath = "resources/map/mapJSON/0_1.json";
+	std::string logicMapPath = "resources/map/mapJSON/0-1.json";
 	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
 
 	try {
@@ -168,7 +185,14 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 
 	SortOperator();
 
-	std::string enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
+	std::string enemyPath;
+
+	if (selectedMapIndex == 2) {
+		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
+	}
+	else {
+		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
+	}
 
 	try {
 		enemyManager.loadEnemyFromJson(enemyPath);

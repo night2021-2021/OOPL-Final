@@ -26,6 +26,7 @@
     <None Include="readme.md" />
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
+    <None Include="Resources\map\enemyJSON\0-2Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Library\audio.cpp">
@@ -150,7 +151,7 @@
     <Image Include="Resources\Reed.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="Resources\map\0_1.bmp">
+    <Image Include="Resources\map\0-1.bmp">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="Resources\cg\mizuki.bmp">

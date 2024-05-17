@@ -120,6 +120,7 @@ namespace game_framework {
 		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
 
 		static TextFormat costTextFormat;						// 用來顯示cost的文字格式
+		static TextFormat operatorCostFormat;					// 用來顯示opCost的文字
 		static TextFormat lifeTextFormat;						// 用來顯示life的文字格式
 		static TextFormat remainTextFormat;						// 用來顯示remain(再部屬時間)的文字格式
 

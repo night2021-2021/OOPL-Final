@@ -238,6 +238,7 @@
     <None Include="Resources\GAME.RC2" />
     <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
+    <None Include="Resources\map\enemyJSON\0-2Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\game.cpp" />
@@ -313,7 +314,7 @@
     <Image Include="Resources\GAME_FRAMEWORK.bmp" />
     <Image Include="Resources\GAME_FRAMEWORK.ico" />
     <Image Include="resources\icon1.ico" />
-    <Image Include="Resources\map\0_1.bmp" />
+    <Image Include="Resources\map\0-1.bmp" />
     <Image Include="Resources\mark\testMark.bmp" />
     <Image Include="Resources\mizuki.bmp" />
     <Image Include="Resources\Reed.bmp" />
