@@ -58,7 +58,7 @@ CGameStateRun::CGameStateRun(CGame* g) : CGameState(g)
 {
 	mainTime = std::chrono::steady_clock::now();
 	lastUpdateTime = mainTime;
-	gameTime = std::chrono::steady_clock::duration::zero();		//¹w­p§R°£
+	gameTime = std::chrono::steady_clock::duration::zero();		
 }
 
 CGameStateRun::~CGameStateRun()
@@ -68,35 +68,76 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
-	//¥H¤U¬°­p®É¾¹
-	mainTime = std::chrono::steady_clock::now();					
-	isGamePaused = false;
+	//¥H¤U¬°Åª¦a¹Ï
+	std::string gameMapPath;
+	std::string logicMapPath;
+	std::string visualMapPath;
+	std::string enemyPath;
 
-	//¥H¤UÅª¦a¹Ï
-	/*
-	std::string gameMapPaths;
-	if (selectedMapIndex == 1) {
-		gameMapPaths = "resources/map/mapJSON/0-1.json";
-	}
-	else if (selectedMapIndex == 2) {
-		gameMapPaths = "resources/map/mapJSON/0-2.json";
+	if (selectedMapIndex == 1) {				//­n-1
+		gameMapPath = "resources/map/0-2.bmp";
+		logicMapPath = "resources/map/mapJSON/0-2.json";
+		visualMapPath = "resources/map/mapJSON/0-2Visual.json";
+		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
 	}
 	else {
-		gameMapPaths = "resources/map/mapJSON/0-1.json";
-	}*/
+		gameMapPath = "resources/map/0-1.bmp";
+		logicMapPath = "resources/map/mapJSON/0-1.json";
+		visualMapPath = "resources/map/mapJSON/0-1Visual.json";
+		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
+	}
 
-	//¥H¤U¬°­µ®Ä(¥Ø«e°ÝÃD:¨C­Ó­µ®Ä¶È¯àload¤@¦¸)
-	CAudio* audio = CAudio::Instance();
-	if (audio != nullptr) {
-		unsigned int soundId = 0;
-		if (audio->Load(soundId, "resources/music/ost/0_1.mp3")) {
-			audio->Play(soundId, true);
+	std::vector<std::string> gameMapPaths = { gameMapPath };
+
+	background.LoadBitmapByString(gameMapPaths);
+	background.SetTopLeft(0, 0);
+
+	try {
+		gameMapManager.loadLogicMapFromJson(logicMapPath);
+		DBOUT("Success of logic map file open." << endl);
+
+		gameMapManager.loadVisualMapFromJson(visualMapPath);
+		DBOUT("Success of visual map file open." << endl);
+
+		auto& gameMap = gameMapManager.getGameMap();
+
+		for (auto& row : gameMap.checkpoint) {
+			for (auto& checkpoint : row) {
+				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
+
+			}
 		}
-		else {
-			std::cerr << "Failed to load audio." << std::endl;
+
+		checkpointManager = std::make_unique<CheckpointManager>(gameMapManager.getGameMap());
+		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
+	}
+	catch (std::exception& e) {
+		DBOUT("Error of file open." << e.what());
+	}
+
+	//¥H¤U¬°Åªenemy
+	try {
+		enemyManager.loadEnemyFromJson(enemyPath);
+		DBOUT("Success of enemy file open." << endl);
+		//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+		auto& loadedEnemies = enemyManager.getEnemies();
+
+		for (auto& enemy : loadedEnemies) {
+			vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
+			enemy->position.x = temp[0];
+			enemy->position.y = temp[1];
+			enemies.push_back(enemy);
 		}
 	}
-	
+	catch (std::exception& e) {
+		DBOUT("Error of enemy file open." << e.what());
+	}
+
+	enemyCount = enemies.size();
+
+	//¥H¤U¬°­p®É¾¹
+	mainTime = std::chrono::steady_clock::now();
+	isGamePaused = false;
 }
 
 void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
@@ -149,69 +190,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	isDragging = false;
 	isConfirmingPlacement = false;
 
-	background.LoadBitmapByString({ "resources/map/0-1.bmp" });
-	background.SetTopLeft(0, 0);
-
-	std::string logicMapPath = "resources/map/mapJSON/0-1.json";
-	std::string visualMapPath = "resources/map/mapJSON/0-1_visual.json";
-
-	try {
-		gameMapManager.loadLogicMapFromJson(logicMapPath);
-		DBOUT("Success of logic map file open." << endl);
-
-		gameMapManager.loadVisualMapFromJson(visualMapPath);
-		DBOUT("Success of visual map file open." << endl);
-
-		auto& gameMap = gameMapManager.getGameMap();
-
-		for (auto& row : gameMap.checkpoint) {
-			for (auto& checkpoint : row) {
-				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
-
-			}
-		}
-
-		checkpointManager = std::make_unique<CheckpointManager>(gameMapManager.getGameMap());
-		// DBOUT("OnInit - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»PFindNearestCheckpoint¹ïÀ³
-	}
-	catch (std::exception& e) {
-		DBOUT("Error of file open." << e.what());
-	}
-
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
 	operators.push_back(std::make_unique<Exusiai>());
 
 	SortOperator();
-
-	std::string enemyPath;
-
-	if (selectedMapIndex == 2) {
-		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
-	}
-	else {
-		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
-	}
-
-	try {
-		enemyManager.loadEnemyFromJson(enemyPath);
-		DBOUT("Success of enemy file open." << endl);
-        //¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
-        auto& loadedEnemies = enemyManager.getEnemies();
-
-        for (auto& enemy : loadedEnemies) {
-            vector<int> temp = FindPixelFromLogic(enemy->trajectory[0][0], enemy->trajectory[0][1]);
-            enemy->position.x = temp[0];
-            enemy->position.y = temp[1];
-            enemies.push_back(enemy);
-        }
-	}
-	catch (std::exception& e) {
-		DBOUT("Error of enemy file open." << e.what());
-	}
-
-	enemyCount = enemies.size();
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -565,6 +549,7 @@ void CGameStateRun::DecreaseLife() {				//¶iÂÅªù-1HP
 
 	if (life <= 0) {
 		GotoGameState(GAME_STATE_OVER);
+		enemies.clear();
 	}
 }
 
