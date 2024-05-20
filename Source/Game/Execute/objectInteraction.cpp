@@ -59,7 +59,14 @@ namespace game_framework
 	}
 
     int ObjectInteraction::OperatorDamageCount(const Operator* op, const Enemy* enemy) {
-        return max(op->atk - enemy->def, 1);
+        if (op->operatorClass == OperatorClass::Caster)     //Caster can attack enemy without defense
+        {
+			return max(op->atk, 1);
+		}
+        else
+        {
+			return max(op->atk - enemy->def, 1);
+		}
     }
 
     void ObjectInteraction::OperatorDamagePerform(int damage,Enemy* enemy,CheckpointManager& checkpointManager) {
