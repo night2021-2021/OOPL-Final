@@ -24,6 +24,8 @@ namespace game_framework
             operatorPtr->attackCD += deltaTime;
             if (operatorPtr->attackCD >= operatorPtr->attackSpeed) {
                 bool isAttack = false;                      //Once the operator attacks, the state will be changed to ATTACK    (Operator can cattack and only attack one enemy at same time.)
+                //Maybe medic operator should heal the operator instead of attack the enemy
+
                 for (auto& enemyPtr : enemies) {      
                     if (OperatorRangeCheck(operatorPtr.get(), enemyPtr.get()) && !enemyPtr->isDead) {
                         operatorPtr->ChangeOperatorState(OperatorState::ATTACK);
@@ -75,6 +77,15 @@ namespace game_framework
             enemy->Dead(checkpointManager);
         }
         DBOUT("The enemy index " << enemy->ID << "'s HP is :" << enemy->hp << ". And It's " << enemy->enemyState << endl);
+    }
+
+    int ObjectInteraction::OperatorHealCount(const Operator* op, const Operator* targetOp) {
+        return op->atk; 
+    }
+
+    void ObjectInteraction::OperatorHealPerform(int healAmount, Operator* targetOp, CheckpointManager& checkpointManager) {
+        targetOp->hp = min(targetOp->hp + healAmount, targetOp->maxHp);                    
+        DBOUT("Operator " << targetOp->operatorName << " HP is :" << targetOp->hp << endl);
     }
 
     //The operator attack enemy

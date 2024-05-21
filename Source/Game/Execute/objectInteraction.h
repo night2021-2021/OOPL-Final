@@ -20,6 +20,10 @@ namespace game_framework
         
         void OperatorDamagePerform(int damage, Enemy* enemy, CheckpointManager& checkpointManager);
 
+        int OperatorHealCount(const Operator* op, const Operator* targetOp);
+
+        void OperatorHealPerform(int heal, Operator* targetOp, CheckpointManager& checkpointManager);
+
         bool EnemyRangeCheck(const Operator* op, const Enemy* enemy);
 
         int EnemyDamageCount(const Operator* op, const Enemy* enemy);
