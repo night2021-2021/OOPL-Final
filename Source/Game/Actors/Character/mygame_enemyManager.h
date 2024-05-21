@@ -75,6 +75,10 @@ namespace game_framework {
             }
         }
 
+        void clearEnemies() {
+            enemies.clear();
+        }
+
         const std::vector<std::shared_ptr<Enemy>>& getEnemies() const {
             return this->enemies;
         }

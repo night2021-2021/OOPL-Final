@@ -68,6 +68,10 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
+	life = 3;
+	cost = 30;
+
+
 	//以下為讀地圖
 	std::string gameMapPath;
 	std::string logicMapPath;
@@ -87,9 +91,10 @@ void CGameStateRun::OnBeginState()
 		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 	}
 
-	std::vector<std::string> gameMapPaths = { gameMapPath };
+	std::vector<std::string> gameMapPaths;
+	gameMapPaths.push_back(gameMapPath);
 
-	background.LoadBitmapByString(gameMapPaths);
+	background.LoadBitmapByString(gameMapPaths);			//有問題待修正
 	background.SetTopLeft(0, 0);
 
 	try {
@@ -104,7 +109,6 @@ void CGameStateRun::OnBeginState()
 		for (auto& row : gameMap.checkpoint) {
 			for (auto& checkpoint : row) {
 				checkpoint.attackRangePoint.LoadBitmapByString({ "resources/mark/testMark.bmp" }, RGB(0, 0, 0));
-
 			}
 		}
 
@@ -117,6 +121,7 @@ void CGameStateRun::OnBeginState()
 
 	//以下為讀enemy
 	try {
+		enemyManager.clearEnemies();
 		enemyManager.loadEnemyFromJson(enemyPath);
 		DBOUT("Success of enemy file open." << endl);
 		//以下為讀入敵人的程式碼
@@ -185,7 +190,6 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 
 void CGameStateRun::OnInit()                              // 遊戲的初值及圖形設定
 {
-	cost = 30;
 	selOpIdx = -1;										  //Selected Operator Index
 	isDragging = false;
 	isConfirmingPlacement = false;
