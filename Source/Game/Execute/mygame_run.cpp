@@ -45,7 +45,7 @@ int enemyCount = 0;
 int life = 3;
 
 TextFormat CGameStateRun::costTextFormat(40, RGB(255, 255, 255), 300, "Segoe UI");
-TextFormat CGameStateRun::operatorCostFormat(40, RGB(255, 255, 255), 500, "Segoe UI");
+TextFormat CGameStateRun::operatorCostFormat(20, RGB(255, 255, 255), 500, "Segoe UI");
 TextFormat CGameStateRun::lifeTextFormat(40, RGB(255, 255, 255), 500, "Segoe UI");
 TextFormat CGameStateRun::remainTextFormat(50, RGB(255, 255, 255), 500, "Segoe UI");
 
@@ -93,8 +93,7 @@ void CGameStateRun::OnBeginState()
 
 	std::vector<std::string> gameMapPaths;
 	gameMapPaths.push_back(gameMapPath);
-
-	background.LoadBitmapByString(gameMapPaths);			//有問題待修正
+	background.LoadBitmapByString(gameMapPaths);			//有問題待修正, background似乎無法unload
 	background.SetTopLeft(0, 0);
 
 	try {
@@ -185,6 +184,7 @@ void CGameStateRun::OnMove()                            // 移動遊戲元素
 	}
 	else {
 		GotoGameState(GAME_STATE_OVER);
+		background.UnshowBitmap();
 	}
 }
 
@@ -276,6 +276,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			checkpointManager->unregisterOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
 
 			selOpIdx = -1;
+			SortOperator();
 		}
 	}
 }
@@ -423,7 +424,7 @@ void CGameStateRun::OnShow()								 // 顯示遊戲畫面
 			textRenderer.ShowText(timeText, locateSecond + 25, 630, remainTextFormat);
 		}
 		else if (!op->isAlive && op->DeployTimer == 0) {
-			textRenderer.ShowText(" ", locateSecond + 25, 630, remainTextFormat);
+			textRenderer.ShowText(std::to_string(op->cost), locateSecond + 5, 620, operatorCostFormat);
 		}
 		locateSecond -= 100;
 	}
@@ -554,6 +555,7 @@ void CGameStateRun::DecreaseLife() {				//進藍門-1HP
 	if (life <= 0) {
 		GotoGameState(GAME_STATE_OVER);
 		enemies.clear();
+		background.UnshowBitmap();
 	}
 }
 

@@ -58,7 +58,7 @@ namespace game_framework {
         DeployTimer = 0.0f;
 
         if (retreatCostIncreaseTimes < maxRetreatCostIncrease) {
-            cost += costIncreaseAmount; 
+            cost *= costIncreaseAmount; 
             ++retreatCostIncreaseTimes; 
         }
     }
