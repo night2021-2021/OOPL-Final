@@ -70,31 +70,35 @@ void CGameStateRun::OnBeginState()
 {
 	life = 3;
 	cost = 30;
+	operators.clear();
 
+	//¥H¤U¬°Åª¤J·F­û
+	operators.push_back(std::make_unique<Reed>());
+	operators.push_back(std::make_unique<Skadi>());
+	operators.push_back(std::make_unique<Saria>());
+	operators.push_back(std::make_unique<Exusiai>());
+
+	SortOperator();
 
 	//¥H¤U¬°Åª¦a¹Ï
-	std::string gameMapPath;
 	std::string logicMapPath;
 	std::string visualMapPath;
 	std::string enemyPath;
 
 	if (selectedMapIndex == 1) {				//­n-1
-		gameMapPath = "resources/map/0-2.bmp";
 		logicMapPath = "resources/map/mapJSON/0-2.json";
 		visualMapPath = "resources/map/mapJSON/0-2Visual.json";
 		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
 	}
 	else {
-		gameMapPath = "resources/map/0-1.bmp";
 		logicMapPath = "resources/map/mapJSON/0-1.json";
 		visualMapPath = "resources/map/mapJSON/0-1Visual.json";
 		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 	}
 
-	std::vector<std::string> gameMapPaths;
-	gameMapPaths.push_back(gameMapPath);
-	background.LoadBitmapByString(gameMapPaths);			//¦³°ÝÃD«Ý­×¥¿, background¦ü¥GµLªkunload
+	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp" });			//¦³°ÝÃD«Ý­×¥¿, background¦ü¥GµLªkunload
 	background.SetTopLeft(0, 0);
+	background.SetFrameIndexOfBitmap(selectedMapIndex);
 
 	try {
 		gameMapManager.loadLogicMapFromJson(logicMapPath);
@@ -139,9 +143,11 @@ void CGameStateRun::OnBeginState()
 
 	enemyCount = enemies.size();
 
-	//¥H¤U¬°­p®É¾¹
-	mainTime = std::chrono::steady_clock::now();
+	//­«·s­p®É
+	CleanTime();
 	isGamePaused = false;
+
+	ost->Play(selectedMapIndex, true);
 }
 
 void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
@@ -149,7 +155,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 	if (!enemies.empty()) {
 		for (auto& enemy : enemies)
 		{
-			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;  // pixel
+			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;		// pixel
 
 			if (enemy->positionIndex + 1 < enemy->trajectory.size()) {
 				originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
@@ -164,7 +170,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
 					}
-					else if (enemy->isBlocked == false && !enemy->isDead) {												//­Y¼Ä¤H¥¼³Qªý¾×¡A«h²¾°Ê	//³o¸Ì¥[¤F¼Ä¤H¦º¤`¤~¯àÄ~Äò°õ¦æªº±ø¥ó
+					else if (enemy->isBlocked == false && !enemy->isDead) {								//­Y¼Ä¤H¥¼³Qªý¾×¡A«h²¾°Ê	//³o¸Ì¥[¤F¼Ä¤H¦º¤`¤~¯àÄ~Äò°õ¦æªº±ø¥ó
 						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
 						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
@@ -183,8 +189,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 		RemoveDeadEnemy();
 	}
 	else {
-		GotoGameState(GAME_STATE_OVER);
-		background.UnshowBitmap();
+		Gameover();
 	}
 }
 
@@ -194,12 +199,17 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	isDragging = false;
 	isConfirmingPlacement = false;
 
-	operators.push_back(std::make_unique<Reed>());
-	operators.push_back(std::make_unique<Skadi>());
-	operators.push_back(std::make_unique<Saria>());
-	operators.push_back(std::make_unique<Exusiai>());
-
-	SortOperator();
+	for (int i = 0; i <= 2; i++) {
+		std::string filePath = "resources/music/ost/0-" + std::to_string(i + 1) + ".wav";
+		if (!ost->Load(i, &filePath[0])) {
+			DBOUT("Fail to load OST :" << i << endl);
+			ost->Close();
+			return;
+		}
+		else {
+			DBOUT("Success to load OST :" << i << endl);
+		}
+	}
 }
 
 void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
@@ -406,8 +416,13 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 
 	for (auto& enemy : enemies) {
 		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		if(enemy->isDead == false && enemy->isActive == true){
+		if (enemy->isDead == false && enemy->isActive == true) {
 			enemy->image.ShowBitmap();
+
+			if (enemy->hp != enemy->maxHp) {
+			int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
+			ShowEnemyHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230);
+			}
 		}
 	}
 
@@ -481,7 +496,13 @@ void CGameStateRun::ResumeGame() {
 	}
 }
 
-Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºcheckpoint	
+void CGameStateRun::CleanTime() {
+	mainTime = std::chrono::steady_clock::now();						// ­«¸m mainTime ¬°²{¦b
+	gameTime = std::chrono::steady_clock::duration::zero();				// ­«¸m gameTime ¬° 0
+	lastUpdateTime = std::chrono::steady_clock::now();					// ­«¸m lastUpdateTime ¬°²{¦b
+}
+
+Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)			// §ä¥X³Ìªñªºcheckpoint	
 {
 	Checkpoint* NearestCheckpoint = nullptr;
 	double minDistance = (std::numeric_limits<double>::max)();
@@ -489,7 +510,7 @@ Checkpoint* CGameStateRun::FindNearestCheckpoint(CPoint point)		// §ä¥X³Ìªñªºche
 	nearLogicX = -1;
 	nearLogicY = -1;
 
-	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);	//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
+	//DBOUT("FindNearestCheckpoint - gameMap address: " << &gameMap << std::endl);		//½T»{¦a¹Ï©ó°O¾ÐÅé¦ì¸m¡A»POnInit¹ïÀ³
 
 	for (int y = 0; y < gameMap.height; ++y) {
 		for (int x = 0; x < gameMap.width; ++x) {
@@ -553,9 +574,7 @@ void CGameStateRun::DecreaseLife() {				//¶iÂÅªù-1HP
 	}
 
 	if (life <= 0) {
-		GotoGameState(GAME_STATE_OVER);
-		enemies.clear();
-		background.UnshowBitmap();
+		Gameover();
 	}
 }
 
@@ -573,4 +592,41 @@ void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
 		{
 			return a->cost > b->cost;
 		});
+}
+
+void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
+{
+	const int bar_width = 60;  // ½Õ¾ã¦å±ø¼e«×
+	const int bar_height = 8;  // ½Õ¾ã¦å±ø°ª«×
+	const int x1 = posX;  // ¦å±øªº¤ô¥­¦ì¸m
+	const int x2 = x1 + bar_width;
+	const int y1 = posY - bar_height - 10;  // ¦å±øÅã¥Ü¦b¼Ä¤H¹Ï¹³¤W¤è
+	const int y2 = y1 + bar_height;
+	const int pen_width = bar_height / 8;
+	const int health_x1 = x1 + pen_width;
+	const int health_x2 = health_x1 + healthPercent * (bar_width - 2 * pen_width) / 100;
+	const int health_x2_end = x2 - pen_width;
+	const int health_y1 = y1 + pen_width;
+	const int health_y2 = y2 - pen_width;
+
+	CDC* pDC = CDDraw::GetBackCDC();  // ¨ú±o«áºÝµe¥¬ªºCDC 
+
+	CBrush b1(RGB(255, 255, 255));  // µe­I´º¦âªº¦å±ø¤º³¡
+	pDC->SelectObject(&b1);
+	pDC->Rectangle(health_x1, health_y1, health_x2_end, health_y2);
+
+	CBrush b2(RGB(255, 0, 0));  // µe¥Õ¦âªº¦å±ø¶i«×
+	pDC->SelectObject(&b2);
+	pDC->Rectangle(health_x1, health_y1, health_x2, health_y2);
+
+	CDDraw::ReleaseBackCDC();  // ÄÀ©ñµe¥¬ªºCDC
+}
+
+
+void CGameStateRun::Gameover()						//¹CÀ¸µ²§ô
+{
+	GotoGameState(GAME_STATE_OVER);
+	enemies.clear();
+	ost->Pause();
+	background.UnshowBitmap();
 }

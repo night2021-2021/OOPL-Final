@@ -59,11 +59,9 @@ void CGameStateInit::loadsecondbackground() {
 	secondbackground.LoadBitmapByString({ "resources/test_image.bmp" });
 	secondbackground.SetTopLeft(0, 0);
 	
-	for (int i = 0; i < 30; i++) {
-		int row = i / 6;
-		int col = i % 6;
-		int x = 40 + 25 + 200 * col;
-		int y = 10 + 25 + 140 * row;
+	for (int i = 0; i < 3; i++) { // 將按鈕數量減至 3 個
+		int x = 325 + 250 * i;
+		int y = 300;
 
 		buttons[i].LoadBitmapByString(std::vector<std::string>{"resources/button/button" + std::to_string(i + 1) + ".bmp"});
 		buttons[i].SetTopLeft(x, y);
@@ -73,16 +71,14 @@ void CGameStateInit::loadsecondbackground() {
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	int buttonWidth = 200, buttonHeight = 140;
-	int topX = 40 + 25, topY = 10 + 25;
+	int topX = 325, topY = 300;
 
 	state += 1;
-	if(state >= 2)
+	if (state >= 2)
 	{
-		for (int i = 0; i < 30; ++i) {
-			int row = i / 6;
-			int col = i % 6;
-			int x = topX + col * buttonWidth;
-			int y = topY + row * buttonHeight;
+		for (int i = 0; i < 3; ++i) { // 將按鈕數量減至 3 個
+			int x = topX + i * buttonWidth;
+			int y = topY;
 
 			if (point.x >= x && point.x <= x + buttonWidth - 50 &&
 				point.y >= y && point.y <= y + buttonHeight - 50) {
@@ -109,7 +105,7 @@ void CGameStateInit::OnShow()
 	else if(state >= 1)
 	{
 		secondbackground.ShowBitmap();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 3; i++) {
 			buttons[i].ShowBitmap();
 		}
 	}
