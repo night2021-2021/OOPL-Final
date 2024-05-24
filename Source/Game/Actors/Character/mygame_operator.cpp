@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <iostream>
 #include "../Library/gameutil.h"
+#include "../Game/Map/mygame_checkpointManager.h"
 #include "mygame_operator.h"
 
 namespace game_framework {
@@ -44,15 +45,31 @@ namespace game_framework {
     }
     
 
-    void Operator::Retreat() {
-        isPlacing = false;
+    void Operator::Retreat(CheckpointManager& checkpointManager) {
+        isPlaced = false;
+        isAlive = false;
 
         position.x = 1080;  
         position.y = 720;
 
+        checkpointManager.unregisterOperatorAtCheckpoint(logicX, logicY, blockCounts);
+
+        isPlaceable = false;
+        DeployTimer = 0.0f;
+
         if (retreatCostIncreaseTimes < maxRetreatCostIncrease) {
-            cost += costIncreaseAmount; 
+            cost *= costIncreaseAmount; 
             ++retreatCostIncreaseTimes; 
+        }
+    }
+
+    void Operator::DeployCD(float deltaTime) {          //The time that the operator can be deployed again
+        if (!isPlaceable) {
+            DeployTimer += deltaTime;
+            if (DeployTimer >= DeployTime) {
+				DeployTimer = 0.0f;
+                isPlaceable = true;
+			}
         }
     }
 

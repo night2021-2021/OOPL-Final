@@ -42,10 +42,19 @@
 #include "../Game/Actors/Character/mygame_enemy.h"
 #include "../Game/Map/mygame_mapAndCheckpoint.h"
 #include "../Game/Map/mygame_mapManager.h"
+#include "../Game/Map/mygame_checkpointManager.h"
 #include "../Game/Execute/objectInteraction.h"
+#include "Execute/mygame_text.h"
+#include "../Library/audio.h"
 #include <chrono>
 
 namespace game_framework {
+	/////////////////////////////////////////////////////////////////////////////
+	// 地圖選擇指標
+	/////////////////////////////////////////////////////////////////////////////
+
+	extern int selectedMapIndex;
+	
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
 	/////////////////////////////////////////////////////////////////////////////
@@ -67,6 +76,7 @@ namespace game_framework {
 		void OnInit();  								// 遊戲的初值及圖形設定
 		void OnBeginState();							// 設定每次重玩所需的變數
 		void OnKeyUp(UINT, UINT, UINT); 				// 處理鍵盤Up的動作
+		void OnMouseMove(UINT nFlags, CPoint point);			// 處理滑鼠的動作 
 		void OnLButtonDown(UINT nFlags, CPoint point);  // 處理滑鼠的動作
 	protected:
 		void OnShow();									// 顯示這個狀態的遊戲畫面
@@ -77,36 +87,7 @@ namespace game_framework {
 		int state = 0; 	//0: 水月  1:星空  2:遊戲開始
 		CMovingBitmap firstbackground;
 		CMovingBitmap secondbackground;
-		CMovingBitmap button1;
-		CMovingBitmap button2;
-		CMovingBitmap button3;
-		CMovingBitmap button4;
-		CMovingBitmap button5;
-		CMovingBitmap button6;
-		CMovingBitmap button7;
-		CMovingBitmap button8;
-		CMovingBitmap button9;
-		CMovingBitmap button10;
-		CMovingBitmap button11;
-		CMovingBitmap button12;
-		CMovingBitmap button13;
-		CMovingBitmap button14;
-		CMovingBitmap button15;
-		CMovingBitmap button16;
-		CMovingBitmap button17;
-		CMovingBitmap button18;
-		CMovingBitmap button19;
-		CMovingBitmap button20;
-		CMovingBitmap button21;
-		CMovingBitmap button22;
-		CMovingBitmap button23;
-		CMovingBitmap button24;
-		CMovingBitmap button25;
-		CMovingBitmap button26;
-		CMovingBitmap button27;
-		CMovingBitmap button28;
-		CMovingBitmap button29;
-		CMovingBitmap button30;
+		CMovingBitmap buttons[30];
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -133,11 +114,23 @@ namespace game_framework {
 		void PauseGame();										// 暫停遊戲
 		void ResumeGame();										// 繼續遊戲
 		void UpdateGameTime();									// 更新遊戲時間
+		void CleanTime();										// 清除時間
 		
 		void ShowAttackRange();									// 顯示攻擊範圍
 		void UnshowAttackRange();								// 隱藏攻擊範圍
 
 		vector<int> FindPixelFromLogic(int logicX, int logicY); // 找出這個logic的pixel
+
+		static TextFormat costTextFormat;						// 用來顯示cost的文字格式
+		static TextFormat operatorCostFormat;					// 用來顯示opCost的文字
+		static TextFormat lifeTextFormat;						// 用來顯示life的文字格式
+		static TextFormat remainTextFormat;						// 用來顯示remain(再部屬時間)的文字格式
+
+		static int lifePoint;									// 生命值
+
+		static void decreaseLifePoint() {						// 減少生命值
+			if(lifePoint>0)lifePoint--;
+		}						
 
 	protected:
 		void OnMove();											// 移動遊戲元素
@@ -145,12 +138,15 @@ namespace game_framework {
 
 	private:
 		CMovingBitmap background;
+		TextRenderer textRenderer;
+		TextFormat defaultTextFormat;
+		
 		std::vector<std::unique_ptr<Operator>> operators;
 		std::vector<std::shared_ptr<Enemy>> enemies;			// 用vector來儲存所有的敵人
 		GameMap gameMap;		
 		GameMapManager gameMapManager;
 		ObjectInteraction objectInteraction;
-		void textShow();
+		std::unique_ptr<CheckpointManager> checkpointManager;
 		int cost;
 		int selOpIdx;
 		int nearLogicX;
@@ -162,9 +158,15 @@ namespace game_framework {
 		std::chrono::duration<float, std::milli> gameTime;
 		std::chrono::steady_clock::time_point lastUpdateTime;
 		std::chrono::steady_clock::time_point lastCostUpdateTime;
+
 		void RemoveDeadEnemy();
-		void RemoveDeadOperator();
+		void DecreaseLife();
 		void SortOperator();	
+		void Gameover();										// 遊戲結束
+
+		void ShowEnemyHealthBar(int healthPercent, int posX, int posY);		// 顯示敵人的血條
+
+		CAudio* ost = CAudio::Instance();						// OST
 	};
 
 	/////////////////////////////////////////////////////////////////////////////

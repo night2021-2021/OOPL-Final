@@ -22,8 +22,6 @@ namespace game_framework {
     private:
 		GameMap gameMap;
     public:
-
-
         void loadLogicMapFromJson(const std::string& logicJsonFilePath) {
             std::ifstream logicFile(logicJsonFilePath);
             if (!logicFile.is_open()) {
@@ -45,9 +43,10 @@ namespace game_framework {
                         tileJson["walkable"],
                         tileJson["placeable"], 
                         tileJson["type"],
-                        tileJson["name"]
+                        tileJson["name"],
+                        x,y
                     );
-                    DBOUT("Checkpoint: " << tileJson["name"] << " at (" << x << ", " << y << ")\n"); //check if the checkpoint is loaded
+                    DBOUT("Checkpoint: " << tileJson["name"] << " at logic (" << x << ", " << y << ")\n"); //check if the checkpoint is loaded
                 }
             }
         }

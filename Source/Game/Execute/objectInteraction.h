@@ -10,16 +10,24 @@ namespace game_framework
 
     public:
     
-        void AttackPerform(std::vector<std::unique_ptr<Operator>>& operators, const std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime);
-
+        void OperatorAttackPerform(std::vector<std::unique_ptr<Operator>>& operators, std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime, CheckpointManager& checkpointManager);
+        void EnemyAttackPerform(std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Operator>>& operators, float deltaTime, CheckpointManager& checkpointManager);
 
     private:
+        bool OperatorRangeCheck(const Operator* op, const Enemy* enemy);
 
-        bool RangeCheck(const Operator* op, const Enemy* enemy);
+        int OperatorDamageCount(const Operator* op, const Enemy* enemy);
+        
+        void OperatorDamagePerform(int damage, Enemy* enemy, CheckpointManager& checkpointManager);
 
-        int DamageCount(const Operator* op, const Enemy* enemy);
+        int OperatorHealCount(const Operator* op, const Operator* targetOp);
 
-        void DamagePerform(int damage, Enemy* enemy);
+        void OperatorHealPerform(int heal, Operator* targetOp, CheckpointManager& checkpointManager);
 
+        bool EnemyRangeCheck(const Operator* op, const Enemy* enemy);
+
+        int EnemyDamageCount(const Operator* op, const Enemy* enemy);
+
+        void EnemyDamagePerform(int damage, Operator* op, CheckpointManager& checkpointManager);
     };
 }

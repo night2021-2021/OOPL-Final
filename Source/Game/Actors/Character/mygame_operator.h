@@ -4,6 +4,7 @@
 #include <afxwin.h> 
 #include "mygame_character.h"
 #include "../../../Library/gameutil.h"
+#include "../Game/Map/mygame_checkpointManager.h"
 #include <vector>
 
 
@@ -55,14 +56,19 @@ namespace game_framework
 		int sp;
 		int maxSp;
 		int logicX, logicY;	 	//the position of the operator in the logic map (0, 0)
-		bool isPlacing;
+		bool isPlaced;
+		bool isPlaceable;
+		bool isAlive;
 		float attackCD;
+		float DeployTime;
+		float DeployTimer;
+		string operatorName;
 		OperatorClass operatorClass;
 		OperatorState operatorStatus;
 		Orientation orientation;
 
-		Operator(int maxHp, int atk, int def, int blocks, int cost, int sp, int maxSP, float attackSpeed, OperatorClass opClass, Orientation ori = Orientation::Down, bool placing = false)
-			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSp(maxSP), sp(sp), operatorClass(opClass), isPlacing(placing), operatorStatus(OperatorState::IDLE), orientation(ori), attackCD(0.0f)
+		Operator(int maxHp, int atk, int def, int blocks, int cost, int sp, int maxSP, float attackSpeed, OperatorClass opClass, string OPname, Orientation ori = Orientation::Down, bool placed = false)
+			: Character(maxHp, atk, def, attackSpeed), blockCounts(blocks), cost(cost), maxSp(maxSP), sp(sp), operatorClass(opClass), isPlaced(placed), operatorStatus(OperatorState::IDLE), orientation(ori), attackCD(0.0f), operatorName(OPname), isAlive(false), DeployTime(10.0f), DeployTimer(0.0f), isPlaceable(true)
 		{
 		}
 
@@ -72,6 +78,9 @@ namespace game_framework
 
 		//Operator's Skill
 		virtual void Skill() {};
+
+		//Operator's Deploy
+		void DeployCD(float deltaTime);
 
 		//Operator's setting
 		virtual void ChangeImages();
@@ -85,7 +94,7 @@ namespace game_framework
 		int retreatCostIncreaseTimes = 0;
 		static constexpr int maxRetreatCostIncrease = 3;
 		static constexpr int costIncreaseAmount = 2;
-		void Retreat();
+		void Retreat(CheckpointManager& checkpointManager);
 
 		//Define the operator's attack range	
 		std::vector<AttackRange> attackRange;

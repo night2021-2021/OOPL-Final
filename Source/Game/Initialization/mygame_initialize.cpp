@@ -6,11 +6,20 @@
 #include "../Library/gameutil.h"
 #include "../Library/gamecore.h"
 #include "../mygame.h"
+#include <sstream>
+#define NOMINMAX
+#define DBOUT( s )            \
+{                             \
+   std::ostringstream os_;    \
+   os_ << s;                  \
+   OutputDebugString( os_.str().c_str() );  \
+}	
 
 using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
+int game_framework::selectedMapIndex = 0;
 
 CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 {
@@ -27,7 +36,6 @@ void CGameStateInit::OnInit()
 	loadsecondbackground();
 	state = 0;
 	ShowInitProgress(33, "Initialize...");    
-	ShowInitProgress(66, "Initialize...");
 	//
 	// 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
 	//
@@ -50,115 +58,43 @@ void CGameStateInit::loadfirstbackground()
 void CGameStateInit::loadsecondbackground() {
 	secondbackground.LoadBitmapByString({ "resources/test_image.bmp" });
 	secondbackground.SetTopLeft(0, 0);
-	//按鈕一排六個
-	// 按鈕 1 至 6
-	button1.LoadBitmapByString({ "resources/button/button1.bmp" });
-	button1.SetTopLeft(40 + 25 + 200 * 0, 10 + 25 + 140 * 0);
+	
+	for (int i = 0; i < 3; i++) { // 將按鈕數量減至 3 個
+		int x = 325 + 250 * i;
+		int y = 300;
 
-	button2.LoadBitmapByString({ "resources/button/button2.bmp" });
-	button2.SetTopLeft(40 + 25 + 200 * 1, 10 + 25 + 140 * 0);
-
-	button3.LoadBitmapByString({ "resources/button/button3.bmp" });
-	button3.SetTopLeft(40 + 25 + 200 * 2, 10 + 25 + 140 * 0);
-
-	button4.LoadBitmapByString({ "resources/button/button4.bmp" });
-	button4.SetTopLeft(40 + 25 + 200 * 3, 10 + 25 + 140 * 0);
-
-	button5.LoadBitmapByString({ "resources/button/button5.bmp" });
-	button5.SetTopLeft(40 + 25 + 200 * 4, 10 + 25 + 140 * 0);
-
-	button6.LoadBitmapByString({ "resources/button/button6.bmp" });
-	button6.SetTopLeft(40 + 25 + 200 * 5, 10 + 25 + 140 * 0);
-
-	// 按鈕 7 至 12
-	button7.LoadBitmapByString({ "resources/button/button7.bmp" });
-	button7.SetTopLeft(40 + 25 + 200 * 0, 10 + 25 + 140 * 1);
-
-	button8.LoadBitmapByString({ "resources/button/button8.bmp" });
-	button8.SetTopLeft(40 + 25 + 200 * 1, 10 + 25 + 140 * 1);
-
-	button9.LoadBitmapByString({ "resources/button/button9.bmp" });
-	button9.SetTopLeft(40 + 25 + 200 * 2, 10 + 25 + 140 * 1);
-
-	button10.LoadBitmapByString({ "resources/button/button10.bmp" });
-	button10.SetTopLeft(40 + 25 + 200 * 3, 10 + 25 + 140 * 1);
-
-	button11.LoadBitmapByString({ "resources/button/button11.bmp" });
-	button11.SetTopLeft(40 + 25 + 200 * 4, 10 + 25 + 140 * 1);
-
-	button12.LoadBitmapByString({ "resources/button/button12.bmp" });
-	button12.SetTopLeft(40 + 25 + 200 * 5, 10 + 25 + 140 * 1);
-
-	// 按鈕 13 至 18
-	button13.LoadBitmapByString({ "resources/button/button13.bmp" });
-	button13.SetTopLeft(40 + 25 + 200 * 0, 10 + 25 + 140 * 2);
-
-	button14.LoadBitmapByString({ "resources/button/button14.bmp" });
-	button14.SetTopLeft(40 + 25 + 200 * 1, 10 + 25 + 140 * 2);
-
-	button15.LoadBitmapByString({ "resources/button/button15.bmp" });
-	button15.SetTopLeft(40 + 25 + 200 * 2, 10 + 25 + 140 * 2);
-
-	button16.LoadBitmapByString({ "resources/button/button16.bmp" });
-	button16.SetTopLeft(40 + 25 + 200 * 3, 10 + 25 + 140 * 2);
-
-	button17.LoadBitmapByString({ "resources/button/button17.bmp" });
-	button17.SetTopLeft(40 + 25 + 200 * 4, 10 + 25 + 140 * 2);
-
-	button18.LoadBitmapByString({ "resources/button/button18.bmp" });
-	button18.SetTopLeft(40 + 25 + 200 * 5, 10 + 25 + 140 * 2);
-
-	// 按鈕 19 至 24
-	button19.LoadBitmapByString({ "resources/button/button19.bmp" });
-	button19.SetTopLeft(40 + 25 + 200 * 0, 10 + 25 + 140 * 3);
-
-	button20.LoadBitmapByString({ "resources/button/button20.bmp" });
-	button20.SetTopLeft(40 + 25 + 200 * 1, 10 + 25 + 140 * 3);
-
-	button21.LoadBitmapByString({ "resources/button/button21.bmp" });
-	button21.SetTopLeft(40 + 25 + 200 * 2, 10 + 25 + 140 * 3);
-
-	button22.LoadBitmapByString({ "resources/button/button22.bmp" });
-	button22.SetTopLeft(40 + 25 + 200 * 3, 10 + 25 + 140 * 3);
-
-	button23.LoadBitmapByString({ "resources/button/button23.bmp" });
-	button23.SetTopLeft(40 + 25 + 200 * 4, 10 + 25 + 140 * 3);
-
-	button24.LoadBitmapByString({ "resources/button/button24.bmp" });
-	button24.SetTopLeft(40 + 25 + 200 * 5, 10 + 25 + 140 * 3);
-
-	// 按鈕 25 至 30
-	button25.LoadBitmapByString({ "resources/button/button25.bmp" });
-	button25.SetTopLeft(40 + 25 + 200 * 0, 10 + 25 + 140 * 4);
-
-	button26.LoadBitmapByString({ "resources/button/button26.bmp" });
-	button26.SetTopLeft(40 + 25 + 200 * 1, 10 + 25 + 140 * 4);
-
-	button27.LoadBitmapByString({ "resources/button/button27.bmp" });
-	button27.SetTopLeft(40 + 25 + 200 * 2, 10 + 25 + 140 * 4);
-
-	button28.LoadBitmapByString({ "resources/button/button28.bmp" });
-	button28.SetTopLeft(40 + 25 + 200 * 3, 10 + 25 + 140 * 4);
-
-	button29.LoadBitmapByString({ "resources/button/button29.bmp" });
-	button29.SetTopLeft(40 + 25 + 200 * 4, 10 + 25 + 140 * 4);
-
-	button30.LoadBitmapByString({ "resources/button/button30.bmp" });
-	button30.SetTopLeft(40 + 25 + 200 * 5, 10 + 25 + 140 * 4);
-
-
+		buttons[i].LoadBitmapByString(std::vector<std::string>{"resources/button/button" + std::to_string(i + 1) + ".bmp"});
+		buttons[i].SetTopLeft(x, y);
+	}
 }
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	state += 1;
-	if(state >= 2)
-	{
-		GotoGameState(GAME_STATE_RUN);        // 切換至GAME_STATE_RUN
-	}
+	int buttonWidth = 200, buttonHeight = 140;
+	int topX = 325, topY = 300;
 
-	
+	state += 1;
+	if (state >= 2)
+	{
+		for (int i = 0; i < 3; ++i) { // 將按鈕數量減至 3 個
+			int x = topX + i * buttonWidth;
+			int y = topY;
+
+			if (point.x >= x && point.x <= x + buttonWidth - 50 &&
+				point.y >= y && point.y <= y + buttonHeight - 50) {
+				selectedMapIndex = i;									// 設置地圖索引
+				GotoGameState(GAME_STATE_RUN);							// 切換至 GAME_STATE_RUN
+				DBOUT("You choose the " << selectedMapIndex + 1 << " maps. " << endl);
+				return;
+			}
+		}
+	}
 }
+
+void CGameStateInit::OnMouseMove(UINT nFlags, CPoint point)
+{
+
+} 
 
 void CGameStateInit::OnShow()
 {
@@ -166,39 +102,12 @@ void CGameStateInit::OnShow()
 	{
 		firstbackground.ShowBitmap();
 	}
-	else if(state == 1)
+	else if(state >= 1)
 	{
 		secondbackground.ShowBitmap();
-		button1.ShowBitmap();
-		button2.ShowBitmap();
-		button3.ShowBitmap();
-		button4.ShowBitmap();
-		button5.ShowBitmap();
-		button6.ShowBitmap();
-		button7.ShowBitmap();
-		button8.ShowBitmap();
-		button9.ShowBitmap();
-		button10.ShowBitmap();
-		button11.ShowBitmap();
-		button12.ShowBitmap();
-		button13.ShowBitmap();
-		button14.ShowBitmap();
-		button15.ShowBitmap();
-		button16.ShowBitmap();
-		button17.ShowBitmap();
-		button18.ShowBitmap();
-		button19.ShowBitmap();
-		button20.ShowBitmap();
-		button21.ShowBitmap();
-		button22.ShowBitmap();
-		button23.ShowBitmap();
-		button24.ShowBitmap();
-		button25.ShowBitmap();
-		button26.ShowBitmap();
-		button27.ShowBitmap();
-		button28.ShowBitmap();
-		button29.ShowBitmap();
-		button30.ShowBitmap();
+		for (int i = 0; i < 3; i++) {
+			buttons[i].ShowBitmap();
+		}
 	}
 }
 
