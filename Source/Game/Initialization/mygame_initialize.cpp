@@ -35,10 +35,6 @@ void CGameStateInit::OnInit()
 	loadfirstbackground();
 	loadsecondbackground();
 	state = 0;
-	ShowInitProgress(33, "Initialize...");    
-	//
-	// 此OnInit動作會接到CGameStaterRun::OnInit()，所以進度還沒到100%
-	//
 }
 
 void CGameStateInit::OnBeginState()
@@ -59,7 +55,7 @@ void CGameStateInit::loadsecondbackground() {
 	secondbackground.LoadBitmapByString({ "resources/test_image.bmp" });
 	secondbackground.SetTopLeft(0, 0);
 	
-	for (int i = 0; i < 3; i++) { // 將按鈕數量減至 3 個
+	for (int i = 0; i < 3; i++) {
 		int x = 325 + 250 * i;
 		int y = 300;
 
@@ -73,10 +69,9 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 	int buttonWidth = 200, buttonHeight = 140;
 	int topX = 325, topY = 300;
 
-	state += 1;
 	if (state >= 2)
 	{
-		for (int i = 0; i < 3; ++i) { // 將按鈕數量減至 3 個
+		for (int i = 0; i < 3; ++i) { 
 			int x = topX + i * buttonWidth;
 			int y = topY;
 
@@ -88,6 +83,9 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 				return;
 			}
 		}
+	}
+	else {
+		state += 1;
 	}
 }
 

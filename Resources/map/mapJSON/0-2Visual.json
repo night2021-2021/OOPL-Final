@@ -1,1 +1,227 @@
-[{"Checkpoint":"A1","x":185,"y":155},{"Checkpoint":"A2","x":277,"y":155},{"Checkpoint":"A3","x":369,"y":155},{"Checkpoint":"A4","x":461,"y":155},{"Checkpoint":"A5","x":553,"y":155},{"Checkpoint":"A6","x":645,"y":155},{"Checkpoint":"A7","x":737,"y":155},{"Checkpoint":"A8","x":829,"y":155},{"Checkpoint":"A9","x":921,"y":155},{"Checkpoint":"B1","x":160,"y":230},{"Checkpoint":"B2","x":257,"y":230},{"Checkpoint":"B3","x":355,"y":230},{"Checkpoint":"B4","x":452,"y":230},{"Checkpoint":"B5","x":551,"y":230},{"Checkpoint":"B6","x":647,"y":230},{"Checkpoint":"B7","x":746,"y":230},{"Checkpoint":"B8","x":751,"y":230},{"Checkpoint":"B9","x":941,"y":230},{"Checkpoint":"C1","x":135,"y":315},{"Checkpoint":"C2","x":237,"y":315},{"Checkpoint":"C3","x":341,"y":315},{"Checkpoint":"C4","x":443,"y":315},{"Checkpoint":"C5","x":549,"y":315},{"Checkpoint":"C6","x":649,"y":315},{"Checkpoint":"C7","x":755,"y":315},{"Checkpoint":"C8","x":765,"y":315},{"Checkpoint":"C9","x":961,"y":315},{"Checkpoint":"D1","x":110,"y":400},{"Checkpoint":"D2","x":217,"y":400},{"Checkpoint":"D3","x":327,"y":400},{"Checkpoint":"D4","x":434,"y":400},{"Checkpoint":"D5","x":547,"y":400},{"Checkpoint":"D6","x":651,"y":400},{"Checkpoint":"D7","x":764,"y":400},{"Checkpoint":"D8","x":779,"y":400},{"Checkpoint":"D9","x":981,"y":400},{"Checkpoint":"E1","x":85,"y":505},{"Checkpoint":"E2","x":197,"y":505},{"Checkpoint":"E3","x":313,"y":505},{"Checkpoint":"E4","x":425,"y":505},{"Checkpoint":"E5","x":545,"y":505},{"Checkpoint":"E6","x":653,"y":505},{"Checkpoint":"E7","x":773,"y":505},{"Checkpoint":"E8","x":793,"y":505},{"Checkpoint":"E9","x":1001,"y":505}]
+[
+  {
+    "Checkpoint": "A1",
+    "x": 185,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A2",
+    "x": 277,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A3",
+    "x": 369,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A4",
+    "x": 461,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A5",
+    "x": 553,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A6",
+    "x": 645,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A7",
+    "x": 737,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A8",
+    "x": 829,
+    "y": 150
+  },
+  {
+    "Checkpoint": "A9",
+    "x": 921,
+    "y": 150
+  },
+  {
+    "Checkpoint": "B1",
+    "x": 160,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B2",
+    "x": 257,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B3",
+    "x": 355,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B4",
+    "x": 452,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B5",
+    "x": 551,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B6",
+    "x": 647,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B7",
+    "x": 746,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B8",
+    "x": 851,
+    "y": 220
+  },
+  {
+    "Checkpoint": "B9",
+    "x": 941,
+    "y": 220
+  },
+  {
+    "Checkpoint": "C1",
+    "x": 135,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C2",
+    "x": 237,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C3",
+    "x": 341,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C4",
+    "x": 443,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C5",
+    "x": 549,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C6",
+    "x": 649,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C7",
+    "x": 755,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C8",
+    "x": 865,
+    "y": 315
+  },
+  {
+    "Checkpoint": "C9",
+    "x": 961,
+    "y": 315
+  },
+  {
+    "Checkpoint": "D1",
+    "x": 110,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D2",
+    "x": 217,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D3",
+    "x": 327,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D4",
+    "x": 434,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D5",
+    "x": 547,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D6",
+    "x": 651,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D7",
+    "x": 764,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D8",
+    "x": 879,
+    "y": 400
+  },
+  {
+    "Checkpoint": "D9",
+    "x": 981,
+    "y": 400
+  },
+  {
+    "Checkpoint": "E1",
+    "x": 85,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E2",
+    "x": 197,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E3",
+    "x": 313,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E4",
+    "x": 425,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E5",
+    "x": 545,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E6",
+    "x": 653,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E7",
+    "x": 773,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E8",
+    "x": 893,
+    "y": 505
+  },
+  {
+    "Checkpoint": "E9",
+    "x": 1001,
+    "y": 505
+  }
+]

@@ -239,6 +239,7 @@
     <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-2Enemy.json" />
+    <None Include="Resources\map\enemyJSON\0-3Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Core\game.cpp" />

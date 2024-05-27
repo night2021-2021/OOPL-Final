@@ -20,7 +20,7 @@ CGameStateOver::CGameStateOver(CGame *g): CGameState(g)
 
 void CGameStateOver::OnMove()
 {
-	GotoGameState(GAME_STATE_INIT);
+
 }
 
 void CGameStateOver::OnBeginState()
@@ -49,4 +49,9 @@ void CGameStateOver::OnInit()
 void CGameStateOver::OnShow()
 {
 
+}
+
+void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	GotoGameState(GAME_STATE_INIT);
 }

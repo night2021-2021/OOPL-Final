@@ -89,6 +89,10 @@ void CGameStateRun::OnBeginState()
 		logicMapPath = "resources/map/mapJSON/0-2.json";
 		visualMapPath = "resources/map/mapJSON/0-2Visual.json";
 		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
+	}else if (selectedMapIndex == 2) {				
+		logicMapPath = "resources/map/mapJSON/0-3.json";
+		visualMapPath = "resources/map/mapJSON/0-3Visual.json";
+		enemyPath = "resources/map/enemyJSON/0-3Enemy.JSON";
 	}
 	else {
 		logicMapPath = "resources/map/mapJSON/0-1.json";
@@ -96,7 +100,7 @@ void CGameStateRun::OnBeginState()
 		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 	}
 
-	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp" });			//有問題待修正, background似乎無法unload
+	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp", "resources/map/0-3.bmp" });			//有問題待修正, background似乎無法unload
 	background.SetTopLeft(0, 0);
 	background.SetFrameIndexOfBitmap(selectedMapIndex);
 
@@ -406,9 +410,15 @@ void CGameStateRun::OnShow()								 // 顯示遊戲畫面
 
 	for (auto& op : operators) {
 		op->headImage.SetTopLeft(locateFirst, 605);
-		op->headImage.ShowBitmap();
+		if(!op->isAlive){
+			op->headImage.ShowBitmap();
+		}
+		else {
+			op->headImage.UnshowBitmap();
+		}
 		locateFirst -= 100;
 	}
+
 	for (auto& op : operators) {
 		op->image.SetTopLeft(op->position.x, op->position.y);
 		op->image.ShowBitmap();
