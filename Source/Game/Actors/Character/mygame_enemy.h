@@ -41,7 +41,7 @@ namespace game_framework {
 			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE), entryTime(TIME), attackCD(0)
 		{
 			hp = MAX_HP;
-			positionIndex = 1;
+			positionIndex = 0;
 		};
 
 		void EnterGame();

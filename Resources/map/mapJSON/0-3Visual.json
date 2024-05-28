@@ -1,0 +1,332 @@
+[
+    {
+        "Checkpoint": "A1",
+        "x": 160,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A2",
+        "x": 262,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A3",
+        "x": 356,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A4",
+        "x": 456,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A5",
+        "x": 548,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A6",
+        "x": 640,
+        "y": 120
+    },
+    {
+        "Checkpoint": "A7",
+        "x": 736,
+        "y": 130
+    },
+    {
+        "Checkpoint": "A8",
+        "x": 828,
+        "y": 130
+    },
+    {
+        "Checkpoint": "A9",
+        "x": 920,
+        "y": 130
+    },
+    {
+        "Checkpoint": "A10",
+        "x": 1006,
+        "y": 130
+    },
+    {
+        "Checkpoint": "A11",
+        "x": 1106,
+        "y": 130
+    },
+    {
+        "Checkpoint": "B1",
+        "x": 152,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B2",
+        "x": 258,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B3",
+        "x": 352,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B4",
+        "x": 450,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B5",
+        "x": 546,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B6",
+        "x": 642,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B7",
+        "x": 738,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B8",
+        "x": 840,
+        "y": 192
+    },
+    {
+        "Checkpoint": "B9",
+        "x": 936,
+        "y": 192
+    },
+    {
+        "Checkpoint": "B10",
+        "x": 1032,
+        "y": 206
+    },
+    {
+        "Checkpoint": "B11",
+        "x": 1120,
+        "y": 206
+    },
+    {
+        "Checkpoint": "C1",
+        "x": 136,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C2",
+        "x": 234,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C3",
+        "x": 323,
+        "y": 278
+    },
+    {
+        "Checkpoint": "C4",
+        "x": 438,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C5",
+        "x": 540,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C6",
+        "x": 642,
+        "y": 278
+    },
+    {
+        "Checkpoint": "C7",
+        "x": 742,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C8",
+        "x": 856,
+        "y": 278
+    },
+    {
+        "Checkpoint": "C9",
+        "x": 962,
+        "y": 278
+    },
+    {
+        "Checkpoint": "C10",
+        "x": 1056,
+        "y": 288
+    },
+    {
+        "Checkpoint": "C11",
+        "x": 1176,
+        "y": 278
+    },
+    {
+        "Checkpoint": "D1",
+        "x": 110,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D2",
+        "x": 212,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D3",
+        "x": 306,
+        "y": 364
+    },
+    {
+        "Checkpoint": "D4",
+        "x": 426,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D5",
+        "x": 532,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D6",
+        "x": 644,
+        "y": 364
+    },
+    {
+        "Checkpoint": "D7",
+        "x": 748,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D8",
+        "x": 868,
+        "y": 364
+    },
+    {
+        "Checkpoint": "D9",
+        "x": 984,
+        "y": 364
+    },
+    {
+        "Checkpoint": "D10",
+        "x": 1078,
+        "y": 374
+    },
+    {
+        "Checkpoint": "D11",
+        "x": 1212,
+        "y": 364
+    },
+    {
+        "Checkpoint": "E1",
+        "x": 50,
+        "y": 466
+    },
+    {
+        "Checkpoint": "E2",
+        "x": 188,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E3",
+        "x": 298,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E4",
+        "x": 412,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E5",
+        "x": 528,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E6",
+        "x": 640,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E7",
+        "x": 752,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E8",
+        "x": 874,
+        "y": 466
+    },
+    {
+        "Checkpoint": "E9",
+        "x": 994,
+        "y": 466
+    },
+    {
+        "Checkpoint": "E10",
+        "x": 1104,
+        "y": 476
+    },
+    {
+        "Checkpoint": "E11",
+        "x": 1208,
+        "y": 476
+    },
+    {
+        "Checkpoint": "F1",
+        "x": 0,
+        "y": 584
+    },
+    {
+        "Checkpoint": "F2",
+        "x": 148,
+        "y": 574
+    },
+    {
+        "Checkpoint": "F3",
+        "x": 272,
+        "y": 574
+    },
+    {
+        "Checkpoint": "F4",
+        "x": 400,
+        "y": 584
+    },
+    {
+        "Checkpoint": "F5",
+        "x": 524,
+        "y": 584
+    },
+    {
+        "Checkpoint": "F6",
+        "x": 644,
+        "y": 584
+    },
+    {
+        "Checkpoint": "F7",
+        "x": 764,
+        "y": 580
+    },
+    {
+        "Checkpoint": "F8",
+        "x": 880,
+        "y": 580
+    },
+    {
+        "Checkpoint": "F9",
+        "x": 1000,
+        "y": 580
+    },
+    {
+        "Checkpoint": "F10",
+        "x": 1120,
+        "y": 580
+    },
+    {
+        "Checkpoint": "F11",
+        "x": 1280,
+        "y": 574
+    }
+]

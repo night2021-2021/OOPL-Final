@@ -32,3 +32,6 @@ LGF (Leistungsstarkes Game Framework) 是一款基於陳偉凱老師的 Game Fra
 我是斯卡蒂小姐的狗 汪汪
 
 DameDaNe DameYo DameNaNoYo
+
+## 遊玩說明
+

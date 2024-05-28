@@ -2,24 +2,24 @@
   [
     {
       "placeable": false,
-      "walkable": false,
-      "type": "building",
+      "walkable": true,
+      "type": "red_Door",
       "x": 0,
       "y": 0,
       "name": "A1"
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 1,
       "y": 0,
       "name": "A2"
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 2,
       "y": 0,
       "name": "A3"
@@ -42,8 +42,8 @@
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 5,
       "y": 0,
       "name": "A6"
@@ -71,22 +71,6 @@
       "x": 8,
       "y": 0,
       "name": "A9"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 9,
-      "y": 0,
-      "name": "A10"
-    },
-    {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 10,
-      "y": 0,
-      "name": "A11"
     }
   ],
   [
@@ -107,41 +91,41 @@
       "name": "B2"
     },
     {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "placeable": false,
+      "walkable": false,
+      "type": "building",
       "x": 2,
       "y": 1,
       "name": "B3"
     },
     {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "placeable": false,
+      "walkable": false,
+      "type": "building",
       "x": 3,
       "y": 1,
       "name": "B4"
     },
     {
       "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "walkable": false,
+      "type": "platform",
       "x": 4,
       "y": 1,
       "name": "B5"
     },
     {
       "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "walkable": false,
+      "type": "platform",
       "x": 5,
       "y": 1,
       "name": "B6"
     },
     {
       "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "walkable": false,
+      "type": "platform",
       "x": 6,
       "y": 1,
       "name": "B7"
@@ -156,34 +140,18 @@
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 8,
       "y": 1,
       "name": "B9"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 9,
-      "y": 1,
-      "name": "B10"
-    },
-    {
-      "placeable": false,
-      "walkable": true,
-      "type": "red_Door",
-      "x": 10,
-      "y": 1,
-      "name": "B11"
     }
   ],
   [
     {
       "placeable": false,
-      "walkable": true,
-      "type": "blue_Door",
+      "walkable": false,
+      "type": "building",
       "x": 0,
       "y": 2,
       "name": "C1"
@@ -197,33 +165,33 @@
       "name": "C2"
     },
     {
-      "placeable": true,
+      "placeable": false,
       "walkable": false,
-      "type": "platform",
+      "type": "building",
       "x": 2,
       "y": 2,
       "name": "C3"
     },
     {
-      "placeable": true,
+      "placeable": false,
       "walkable": true,
-      "type": "path",
+      "type": "blue_Door",
       "x": 3,
       "y": 2,
       "name": "C4"
     },
     {
-      "placeable": true,
+      "placeable": false,
       "walkable": true,
-      "type": "path",
+      "type": "grass",
       "x": 4,
       "y": 2,
       "name": "C5"
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 5,
       "y": 2,
       "name": "C6"
@@ -237,43 +205,27 @@
       "name": "C7"
     },
     {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
+      "placeable": true,
+      "walkable": true,
+      "type": "path",
       "x": 7,
       "y": 2,
       "name": "C8"
     },
     {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 8,
-      "y": 2,
-      "name": "C9"
-    },
-    {
       "placeable": true,
       "walkable": true,
       "type": "path",
-      "x": 9,
+      "x": 8,
       "y": 2,
-      "name": "C10"
-    },
-    {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 10,
-      "y": 2,
-      "name": "C11"
+      "name": "C9"
     }
   ],
   [
     {
       "placeable": false,
-      "walkable": true,
-      "type": "blue_Door",
+      "walkable": false,
+      "type": "building",
       "x": 0,
       "y": 3,
       "name": "D1"
@@ -287,25 +239,25 @@
       "name": "D2"
     },
     {
-      "placeable": true,
+      "placeable": false,
       "walkable": false,
-      "type": "platform",
+      "type": "building",
       "x": 2,
       "y": 3,
       "name": "D3"
     },
     {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "placeable": false,
+      "walkable": false,
+      "type": "building",
       "x": 3,
       "y": 3,
       "name": "D4"
     },
     {
       "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "walkable": false,
+      "type": "platform",
       "x": 4,
       "y": 3,
       "name": "D5"
@@ -320,50 +272,34 @@
     },
     {
       "placeable": true,
-      "walkable": true,
-      "type": "path",
+      "walkable": false,
+      "type": "platform",
       "x": 6,
       "y": 3,
       "name": "D7"
     },
     {
-      "placeable": false,
+      "placeable": true,
       "walkable": false,
-      "type": "building",
+      "type": "platform",
       "x": 7,
       "y": 3,
       "name": "D8"
     },
     {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 8,
-      "y": 3,
-      "name": "D9"
-    },
-    {
       "placeable": true,
       "walkable": true,
       "type": "path",
-      "x": 9,
+      "x": 8,
       "y": 3,
-      "name": "D10"
-    },
-    {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 10,
-      "y": 3,
-      "name": "D11"
+      "name": "D9"
     }
   ],
   [
     {
       "placeable": false,
-      "walkable": false,
-      "type": "building",
+      "walkable": true,
+      "type": "red_Door",
       "x": 0,
       "y": 4,
       "name": "E1"
@@ -417,126 +353,20 @@
       "name": "E7"
     },
     {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
+      "placeable": true,
+      "walkable": true,
+      "type": "path",
       "x": 7,
       "y": 4,
       "name": "E8"
     },
     {
       "placeable": true,
-      "walkable": false,
-      "type": "platform",
+      "walkable": true,
+      "type": "path",
       "x": 8,
       "y": 4,
       "name": "E9"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 9,
-      "y": 4,
-      "name": "E10"
-    },
-    {
-      "placeable": false,
-      "walkable": true,
-      "type": "red_Door",
-      "x": 10,
-      "y": 4,
-      "name": "E11"
-    }
-  ],
-  [
-    {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 0,
-      "y": 5,
-      "name": "F1"
-    },
-    {
-      "placeable": true,
-      "walkable": false,
-      "type": "platform",
-      "x": 1,
-      "y": 5,
-      "name": "F2"
-    },
-    {
-      "placeable": true,
-      "walkable": false,
-      "type": "platform",
-      "x": 2,
-      "y": 5,
-      "name": "F3"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 3,
-      "y": 5,
-      "name": "F4"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 4,
-      "y": 5,
-      "name": "F5"
-    },
-    {
-      "placeable": true,
-      "walkable": false,
-      "type": "platform",
-      "x": 5,
-      "y": 5,
-      "name": "F6"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 6,
-      "y": 5,
-      "name": "F7"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 7,
-      "y": 5,
-      "name": "F8"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 8,
-      "y": 5,
-      "name": "F9"
-    },
-    {
-      "placeable": true,
-      "walkable": true,
-      "type": "path",
-      "x": 9,
-      "y": 5,
-      "name": "F10"
-    },
-    {
-      "placeable": false,
-      "walkable": false,
-      "type": "building",
-      "x": 10,
-      "y": 5,
-      "name": "F11"
     }
   ]
 ]
