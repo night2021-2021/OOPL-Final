@@ -150,7 +150,7 @@ void CGameStateRun::OnBeginState()
 	ost->Play(selectedMapIndex, true);
 }
 
-void CGameStateRun::OnMove()                            // 移動遊戲元素
+void CGameStateRun::OnMove()																	// 移動遊戲元素
 {
 	if (!enemies.empty()) {
 		for (auto& enemy : enemies)
@@ -395,7 +395,7 @@ static std::string formatFloat(float value) {
 	return stream.str();
 }
 
-void CGameStateRun::OnShow()								 // 顯示遊戲畫面	
+void CGameStateRun::OnShow()								  // 顯示遊戲畫面	
 {
 	background.ShowBitmap();
 	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528, costTextFormat);
@@ -596,11 +596,11 @@ void CGameStateRun::SortOperator()					//排序幹員
 
 void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
 {
-	const int bar_width = 60;  // 調整血條寬度
-	const int bar_height = 8;  // 調整血條高度
-	const int x1 = posX;  // 血條的水平位置
+	const int bar_width = 60;					// 調整血條寬度
+	const int bar_height = 8;					// 調整血條高度
+	const int x1 = posX;						// 血條的水平位置
 	const int x2 = x1 + bar_width;
-	const int y1 = posY - bar_height - 10;  // 血條顯示在敵人圖像上方
+	const int y1 = posY - bar_height - 10;		// 血條顯示在敵人圖像上方
 	const int y2 = y1 + bar_height;
 	const int pen_width = bar_height / 8;
 	const int health_x1 = x1 + pen_width;
@@ -609,17 +609,17 @@ void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
 	const int health_y1 = y1 + pen_width;
 	const int health_y2 = y2 - pen_width;
 
-	CDC* pDC = CDDraw::GetBackCDC();  // 取得後端畫布的CDC 
+	CDC* pDC = CDDraw::GetBackCDC();			// 取得後端畫布的CDC 
 
-	CBrush b1(RGB(255, 255, 255));  // 畫背景色的血條內部
+	CBrush b1(RGB(255, 255, 255));				// 白色的血條底色
 	pDC->SelectObject(&b1);
 	pDC->Rectangle(health_x1, health_y1, health_x2_end, health_y2);
 
-	CBrush b2(RGB(255, 0, 0));  // 畫白色的血條進度
+	CBrush b2(RGB(255, 0, 0));					// 紅色的血條進度
 	pDC->SelectObject(&b2);
 	pDC->Rectangle(health_x1, health_y1, health_x2, health_y2);
 
-	CDDraw::ReleaseBackCDC();  // 釋放畫布的CDC
+	CDDraw::ReleaseBackCDC();					// 釋放畫布的CDC
 }
 
 
