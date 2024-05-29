@@ -10,6 +10,7 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Enemy/Giant_normal/Giant_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
+#include "../Actors/Operator/Eyjafjalla/Eyjafjalla.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include"../Actors/Operator/Saria/Saria.h"
@@ -77,6 +78,7 @@ void CGameStateRun::OnBeginState()
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
 	operators.push_back(std::make_unique<Exusiai>());
+	operators.push_back(std::make_unique<Eyjafjalla>());
 
 	SortOperator();
 

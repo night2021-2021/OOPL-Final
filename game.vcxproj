@@ -254,6 +254,7 @@
     <ClCompile Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.cpp" />
     <ClCompile Include="Source\Game\Actors\Enemy\Giant_normal\Giant_normal.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Exusiai\Exusiai.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Eyjafjalla\Eyjafjalla.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Reed\Reed.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Saria\Sarai.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Skadi\Skadi.cpp" />
@@ -279,6 +280,7 @@
     <ClInclude Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Giant_normal\Giant_normal.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Exusiai\Exusiai.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Eyjafjalla\Eyjafjalla.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Reed\Reed.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Saria\Saria.h" />
     <ClInclude Include="Source\Game\Actors\Operator\Skadi\Skadi.h" />
