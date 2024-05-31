@@ -400,28 +400,24 @@ static std::string formatFloat(float value) {
 	return stream.str();
 }
 
-void CGameStateRun::OnShow()								  // 顯示遊戲畫面	
-{
+void CGameStateRun::OnShow() {                                  // 顯示遊戲畫面   
 	background.ShowBitmap();
 	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528, costTextFormat);
-	
 
 	int locateFirst = 1150;
 	int locateSecond = 1150;
 
 	for (auto& op : operators) {
-		op->headImage.SetTopLeft(locateFirst, 605);
-		if(!op->isAlive){
+		op->headImage.SetTopLeft(locateFirst, 605);									//顯示幹員頭像
+		if (!op->isAlive) {
 			op->headImage.ShowBitmap();
 		}
 		else {
 			op->headImage.UnshowBitmap();
 		}
 		locateFirst -= 100;
-	}
 
-	for (auto& op : operators) {
-		if (op->isAlive || isConfirmingPlacement || isDragging) {
+		if (op->isAlive || isConfirmingPlacement || isDragging) {					//顯示幹員
 			op->image.SetTopLeft(op->position.x, op->position.y);
 			op->image.ShowBitmap();
 			if (op->hp < op->maxHp) {
@@ -429,27 +425,7 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 				ShowHealthBar(healthPercent, op->position.x + 100, op->position.y + 230, false);
 			}
 		}
-	}
 
-	for (auto& enemy : enemies) {
-		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		if (enemy->isDead == false && enemy->isActive == true) {
-			enemy->image.ShowBitmap();
-
-			if (enemy->hp != enemy->maxHp) {
-			int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
-			ShowHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230, true);
-			}
-		}
-	}
-
-	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount) + "                " + std::to_string(life) + "/ 3", 480, 0, lifeTextFormat);
-
-	if (isConfirmingPlacement && selOpIdx != -1) {
-		ShowAttackRange();
-	}
-
-	for (auto& op : operators) {
 		if (!op->isAlive && op->DeployTimer != 0) {
 			float remainingTime = op->DeployTime - op->DeployTimer;
 			std::string timeText = formatFloat(remainingTime);
@@ -461,9 +437,27 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 		locateSecond -= 100;
 	}
 
+	for (auto& enemy : enemies) {
+		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
+		if (enemy->isDead == false && enemy->isActive == true) {
+			enemy->image.ShowBitmap();
+			if (enemy->hp != enemy->maxHp) {
+				int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
+				ShowHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230, true);
+			}
+		}
+	}
+
+	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount) + "                " + std::to_string(life) + "/ 3", 480, 0, lifeTextFormat);
+
+	if (isConfirmingPlacement && selOpIdx != -1) {
+		ShowAttackRange();
+	}
+
 	//時間軸
 	UpdateGameTime();
 }
+
 
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
@@ -633,7 +627,8 @@ void CGameStateRun::ShowHealthBar(int healthPercent, int posX, int posY, bool is
 	pDC->SelectObject(&b1);
 	pDC->Rectangle(health_x1, health_y1, health_x2_end, health_y2);
 
-	CBrush b2(isEnemy ? RGB(255, 0, 0) : RGB(135, 206, 255));					
+	CBrush b2(isEnemy ? RGB(255, 0, 0) : RGB(135, 206, 255));	
+	pDC->SelectObject(&b2);
 	pDC->Rectangle(health_x1, health_y1, health_x2, health_y2);
 
 	CDDraw::ReleaseBackCDC();					// 釋放畫布的CDC
