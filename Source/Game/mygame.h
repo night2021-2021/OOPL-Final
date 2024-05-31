@@ -164,7 +164,7 @@ namespace game_framework {
 		void SortOperator();	
 		void Gameover();										// 遊戲結束
 
-		void ShowEnemyHealthBar(int healthPercent, int posX, int posY);		// 顯示敵人的血條
+		void ShowHealthBar(int healthPercent, int posX, int posY, bool isEnemy);		// 顯示血條
 
 		CAudio* ost = CAudio::Instance();						// OST
 	};

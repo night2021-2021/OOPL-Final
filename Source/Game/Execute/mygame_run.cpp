@@ -424,8 +424,11 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 		if (op->isAlive || isConfirmingPlacement || isDragging) {
 			op->image.SetTopLeft(op->position.x, op->position.y);
 			op->image.ShowBitmap();
+			if (op->hp < op->maxHp) {
+				int healthPercent = static_cast<int>(100.0 * op->hp / op->maxHp);
+				ShowHealthBar(healthPercent, op->position.x + 100, op->position.y + 230, false);
+			}
 		}
-
 	}
 
 	for (auto& enemy : enemies) {
@@ -435,7 +438,7 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 
 			if (enemy->hp != enemy->maxHp) {
 			int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
-			ShowEnemyHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230);
+			ShowHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230, true);
 			}
 		}
 	}
@@ -594,14 +597,14 @@ void CGameStateRun::DecreaseLife() {				//進藍門-1HP
 }
 
 
-void CGameStateRun::RemoveDeadEnemy()				//移除死亡的敵人
+void CGameStateRun::RemoveDeadEnemy()			//移除死亡的敵人
 {
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
 		return enemy->enemyState == EnemyState::DEAD;
 		}), enemies.end());
 }
 
-void CGameStateRun::SortOperator()					//排序幹員
+void CGameStateRun::SortOperator()				//排序幹員
 {
 	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
 		{
@@ -609,13 +612,13 @@ void CGameStateRun::SortOperator()					//排序幹員
 		});
 }
 
-void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
+void CGameStateRun::ShowHealthBar(int healthPercent, int posX, int posY, bool isEnemy)
 {
 	const int bar_width = 60;					// 調整血條寬度
 	const int bar_height = 8;					// 調整血條高度
 	const int x1 = posX;						// 血條的水平位置
 	const int x2 = x1 + bar_width;
-	const int y1 = posY - bar_height - 10;		// 血條顯示在敵人圖像上方
+	const int y1 = posY - bar_height - 10;		
 	const int y2 = y1 + bar_height;
 	const int pen_width = bar_height / 8;
 	const int health_x1 = x1 + pen_width;
@@ -630,8 +633,7 @@ void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
 	pDC->SelectObject(&b1);
 	pDC->Rectangle(health_x1, health_y1, health_x2_end, health_y2);
 
-	CBrush b2(RGB(255, 0, 0));					// 紅色的血條進度
-	pDC->SelectObject(&b2);
+	CBrush b2(isEnemy ? RGB(255, 0, 0) : RGB(135, 206, 255));					
 	pDC->Rectangle(health_x1, health_y1, health_x2, health_y2);
 
 	CDDraw::ReleaseBackCDC();					// 釋放畫布的CDC
