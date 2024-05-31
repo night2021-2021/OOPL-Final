@@ -11,6 +11,9 @@ namespace game_framework
     public:
     
         void OperatorAttackPerform(std::vector<std::unique_ptr<Operator>>& operators, std::vector<std::shared_ptr<Enemy>>& enemies, float deltaTime, CheckpointManager& checkpointManager);
+
+        void OperatorHealPerform(std::vector<std::unique_ptr<Operator>>& operators, std::vector<std::unique_ptr<Operator>>& allies, float deltaTime, CheckpointManager& checkpointManager);
+
         void EnemyAttackPerform(std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<std::unique_ptr<Operator>>& operators, float deltaTime, CheckpointManager& checkpointManager);
 
     private:
@@ -20,9 +23,11 @@ namespace game_framework
         
         void OperatorDamagePerform(int damage, Enemy* enemy, CheckpointManager& checkpointManager);
 
+        bool HealerRangeCheck(const Operator* op, const Operator* allies);
+
         int OperatorHealCount(const Operator* op, const Operator* targetOp);
 
-        void OperatorHealPerform(int heal, Operator* targetOp, CheckpointManager& checkpointManager);
+        void OperatorRecoverPerform(int heal, Operator* targetOp);
 
         bool EnemyRangeCheck(const Operator* op, const Enemy* enemy);
 

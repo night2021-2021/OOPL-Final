@@ -51,7 +51,7 @@ void CGameStateOver::OnShow()
 
 }
 
-void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
+void CGameStateOver::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	GotoGameState(GAME_STATE_INIT);
 }

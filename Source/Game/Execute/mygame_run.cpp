@@ -10,6 +10,7 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Enemy/Giant_normal/Giant_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
+#include "../Actors/Operator/Eyjafjalla/Eyjafjalla.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include"../Actors/Operator/Saria/Saria.h"
@@ -77,6 +78,7 @@ void CGameStateRun::OnBeginState()
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
 	operators.push_back(std::make_unique<Exusiai>());
+	operators.push_back(std::make_unique<Eyjafjalla>());
 
 	SortOperator();
 
@@ -290,7 +292,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 			checkpointManager->unregisterOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
 
 			selOpIdx = -1;
-			SortOperator();
 		}
 	}
 }
@@ -420,8 +421,11 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 	}
 
 	for (auto& op : operators) {
-		op->image.SetTopLeft(op->position.x, op->position.y);
-		op->image.ShowBitmap();
+		if (op->isAlive || isConfirmingPlacement || isDragging) {
+			op->image.SetTopLeft(op->position.x, op->position.y);
+			op->image.ShowBitmap();
+		}
+
 	}
 
 	for (auto& enemy : enemies) {
@@ -436,7 +440,7 @@ void CGameStateRun::OnShow()								  // 顯示遊戲畫面
 		}
 	}
 
-	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount), 600, 0, lifeTextFormat);
+	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount) + "                " + std::to_string(life) + "/ 3", 480, 0, lifeTextFormat);
 
 	if (isConfirmingPlacement && selOpIdx != -1) {
 		ShowAttackRange();
@@ -472,7 +476,8 @@ void CGameStateRun::UpdateGameTime() {
 		}
 
 		objectInteraction.OperatorAttackPerform(operators, enemies, deltaTime.count() / 1000.0f, *checkpointManager);
-		
+		objectInteraction.OperatorHealPerform(operators, operators, deltaTime.count() / 1000.0f, *checkpointManager);
+
 		for (auto& enemy : enemies) {
 			if (!enemy->isActive && gameTime.count() >= enemy->entryTime * 1000) {  
 				enemy->isActive = true;
