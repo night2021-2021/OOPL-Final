@@ -80,7 +80,7 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 				selectedMapIndex = i;									// 設置地圖索引
 				ShowInitProgress(0, "Start Initialize...");
 				GotoGameState(GAME_STATE_RUN);							// 切換至 GAME_STATE_RUN
-				DBOUT("You choose the " << selectedMapIndex + 1 << " maps. " << endl);
+				ShowInitProgress(100, "Done!");
 				return;
 			}
 		}

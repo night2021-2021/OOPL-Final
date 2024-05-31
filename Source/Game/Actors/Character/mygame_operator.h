@@ -95,6 +95,7 @@ namespace game_framework
 		static constexpr int maxRetreatCostIncrease = 3;
 		static constexpr int costIncreaseAmount = 2;
 		void Retreat(CheckpointManager& checkpointManager);
+		void Reset();
 
 		//Define the operator's attack range	
 		std::vector<AttackRange> attackRange;

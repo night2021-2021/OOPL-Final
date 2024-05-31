@@ -61,7 +61,14 @@ namespace game_framework {
             cost *= costIncreaseAmount; 
             ++retreatCostIncreaseTimes; 
         }
+
+        Reset();
     }
+
+    void Operator::Reset() {
+        hp = maxHp;
+    }
+
 
     void Operator::DeployCD(float deltaTime) {          //The time that the operator can be deployed again
         if (!isPlaceable) {
