@@ -208,12 +208,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	for (int i = 0; i <= 2; i++) {
 		std::string filePath = "resources/music/ost/0-" + std::to_string(i + 1) + ".wav";
 		if (!ost->Load(i, &filePath[0])) {
-			DBOUT("Fail to load OST :" << i << endl);
+			DBOUT("Fail to load OST :" << i + 1 << endl);
 			ost->Close();
 			return;
 		}
 		else {
-			DBOUT("Success to load OST :" << i << endl);
+			DBOUT("Success to load OST :" << i + 1 << endl);
 		}
 	}
 }
@@ -582,7 +582,6 @@ void CGameStateRun::DecreaseLife() {				//¶iÂÅªù-1HP
 
 		(*blueDoorEnemyIt)->enemyState = EnemyState::DEAD;
 		--life;
-		DBOUT("©Ò²Ö«õ¦h¥d¯Ç! " << life << endl);
 	}
 
 	if (life <= 0) {

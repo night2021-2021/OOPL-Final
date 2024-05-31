@@ -20,6 +20,9 @@ using namespace game_framework;
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
 int game_framework::selectedMapIndex = 0;
+int topX = 250, topY = 300;
+int buttonWidth = 200, buttonHeight = 100;
+int gap = 100;
 
 CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 {
@@ -52,32 +55,30 @@ void CGameStateInit::loadfirstbackground()
 	firstbackground.SetTopLeft(0, 0);
 }
 void CGameStateInit::loadsecondbackground() {
-	secondbackground.LoadBitmapByString({ "resources/test_image.bmp" });
+	secondbackground.LoadBitmapByString({ "resources/cg/SelectMap.bmp" });
 	secondbackground.SetTopLeft(0, 0);
 	
 	for (int i = 0; i < 3; i++) {
-		int x = 325 + 250 * i;
-		int y = 300;
+		int x = topX + i * (buttonWidth + gap);
+		int y = topY;
 
-		buttons[i].LoadBitmapByString(std::vector<std::string>{"resources/button/button" + std::to_string(i + 1) + ".bmp"});
+		buttons[i].LoadBitmapByString(std::vector<std::string>{"resources/button/level" + std::to_string(i + 1) + ".bmp", "resources/button/level" + std::to_string(i + 1) + "_choose.bmp", "resources/button/lock.bmp"});
 		buttons[i].SetTopLeft(x, y);
 	}
 }
 
 void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	int buttonWidth = 200, buttonHeight = 140;
-	int topX = 325, topY = 300;
-
-	if (state >= 2)
+	if (state >= 1)
 	{
 		for (int i = 0; i < 3; ++i) { 
-			int x = topX + i * buttonWidth;
+			int x = topX + i * (buttonWidth + gap);
 			int y = topY;
 
-			if (point.x >= x && point.x <= x + buttonWidth - 50 &&
-				point.y >= y && point.y <= y + buttonHeight - 50) {
+			if (point.x >= x && point.x <= x + buttonWidth &&
+				point.y >= y && point.y <= y + buttonHeight) {
 				selectedMapIndex = i;									// 設置地圖索引
+				ShowInitProgress(0, "Start Initialize...");
 				GotoGameState(GAME_STATE_RUN);							// 切換至 GAME_STATE_RUN
 				DBOUT("You choose the " << selectedMapIndex + 1 << " maps. " << endl);
 				return;
@@ -91,7 +92,23 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CGameStateInit::OnMouseMove(UINT nFlags, CPoint point)
 {
+	if (state >= 1)
+	{
+		for (int i = 0; i < 3; ++i) {
+			int x = topX + i * (buttonWidth + gap);
+			int y = topY;
 
+			if (point.x >= x && point.x <= x + buttonWidth &&
+				point.y >= y && point.y <= y + buttonHeight) {
+				selectedMapIndex = i;
+				buttons[i].SetFrameIndexOfBitmap(0);
+
+			}
+			else {
+				buttons[i].SetFrameIndexOfBitmap(1);
+			}
+		}
+	}
 } 
 
 void CGameStateInit::OnShow()

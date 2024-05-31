@@ -995,7 +995,7 @@ namespace game_framework {
 		CPen *pp, p(PS_NULL, 0, RGB(0, 0, 0));		// 清除pen
 		pp = pDC->SelectObject(&p);
 
-		CBrush *pb, b(RGB(155, 155, 155));				// 畫綠色 progress框
+		CBrush *pb, b(RGB(155, 155, 155));			// 畫綠色 progress框
 		pb = pDC->SelectObject(&b);
 		pDC->Rectangle(x1, y1, x2, y2);
 
@@ -1003,7 +1003,7 @@ namespace game_framework {
 		pDC->SelectObject(&b1);
 		pDC->Rectangle(progress_x1, progress_y1, progress_x2_end, progress_y2);
 
-		CBrush b2(RGB(255, 255, 255));					// 畫黃色 progrss進度
+		CBrush b2(RGB(255, 255, 255));				// 畫白色 progrss進度
 		pDC->SelectObject(&b2);
 		pDC->Rectangle(progress_x1, progress_y1, progress_x2, progress_y2);
 

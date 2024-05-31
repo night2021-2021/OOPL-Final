@@ -87,7 +87,7 @@ namespace game_framework {
 		int state = 0; 	//0: 水月  1:星空  2:遊戲開始
 		CMovingBitmap firstbackground;
 		CMovingBitmap secondbackground;
-		CMovingBitmap buttons[30];
+		CMovingBitmap buttons[3];
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -184,10 +184,11 @@ namespace game_framework {
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		CMovingBitmap background;
+		CMovingBitmap gameoverBackground;				// 遊戲結束的背景
 		GameMapManager gameMapManager;
 		GameMap gameMap;
 		int counter;									// 倒數之計數器
+		void loadGameOverMap();
 	};
 
 }
