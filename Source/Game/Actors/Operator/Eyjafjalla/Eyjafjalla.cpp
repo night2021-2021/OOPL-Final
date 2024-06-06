@@ -43,5 +43,6 @@ namespace game_framework {
         imageObject.LoadBitmapByString(imagePaths, RGB(255, 255, 255));
         imageObject.SetAnimation(10, false);
     }
+
     void Eyjafjalla::Skill() {}
 };

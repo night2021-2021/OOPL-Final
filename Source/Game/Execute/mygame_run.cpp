@@ -69,14 +69,19 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
+	ShowInitProgress(0, "Initializing...");
 	life = 3;
 	cost = 30;
 	operators.clear();
 
+	
 	//以下為讀入幹員
+	ShowInitProgress(10, "Loading operators...");
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
+
+	ShowInitProgress(25, "Loading operators...");
 	operators.push_back(std::make_unique<Exusiai>());
 	operators.push_back(std::make_unique<Eyjafjalla>());
 
@@ -87,6 +92,7 @@ void CGameStateRun::OnBeginState()
 	std::string visualMapPath;
 	std::string enemyPath;
 
+	ShowInitProgress(40, "Loading Maps...");
 	if (selectedMapIndex == 1) {				//要-1
 		logicMapPath = "resources/map/mapJSON/0-2.json";
 		visualMapPath = "resources/map/mapJSON/0-2Visual.json";
@@ -106,6 +112,7 @@ void CGameStateRun::OnBeginState()
 	background.SetTopLeft(0, 0);
 	background.SetFrameIndexOfBitmap(selectedMapIndex);
 
+	ShowInitProgress(60, "Compare maps...");
 	try {
 		gameMapManager.loadLogicMapFromJson(logicMapPath);
 		DBOUT("Success of logic map file open." << endl);
@@ -128,6 +135,7 @@ void CGameStateRun::OnBeginState()
 		DBOUT("Error of file open." << e.what());
 	}
 
+	ShowInitProgress(80, "Loading Enimies...");
 	//以下為讀enemy
 	try {
 		enemyManager.clearEnemies();
@@ -148,6 +156,9 @@ void CGameStateRun::OnBeginState()
 	}
 
 	enemyCount = enemies.size();
+
+	ShowInitProgress(100, "Mission start!");
+	Sleep(1000);
 
 	//重新計時
 	CleanTime();
@@ -280,7 +291,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		if (selOpIdx >= 0) {
+		if (selOpIdx >= 0 && !isDragging && !isConfirmingPlacement) {
 			cost += operators[selOpIdx]->cost / 2;								//撤退返還一半的費用
 			if(cost >= 99) cost = 99;
 			
@@ -289,7 +300,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 			operators[selOpIdx]->ChangeOperatorState(OperatorState::IDLE);
 			operators[selOpIdx]->Retreat(*checkpointManager);
-			checkpointManager->unregisterOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
 
 			selOpIdx = -1;
 		}
@@ -388,6 +398,10 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // 處理滑鼠的動作
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // 處理滑鼠的動作
 {
+	if (selOpIdx != -1) {
+		operators[selOpIdx]->Skill();
+		DBOUT("It's time to execute " << operators[selOpIdx]->operatorName << "'s skill!" << endl);
+	}
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // 處理滑鼠的動作
@@ -463,8 +477,8 @@ void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
 		std::chrono::duration<float, std::milli> deltaTime = now - lastUpdateTime;
-		gameTime += deltaTime;							// 只有在未暫停時累積遊戲時間
-		lastUpdateTime = now;							// 更新 lastUpdateTime 為目前時間
+		gameTime += deltaTime;										// 只有在未暫停時累積遊戲時間
+		lastUpdateTime = now;										// 更新 lastUpdateTime 為目前時間
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {

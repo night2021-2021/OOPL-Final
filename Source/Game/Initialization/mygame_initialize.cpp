@@ -30,11 +30,7 @@ CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 
 void CGameStateInit::OnInit()
 {
-	//
-	// 當圖很多時，OnInit載入所有的圖要花很多時間。為避免玩遊戲的人
-	//     等的不耐煩，遊戲會出現「Loading ...」，顯示Loading的進度。
-	//
-	ShowInitProgress(0, "Start Initialize...");    // 一開始的loading進度為0%
+
 	loadfirstbackground();
 	loadsecondbackground();
 	state = 0;
@@ -46,7 +42,7 @@ void CGameStateInit::OnBeginState()
 
 void CGameStateInit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	GotoGameState(GAME_STATE_RUN);
+
 }
 
 void CGameStateInit::loadfirstbackground()
@@ -80,7 +76,6 @@ void CGameStateInit::OnLButtonDown(UINT nFlags, CPoint point)
 				selectedMapIndex = i;									// 設置地圖索引
 				ShowInitProgress(0, "Start Initialize...");
 				GotoGameState(GAME_STATE_RUN);							// 切換至 GAME_STATE_RUN
-				ShowInitProgress(100, "Done!");
 				return;
 			}
 		}
