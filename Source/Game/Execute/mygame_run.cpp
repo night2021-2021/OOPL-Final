@@ -170,34 +170,32 @@ void CGameStateRun::OnBeginState()
 void CGameStateRun::OnMove()																	// 移動遊戲元素
 {
 	if (!enemies.empty()) {
-		for (auto& enemy : enemies)
-		{
-			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;		// pixel
-
+		for (auto& enemy : enemies) {
 			if (enemy->positionIndex + 1 < enemy->trajectory.size()) {
-				originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
-				originalVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-				nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+				vector<int> originalLogicPosition = enemy->trajectory[enemy->positionIndex];
+				vector<int> nextLogicPosition = enemy->trajectory[enemy->positionIndex + 1];
+				vector<int> originalVisualPosition = FindPixelFromLogic(originalLogicPosition[0], originalLogicPosition[1]);
+				vector<int> nextVisualPosition = FindPixelFromLogic(nextLogicPosition[0], nextLogicPosition[1]);
 
 				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
 				enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
 
-				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {					//若該checkpoint的blockCount - enemyCount <= 0，則敵人可以通過
-					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//若敵人被阻擋，且blockCount歸零，則解除阻擋	
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {				//若該checkpoint的blockCount - enemyCount <= 0，則敵人可以通過
+					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {			//若敵人被阻擋，且blockCount=0，則解除阻擋	
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
 					}
-					else if (enemy->isBlocked == false && !enemy->isDead) {								//若敵人未被阻擋，則移動	//這裡加了敵人死亡才能繼續執行的條件
-						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
-						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
+					else if (!enemy->isBlocked && !enemy->isDead) {									//若敵人未被阻擋，則改為移動
+						enemy->logicX = nextLogicPosition[0];
+						enemy->logicY = nextLogicPosition[1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
 				else {
-					if (!enemy->isBlocked && !enemy->isDead) {											//若敵人未被阻擋，且未死亡，則阻擋敵人
+					if (!enemy->isBlocked && !enemy->isDead) {										//若敵人未被阻擋且未死亡，則改為阻擋		
 						checkpointManager->registerEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = true;
-						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: "<< currentCheckpoint.blockCount << endl);
+						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: " << currentCheckpoint.blockCount << endl);
 					}
 				}
 			}

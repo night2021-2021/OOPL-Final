@@ -43,8 +43,8 @@ namespace game_framework {
 
 		size_t  positionIndex;				//The index of the current position in the trajectory
 
-		Enemy(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, int TIME)
-			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE), entryTime(TIME), attackCD(0)
+		Enemy(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, int TIME, EnemyOrientation ori = EnemyOrientation::Left)
+			:ID(IDENTIFY), Character(MAX_HP, ATK, DEF, AS), sp(SP), blockCount(BLOCKS), moveSpeed(MS), trajectory(TRAJECTORY), enemyType(TYPE), enemyState(IDLE), entryTime(TIME), attackCD(0), enemyOrientation(ori)
 		{
 			hp = MAX_HP;
 			positionIndex = 0;

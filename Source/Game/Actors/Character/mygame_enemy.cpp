@@ -32,6 +32,7 @@ namespace  game_framework {
                     onReachBlueDoor(checkpointManager);
 
                 } else {
+                    this->ChangeEnemyOrientation();                                     //Change the orientation of the enemy
                     this->logicX = this->trajectory[this->positionIndex + 1][0];
                     this->logicY = this->trajectory[this->positionIndex + 1][1];
                     this->positionIndex += 1;                                           //Move to the next position
