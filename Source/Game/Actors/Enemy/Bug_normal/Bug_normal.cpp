@@ -4,8 +4,8 @@
 namespace game_framework {
 
 	void Bug_normal::LoadImages() {
-		LoadIdleImagesForDirection("N/A", "Move", MoveImage, 58);
-        LoadIdleImagesForDirection("N/A", "Attack", AttackImage, 18);
+		LoadIdleImagesForDirection("N/A", "Move", leftMoveImage, 58);
+        LoadIdleImagesForDirection("N/A", "Attack", leftAttackImage, 18);
 	}
 
     void Bug_normal::LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {

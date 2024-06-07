@@ -11,7 +11,7 @@ namespace game_framework
             : Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE, TIME)
 		{
 			LoadImages();
-			image = MoveImage;
+			image = leftMoveImage;
 		}
 
         

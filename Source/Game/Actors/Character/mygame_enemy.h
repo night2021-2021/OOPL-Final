@@ -14,12 +14,17 @@ namespace game_framework {
 
 	enum EnemyType { BUG_NORMAL, GIANT_NORMAL };
 
+	enum class EnemyOrientation { Left, Right };
+
 	class Enemy : public Character 
 	{
 	public:
+
 		CMovingBitmap image;
-		CMovingBitmap MoveImage;
-		CMovingBitmap AttackImage;
+		CMovingBitmap leftMoveImage;
+		CMovingBitmap leftAttackImage;
+		CMovingBitmap rightMoveImage;
+		CMovingBitmap rightAttackImage;
 		CPoint position;				//The real position(pixel)
 		int ID;
 		int sp;
@@ -30,6 +35,7 @@ namespace game_framework {
 		std::vector<std::vector<int>> trajectory; 		// Moving path
 		EnemyType enemyType;  
 		EnemyState enemyState; 
+		EnemyOrientation enemyOrientation;
 		bool isDead = false;
 		bool isActive = false;
 		bool isBlocked = false;
@@ -48,6 +54,7 @@ namespace game_framework {
 		void Move(std::vector<int> originalPosition, std::vector<int> nextPosition, CheckpointManager& checkpointManager);
 		void Dead(CheckpointManager& checkpointManager);
 		void ChangeEnemyState(EnemyState newState);
+		void ChangeEnemyOrientation();
 		void ChangeImages();
 
 		//Enemy's Load Images

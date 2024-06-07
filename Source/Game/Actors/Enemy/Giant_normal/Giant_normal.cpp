@@ -4,8 +4,8 @@
 namespace game_framework {
 
 	void Giant_normal::LoadImages() {
-		LoadIdleImagesForDirection("N/A", "Move", MoveImage, 27);
-        LoadIdleImagesForDirection("N/A", "Attack", AttackImage, 12);
+		LoadIdleImagesForDirection("N/A", "Move", leftMoveImage, 27);
+        LoadIdleImagesForDirection("N/A", "Attack", leftAttackImage, 12);
 	}
 
     void Giant_normal::LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {

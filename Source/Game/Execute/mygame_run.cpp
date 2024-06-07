@@ -108,7 +108,7 @@ void CGameStateRun::OnBeginState()
 		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 	}
 
-	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp", "resources/map/0-3.bmp" });			//有問題待修正, background似乎無法unload
+	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp", "resources/map/0-3.bmp" });			
 	background.SetTopLeft(0, 0);
 	background.SetFrameIndexOfBitmap(selectedMapIndex);
 
@@ -158,7 +158,7 @@ void CGameStateRun::OnBeginState()
 	enemyCount = enemies.size();
 
 	ShowInitProgress(100, "Mission start!");
-	Sleep(1000);
+	Sleep(1500);
 
 	//重新計時
 	CleanTime();

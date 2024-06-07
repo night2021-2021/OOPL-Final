@@ -63,16 +63,25 @@ namespace  game_framework {
 		}
     }
 
+    void Enemy::ChangeEnemyOrientation() {
+        if (logicX > this->trajectory[this->positionIndex + 1][0]) {
+			this->enemyOrientation = EnemyOrientation::Left;
+        }
+        else {
+			this->enemyOrientation = EnemyOrientation::Right;
+		}
+    }
+
     void Enemy::ChangeImages() {
         switch (enemyState) {
 		case EnemyState::IDLE:
-			this->image = this->MoveImage;
+			this->image = this->leftMoveImage;
 			break;
 		case EnemyState::MOVE:
-			this->image = this->MoveImage;
+			this->image = this->leftMoveImage;
 			break;
 		case EnemyState::ATTACK:
-			this->image = this->AttackImage;
+			this->image = this->leftAttackImage;
 			break;
 		case EnemyState::DEAD:
 			break;
