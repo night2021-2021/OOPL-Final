@@ -141,7 +141,7 @@ void CGameStateRun::OnBeginState()
 		enemyManager.clearEnemies();
 		enemyManager.loadEnemyFromJson(enemyPath);
 		DBOUT("Success of enemy file open." << endl);
-		//以下為讀入敵人的程式碼
+
 		auto& loadedEnemies = enemyManager.getEnemies();
 
 		for (auto& enemy : loadedEnemies) {
@@ -186,8 +186,8 @@ void CGameStateRun::OnMove()																	// 移動遊戲元素
 						enemy->isBlocked = false;
 					}
 					else if (!enemy->isBlocked && !enemy->isDead) {									//若敵人未被阻擋，則改為移動
-						enemy->logicX = nextLogicPosition[0];
-						enemy->logicY = nextLogicPosition[1];
+						//enemy->logicX = nextLogicPosition[0];
+						//enemy->logicY = nextLogicPosition[1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
