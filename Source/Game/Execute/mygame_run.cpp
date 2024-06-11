@@ -15,6 +15,13 @@
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include"../Actors/Operator/Saria/Saria.h"
 #include "../Actors/Operator/Exusiai/Exusiai.h"
+#include "../Actors/Operator/Bagpipe/Bagpipe.h"
+#include "../Actors/Operator/Blaze/Blaze.h"
+#include "../Actors/Operator/Dusk/Dusk.h"
+#include "../Actors/Operator/Hongxue/Hongxue.h"
+#include "../Actors/Operator/Ines/Ines.h"
+#include "../Actors/Operator/Nian/Nian.h"
+#include "../Actors/Operator/Nightingale/Nightingale.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -44,6 +51,7 @@ const int deviationX = 120;
 const int deviationY = 180;
 int enemyCount = 0;
 int life = 3;
+bool isGameover;
 
 TextFormat CGameStateRun::costTextFormat(40, RGB(255, 255, 255), 300, "Segoe UI");
 TextFormat CGameStateRun::operatorCostFormat(20, RGB(255, 255, 255), 500, "Segoe UI");
@@ -73,17 +81,29 @@ void CGameStateRun::OnBeginState()
 	life = 3;
 	cost = 30;
 	operators.clear();
+	isGameover = false;
 
 	
 	//以下為讀入幹員
-	ShowInitProgress(10, "Loading operators...");
+	ShowInitProgress(5, "Loading operators...");
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
 
-	ShowInitProgress(25, "Loading operators...");
+	ShowInitProgress(10, "Loading operators...");
 	operators.push_back(std::make_unique<Exusiai>());
 	operators.push_back(std::make_unique<Eyjafjalla>());
+	operators.push_back(std::make_unique<Bagpipe>());
+
+	ShowInitProgress(20, "Loading operators...");
+	operators.push_back(std::make_unique<Blaze>());
+	operators.push_back(std::make_unique<Dusk>());
+	operators.push_back(std::make_unique<Hongxue>());
+
+	ShowInitProgress(30, "Loading operators...");
+	operators.push_back(std::make_unique<Ines>());
+	operators.push_back(std::make_unique<Nian>());
+	operators.push_back(std::make_unique<Nightingale>());
 
 	SortOperator();
 
@@ -111,6 +131,7 @@ void CGameStateRun::OnBeginState()
 	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp", "resources/map/0-3.bmp" });			
 	background.SetTopLeft(0, 0);
 	background.SetFrameIndexOfBitmap(selectedMapIndex);
+
 
 	ShowInitProgress(60, "Compare maps...");
 	try {
@@ -186,8 +207,6 @@ void CGameStateRun::OnMove()																	// 移動遊戲元素
 						enemy->isBlocked = false;
 					}
 					else if (!enemy->isBlocked && !enemy->isDead) {									//若敵人未被阻擋，則改為移動
-						//enemy->logicX = nextLogicPosition[0];
-						//enemy->logicY = nextLogicPosition[1];
 						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
@@ -204,6 +223,7 @@ void CGameStateRun::OnMove()																	// 移動遊戲元素
 		RemoveDeadEnemy();
 	}
 	else {
+		isGameover = true;
 		Gameover();
 	}
 }
@@ -279,7 +299,6 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			int logicY = operators[selOpIdx]->logicY;
 			
 			checkpointManager->registerOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
-
 			selOpIdx = -1;
 			break;
 		}
@@ -298,7 +317,6 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 			operators[selOpIdx]->ChangeOperatorState(OperatorState::IDLE);
 			operators[selOpIdx]->Retreat(*checkpointManager);
-
 			selOpIdx = -1;
 		}
 	}
@@ -597,6 +615,7 @@ void CGameStateRun::DecreaseLife() {				//進藍門-1HP
 	}
 
 	if (life <= 0) {
+		isGameover = true;
 		Gameover();
 	}
 }
@@ -648,8 +667,17 @@ void CGameStateRun::ShowHealthBar(int healthPercent, int posX, int posY, bool is
 
 void CGameStateRun::Gameover()						//遊戲結束
 {
+	ost->Pause();
+	Sleep(1000);
+
+	if (!enemies.empty()) {
+		levelpass = 0;
+	}else {
+		levelpass = 1;
+	}
+	
 	GotoGameState(GAME_STATE_OVER);
 	enemies.clear();
-	ost->Pause();
 	background.UnshowBitmap();
+	isGameover = false;
 }

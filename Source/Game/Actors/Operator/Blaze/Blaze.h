@@ -4,14 +4,14 @@
 
 namespace game_framework
 {
-    class Saria : public Operator
+    class Blaze : public Operator
     {
     public:
-        Saria()
-            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
-            headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
+        Blaze()
+        : Operator(1858, 495, 245, 2, 19, 0, 40, 1.2f, OperatorClass::Guard, "Blaze") {
+            headImage.LoadBitmapByString({ "resources/characters/operators/Blaze/Blaze_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
-
+            
             LoadImages();
             SetAttackRange();
             image = frontIdleImage;

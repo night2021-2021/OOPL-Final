@@ -4,14 +4,14 @@
 
 namespace game_framework
 {
-    class Saria : public Operator
+    class Bagpipe : public Operator
     {
     public:
-        Saria()
-            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
-            headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
+        Bagpipe()
+        : Operator(1226, 445, 279, 1, 10, 0, 45, 1.0f, OperatorClass::Vanguard, "Bagpipe") {
+            headImage.LoadBitmapByString({ "resources/characters/operators/Bagpipe/Bagpipe_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
-
+            
             LoadImages();
             SetAttackRange();
             image = frontIdleImage;

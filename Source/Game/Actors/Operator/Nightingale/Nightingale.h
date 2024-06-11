@@ -4,14 +4,14 @@
 
 namespace game_framework
 {
-    class Saria : public Operator
+    class Nightingale : public Operator
     {
     public:
-        Saria()
-            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
-            headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
+        Nightingale()
+        : Operator(1220, 345, 110, 1, 17, 10, 30, 2.85f, OperatorClass::Medic, "Nightingale") {
+            headImage.LoadBitmapByString({ "resources/characters/operators/Nightingale/Nightingale_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
-
+            
             LoadImages();
             SetAttackRange();
             image = frontIdleImage;

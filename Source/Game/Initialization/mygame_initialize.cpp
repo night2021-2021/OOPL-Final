@@ -20,6 +20,7 @@ using namespace game_framework;
 // 這個class為遊戲的遊戲開頭畫面物件
 /////////////////////////////////////////////////////////////////////////////
 int game_framework::selectedMapIndex = 0;
+int game_framework::levelpass = 0;
 int topX = 250, topY = 300;
 int buttonWidth = 200, buttonHeight = 100;
 int gap = 100;
@@ -30,10 +31,10 @@ CGameStateInit::CGameStateInit(CGame *g) : CGameState(g)
 
 void CGameStateInit::OnInit()
 {
-
 	loadfirstbackground();
 	loadsecondbackground();
 	state = 0;
+	levelpass = -1;
 }
 
 void CGameStateInit::OnBeginState()

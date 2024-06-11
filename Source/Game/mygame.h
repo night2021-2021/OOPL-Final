@@ -54,6 +54,7 @@ namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 
 	extern int selectedMapIndex;
+	extern int levelpass;
 	
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -185,10 +186,12 @@ namespace game_framework {
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
 		CMovingBitmap gameoverBackground;				// 遊戲結束的背景
+		CMovingBitmap gameResult;						// 遊戲結果
 		GameMapManager gameMapManager;
 		GameMap gameMap;
 		int counter;									// 倒數之計數器
 		void loadGameOverMap();
+		void loadGameResult();
 	};
 
 }

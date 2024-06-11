@@ -8,7 +8,7 @@ namespace game_framework
     {
     public:
         Eyjafjalla()
-        : Operator(1100, 470, 90, 1, 16, 0, 4, 1.6f, OperatorClass::Caster, "Eyjafjalla") {
+        : Operator(1100, 470, 90, 1, 18, 0, 4, 1.6f, OperatorClass::Caster, "Eyjafjalla") {
 
             headImage.LoadBitmapByString({ "resources/characters/operators/Eyjafjalla/Eyjafjalla_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);

@@ -26,6 +26,7 @@ void CGameStateOver::OnMove()
 void CGameStateOver::OnBeginState()
 {
 	loadGameOverMap();
+	loadGameResult();
 }
 
 void CGameStateOver::OnInit()
@@ -36,6 +37,7 @@ void CGameStateOver::OnInit()
 void CGameStateOver::OnShow()
 {
 	gameoverBackground.ShowBitmap();
+	gameResult.ShowBitmap();
 }
 
 void CGameStateOver::OnLButtonUp(UINT nFlags, CPoint point)
@@ -49,3 +51,10 @@ void CGameStateOver::loadGameOverMap()
 	gameoverBackground.LoadBitmapByString({ "resources/cg/Gameover.bmp" });
 	gameoverBackground.SetTopLeft(0, 0);
 }	
+
+void CGameStateOver::loadGameResult()
+{
+	gameResult.LoadBitmapByString({ "resources/Alert/failed.bmp", "resources/Alert/complete.bmp " });
+	gameResult.SetTopLeft(200, 200);
+	gameResult.SetFrameIndexOfBitmap(levelpass);
+}

@@ -4,14 +4,14 @@
 
 namespace game_framework
 {
-    class Saria : public Operator
+    class Hongxue : public Operator
     {
     public:
-        Saria()
-            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
-            headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
+        Hongxue()
+        : Operator(1060, 375, 126, 1, 11, 0, 4, 1.0f, OperatorClass::Sniper, "Hongxue") {
+            headImage.LoadBitmapByString({ "resources/characters/operators/Hongxue/Hongxue_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
-
+            
             LoadImages();
             SetAttackRange();
             image = frontIdleImage;

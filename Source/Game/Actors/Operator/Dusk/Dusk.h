@@ -4,14 +4,14 @@
 
 namespace game_framework
 {
-    class Saria : public Operator
+    class Dusk : public Operator
     {
     public:
-        Saria()
-            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
-            headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
+        Dusk()
+        : Operator(1141, 582, 95, 1, 30, 0, 40, 2.9f, OperatorClass::Caster, "Dusk") {
+            headImage.LoadBitmapByString({ "resources/characters/operators/Dusk/Dusk_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
-
+            
             LoadImages();
             SetAttackRange();
             image = frontIdleImage;
