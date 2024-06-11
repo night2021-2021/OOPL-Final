@@ -10,10 +10,18 @@
 #include "../Actors/Enemy/Bug_normal/Bug_normal.h"
 #include "../Actors/Enemy/Giant_normal/Giant_normal.h"
 #include "../Actors/Character/mygame_enemyManager.h"
+#include "../Actors/Operator/Eyjafjalla/Eyjafjalla.h"
 #include "../Actors/Operator/Reed/Reed.h"
 #include"../Actors/Operator/Skadi/Skadi.h"
 #include"../Actors/Operator/Saria/Saria.h"
 #include "../Actors/Operator/Exusiai/Exusiai.h"
+#include "../Actors/Operator/Bagpipe/Bagpipe.h"
+#include "../Actors/Operator/Blaze/Blaze.h"
+#include "../Actors/Operator/Dusk/Dusk.h"
+#include "../Actors/Operator/Hongxue/Hongxue.h"
+#include "../Actors/Operator/Ines/Ines.h"
+#include "../Actors/Operator/Nian/Nian.h"
+#include "../Actors/Operator/Nightingale/Nightingale.h"
 #include "../mygame.h"
 #include "../Map/mygame_mapManager.h"
 #include "../Map/mygame_mapAndCheckpoint.h"
@@ -43,6 +51,7 @@ const int deviationX = 120;
 const int deviationY = 180;
 int enemyCount = 0;
 int life = 3;
+bool isGameover;
 
 TextFormat CGameStateRun::costTextFormat(40, RGB(255, 255, 255), 300, "Segoe UI");
 TextFormat CGameStateRun::operatorCostFormat(20, RGB(255, 255, 255), 500, "Segoe UI");
@@ -68,15 +77,33 @@ CGameStateRun::~CGameStateRun()
 
 void CGameStateRun::OnBeginState()
 {
+	ShowInitProgress(0, "Initializing...");
 	life = 3;
 	cost = 30;
 	operators.clear();
+	isGameover = false;
 
+	
 	//¥H¤U¬°Åª¤J·F­û
+	ShowInitProgress(5, "Loading operators...");
 	operators.push_back(std::make_unique<Reed>());
 	operators.push_back(std::make_unique<Skadi>());
 	operators.push_back(std::make_unique<Saria>());
+
+	ShowInitProgress(10, "Loading operators...");
 	operators.push_back(std::make_unique<Exusiai>());
+	operators.push_back(std::make_unique<Eyjafjalla>());
+	operators.push_back(std::make_unique<Bagpipe>());
+
+	ShowInitProgress(20, "Loading operators...");
+	operators.push_back(std::make_unique<Blaze>());
+	operators.push_back(std::make_unique<Dusk>());
+	operators.push_back(std::make_unique<Hongxue>());
+
+	ShowInitProgress(30, "Loading operators...");
+	operators.push_back(std::make_unique<Ines>());
+	operators.push_back(std::make_unique<Nian>());
+	operators.push_back(std::make_unique<Nightingale>());
 
 	SortOperator();
 
@@ -85,10 +112,15 @@ void CGameStateRun::OnBeginState()
 	std::string visualMapPath;
 	std::string enemyPath;
 
+	ShowInitProgress(40, "Loading Maps...");
 	if (selectedMapIndex == 1) {				//­n-1
 		logicMapPath = "resources/map/mapJSON/0-2.json";
 		visualMapPath = "resources/map/mapJSON/0-2Visual.json";
 		enemyPath = "resources/map/enemyJSON/0-2Enemy.JSON";
+	}else if (selectedMapIndex == 2) {				
+		logicMapPath = "resources/map/mapJSON/0-3.json";
+		visualMapPath = "resources/map/mapJSON/0-3Visual.json";
+		enemyPath = "resources/map/enemyJSON/0-3Enemy.JSON";
 	}
 	else {
 		logicMapPath = "resources/map/mapJSON/0-1.json";
@@ -96,10 +128,12 @@ void CGameStateRun::OnBeginState()
 		enemyPath = "resources/map/enemyJSON/0-1Enemy.JSON";
 	}
 
-	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp" });			//¦³°ÝÃD«Ý­×¥¿, background¦ü¥GµLªkunload
+	background.LoadBitmapByString({ "resources/map/0-1.bmp", "resources/map/0-2.bmp", "resources/map/0-3.bmp" });			
 	background.SetTopLeft(0, 0);
 	background.SetFrameIndexOfBitmap(selectedMapIndex);
 
+
+	ShowInitProgress(60, "Compare maps...");
 	try {
 		gameMapManager.loadLogicMapFromJson(logicMapPath);
 		DBOUT("Success of logic map file open." << endl);
@@ -122,12 +156,13 @@ void CGameStateRun::OnBeginState()
 		DBOUT("Error of file open." << e.what());
 	}
 
+	ShowInitProgress(80, "Loading Enimies...");
 	//¥H¤U¬°Åªenemy
 	try {
 		enemyManager.clearEnemies();
 		enemyManager.loadEnemyFromJson(enemyPath);
 		DBOUT("Success of enemy file open." << endl);
-		//¥H¤U¬°Åª¤J¼Ä¤Hªºµ{¦¡½X
+
 		auto& loadedEnemies = enemyManager.getEnemies();
 
 		for (auto& enemy : loadedEnemies) {
@@ -143,6 +178,9 @@ void CGameStateRun::OnBeginState()
 
 	enemyCount = enemies.size();
 
+	ShowInitProgress(100, "Mission start!");
+	Sleep(1500);
+
 	//­«·s­p®É
 	CleanTime();
 	isGamePaused = false;
@@ -150,37 +188,33 @@ void CGameStateRun::OnBeginState()
 	ost->Play(selectedMapIndex, true);
 }
 
-void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
+void CGameStateRun::OnMove()																	// ²¾°Ê¹CÀ¸¤¸¯À
 {
 	if (!enemies.empty()) {
-		for (auto& enemy : enemies)
-		{
-			vector<int> originalLogicPosition, originalVisualPosition, nextVisualPosition;		// pixel
-
+		for (auto& enemy : enemies) {
 			if (enemy->positionIndex + 1 < enemy->trajectory.size()) {
-				originalLogicPosition = (enemy->trajectory[enemy->positionIndex]);
-				originalVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex][0], enemy->trajectory[enemy->positionIndex][1]);
-				nextVisualPosition = FindPixelFromLogic(enemy->trajectory[enemy->positionIndex + 1][0], enemy->trajectory[enemy->positionIndex + 1][1]);
+				vector<int> originalLogicPosition = enemy->trajectory[enemy->positionIndex];
+				vector<int> nextLogicPosition = enemy->trajectory[enemy->positionIndex + 1];
+				vector<int> originalVisualPosition = FindPixelFromLogic(originalLogicPosition[0], originalLogicPosition[1]);
+				vector<int> nextVisualPosition = FindPixelFromLogic(nextLogicPosition[0], nextLogicPosition[1]);
 
 				Checkpoint& currentCheckpoint = checkpointManager->getCheckpoint(originalLogicPosition[0], originalLogicPosition[1]);
 				enemy->Move(originalVisualPosition, nextVisualPosition, *checkpointManager);
 
-				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {					//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
-					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {				//­Y¼Ä¤H³Qªý¾×¡A¥BblockCountÂk¹s¡A«h¸Ñ°£ªý¾×	
+				if (currentCheckpoint.blockCount - currentCheckpoint.enemyCount <= 0) {				//­Y¸ÓcheckpointªºblockCount - enemyCount <= 0¡A«h¼Ä¤H¥i¥H³q¹L
+					if (currentCheckpoint.blockCount == 0 && enemy->isBlocked == true) {			//­Y¼Ä¤H³Qªý¾×¡A¥BblockCount=0¡A«h¸Ñ°£ªý¾×	
 						checkpointManager->unregisterEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = false;
 					}
-					else if (enemy->isBlocked == false && !enemy->isDead) {								//­Y¼Ä¤H¥¼³Qªý¾×¡A«h²¾°Ê	//³o¸Ì¥[¤F¼Ä¤H¦º¤`¤~¯àÄ~Äò°õ¦æªº±ø¥ó
-						enemy->logicX = enemy->trajectory[enemy->positionIndex][0];
-						enemy->logicY = enemy->trajectory[enemy->positionIndex][1];
+					else if (!enemy->isBlocked && !enemy->isDead) {									//­Y¼Ä¤H¥¼³Qªý¾×¡A«h§ï¬°²¾°Ê
 						enemy->ChangeEnemyState(EnemyState::MOVE);
 					}
 				}
 				else {
-					if (!enemy->isBlocked && !enemy->isDead) {											//­Y¼Ä¤H¥¼³Qªý¾×¡A¥B¥¼¦º¤`¡A«hªý¾×¼Ä¤H
+					if (!enemy->isBlocked && !enemy->isDead) {										//­Y¼Ä¤H¥¼³Qªý¾×¥B¥¼¦º¤`¡A«h§ï¬°ªý¾×		
 						checkpointManager->registerEnemyAtCheckpoint(originalLogicPosition[0], originalLogicPosition[1], enemy->blockCount);
 						enemy->isBlocked = true;
-						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: "<< currentCheckpoint.blockCount << endl);
+						DBOUT("The CKPT (" << currentCheckpoint.logicX << "," << currentCheckpoint.logicY << ") has " << currentCheckpoint.enemyCount << " enemies. It's ID : " << enemy->ID << ". And it's in (" << enemy->logicX << ", " << enemy->logicY << "). Has block counts: " << currentCheckpoint.blockCount << endl);
 					}
 				}
 			}
@@ -189,6 +223,7 @@ void CGameStateRun::OnMove()                            // ²¾°Ê¹CÀ¸¤¸¯À
 		RemoveDeadEnemy();
 	}
 	else {
+		isGameover = true;
 		Gameover();
 	}
 }
@@ -202,12 +237,12 @@ void CGameStateRun::OnInit()                              // ¹CÀ¸ªºªì­È¤Î¹Ï§Î³]©
 	for (int i = 0; i <= 2; i++) {
 		std::string filePath = "resources/music/ost/0-" + std::to_string(i + 1) + ".wav";
 		if (!ost->Load(i, &filePath[0])) {
-			DBOUT("Fail to load OST :" << i << endl);
+			DBOUT("Fail to load OST :" << i + 1 << endl);
 			ost->Close();
 			return;
 		}
 		else {
-			DBOUT("Success to load OST :" << i << endl);
+			DBOUT("Success to load OST :" << i + 1 << endl);
 		}
 	}
 }
@@ -264,7 +299,6 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 			int logicY = operators[selOpIdx]->logicY;
 			
 			checkpointManager->registerOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
-
 			selOpIdx = -1;
 			break;
 		}
@@ -274,7 +308,7 @@ void CGameStateRun::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
 	if (nChar == VK_BACK) {
-		if (selOpIdx >= 0) {
+		if (selOpIdx >= 0 && !isDragging && !isConfirmingPlacement) {
 			cost += operators[selOpIdx]->cost / 2;								//ºM°hªðÁÙ¤@¥bªº¶O¥Î
 			if(cost >= 99) cost = 99;
 			
@@ -283,10 +317,7 @@ void CGameStateRun::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags)
 
 			operators[selOpIdx]->ChangeOperatorState(OperatorState::IDLE);
 			operators[selOpIdx]->Retreat(*checkpointManager);
-			checkpointManager->unregisterOperatorAtCheckpoint(logicX, logicY, operators[selOpIdx]->blockCounts);
-
 			selOpIdx = -1;
-			SortOperator();
 		}
 	}
 }
@@ -383,6 +414,10 @@ void CGameStateRun::OnMouseMove(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
 
 void CGameStateRun::OnRButtonDown(UINT nFlags, CPoint point)  // ³B²z·Æ¹«ªº°Ê§@
 {
+	if (selOpIdx != -1) {
+		operators[selOpIdx]->Skill();
+		DBOUT("It's time to execute " << operators[selOpIdx]->operatorName << "'s skill!" << endl);
+	}
 }
 
 void CGameStateRun::OnRButtonUp(UINT nFlags, CPoint point)    // ³B²z·Æ¹«ªº°Ê§@
@@ -395,44 +430,32 @@ static std::string formatFloat(float value) {
 	return stream.str();
 }
 
-void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±	
-{
+void CGameStateRun::OnShow() {                                  // Åã¥Ü¹CÀ¸µe­±   
 	background.ShowBitmap();
 	textRenderer.ShowText("Cost: " + std::to_string(cost), 1100, 528, costTextFormat);
-	
 
 	int locateFirst = 1150;
 	int locateSecond = 1150;
 
 	for (auto& op : operators) {
-		op->headImage.SetTopLeft(locateFirst, 605);
-		op->headImage.ShowBitmap();
+		op->headImage.SetTopLeft(locateFirst, 605);									//Åã¥Ü·F­ûÀY¹³
+		if (!op->isAlive) {
+			op->headImage.ShowBitmap();
+		}
+		else {
+			op->headImage.UnshowBitmap();
+		}
 		locateFirst -= 100;
-	}
-	for (auto& op : operators) {
-		op->image.SetTopLeft(op->position.x, op->position.y);
-		op->image.ShowBitmap();
-	}
 
-	for (auto& enemy : enemies) {
-		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
-		if (enemy->isDead == false && enemy->isActive == true) {
-			enemy->image.ShowBitmap();
-
-			if (enemy->hp != enemy->maxHp) {
-			int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
-			ShowEnemyHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230);
+		if (op->isAlive || isConfirmingPlacement || isDragging) {					//Åã¥Ü·F­û
+			op->image.SetTopLeft(op->position.x, op->position.y);
+			op->image.ShowBitmap();
+			if (op->hp < op->maxHp) {
+				int healthPercent = static_cast<int>(100.0 * op->hp / op->maxHp);
+				ShowHealthBar(healthPercent, op->position.x + 100, op->position.y + 230, false);
 			}
 		}
-	}
 
-	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount), 600, 0, lifeTextFormat);
-
-	if (isConfirmingPlacement && selOpIdx != -1) {
-		ShowAttackRange();
-	}
-
-	for (auto& op : operators) {
 		if (!op->isAlive && op->DeployTimer != 0) {
 			float remainingTime = op->DeployTime - op->DeployTimer;
 			std::string timeText = formatFloat(remainingTime);
@@ -444,16 +467,34 @@ void CGameStateRun::OnShow()								 // Åã¥Ü¹CÀ¸µe­±
 		locateSecond -= 100;
 	}
 
+	for (auto& enemy : enemies) {
+		enemy->image.SetTopLeft(enemy->position.x, enemy->position.y);
+		if (enemy->isDead == false && enemy->isActive == true) {
+			enemy->image.ShowBitmap();
+			if (enemy->hp != enemy->maxHp) {
+				int healthPercent = static_cast<int>(100.0 * enemy->hp / enemy->maxHp);
+				ShowHealthBar(healthPercent, enemy->position.x + 100, enemy->position.y + 230, true);
+			}
+		}
+	}
+
+	textRenderer.ShowText(std::to_string(enemyCount - enemies.size()) + "/" + std::to_string(enemyCount) + "                " + std::to_string(life) + "/ 3", 480, 0, lifeTextFormat);
+
+	if (isConfirmingPlacement && selOpIdx != -1) {
+		ShowAttackRange();
+	}
+
 	//®É¶¡¶b
 	UpdateGameTime();
 }
+
 
 void CGameStateRun::UpdateGameTime() {
 	if (!isGamePaused) {
 		auto now = std::chrono::steady_clock::now();
 		std::chrono::duration<float, std::milli> deltaTime = now - lastUpdateTime;
-		gameTime += deltaTime;							// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
-		lastUpdateTime = now;							// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
+		gameTime += deltaTime;										// ¥u¦³¦b¥¼¼È°±®É²Ö¿n¹CÀ¸®É¶¡
+		lastUpdateTime = now;										// §ó·s lastUpdateTime ¬°¥Ø«e®É¶¡
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
 		if (LastCostUpdate >= 500 && cost < 99) {
@@ -462,7 +503,8 @@ void CGameStateRun::UpdateGameTime() {
 		}
 
 		objectInteraction.OperatorAttackPerform(operators, enemies, deltaTime.count() / 1000.0f, *checkpointManager);
-		
+		objectInteraction.OperatorHealPerform(operators, operators, deltaTime.count() / 1000.0f, *checkpointManager);
+
 		for (auto& enemy : enemies) {
 			if (!enemy->isActive && gameTime.count() >= enemy->entryTime * 1000) {  
 				enemy->isActive = true;
@@ -570,23 +612,23 @@ void CGameStateRun::DecreaseLife() {				//¶iÂÅªù-1HP
 
 		(*blueDoorEnemyIt)->enemyState = EnemyState::DEAD;
 		--life;
-		DBOUT("©Ò²Ö«õ¦h¥d¯Ç! " << life << endl);
 	}
 
 	if (life <= 0) {
+		isGameover = true;
 		Gameover();
 	}
 }
 
 
-void CGameStateRun::RemoveDeadEnemy()				//²¾°£¦º¤`ªº¼Ä¤H
+void CGameStateRun::RemoveDeadEnemy()			//²¾°£¦º¤`ªº¼Ä¤H
 {
 	enemies.erase(std::remove_if(enemies.begin(), enemies.end(), [](const std::shared_ptr<Enemy>& enemy) {
 		return enemy->enemyState == EnemyState::DEAD;
 		}), enemies.end());
 }
 
-void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
+void CGameStateRun::SortOperator()				//±Æ§Ç·F­û
 {
 	std::sort(operators.begin(), operators.end(), [](const std::unique_ptr<Operator>& a, const std::unique_ptr<Operator>& b)
 		{
@@ -594,13 +636,13 @@ void CGameStateRun::SortOperator()					//±Æ§Ç·F­û
 		});
 }
 
-void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
+void CGameStateRun::ShowHealthBar(int healthPercent, int posX, int posY, bool isEnemy)
 {
-	const int bar_width = 60;  // ½Õ¾ã¦å±ø¼e«×
-	const int bar_height = 8;  // ½Õ¾ã¦å±ø°ª«×
-	const int x1 = posX;  // ¦å±øªº¤ô¥­¦ì¸m
+	const int bar_width = 60;					// ½Õ¾ã¦å±ø¼e«×
+	const int bar_height = 8;					// ½Õ¾ã¦å±ø°ª«×
+	const int x1 = posX;						// ¦å±øªº¤ô¥­¦ì¸m
 	const int x2 = x1 + bar_width;
-	const int y1 = posY - bar_height - 10;  // ¦å±øÅã¥Ü¦b¼Ä¤H¹Ï¹³¤W¤è
+	const int y1 = posY - bar_height - 10;		
 	const int y2 = y1 + bar_height;
 	const int pen_width = bar_height / 8;
 	const int health_x1 = x1 + pen_width;
@@ -609,24 +651,33 @@ void CGameStateRun::ShowEnemyHealthBar(int healthPercent, int posX, int posY)
 	const int health_y1 = y1 + pen_width;
 	const int health_y2 = y2 - pen_width;
 
-	CDC* pDC = CDDraw::GetBackCDC();  // ¨ú±o«áºÝµe¥¬ªºCDC 
+	CDC* pDC = CDDraw::GetBackCDC();			// ¨ú±o«áºÝµe¥¬ªºCDC 
 
-	CBrush b1(RGB(255, 255, 255));  // µe­I´º¦âªº¦å±ø¤º³¡
+	CBrush b1(RGB(255, 255, 255));				// ¥Õ¦âªº¦å±ø©³¦â
 	pDC->SelectObject(&b1);
 	pDC->Rectangle(health_x1, health_y1, health_x2_end, health_y2);
 
-	CBrush b2(RGB(255, 0, 0));  // µe¥Õ¦âªº¦å±ø¶i«×
+	CBrush b2(isEnemy ? RGB(255, 0, 0) : RGB(135, 206, 255));	
 	pDC->SelectObject(&b2);
 	pDC->Rectangle(health_x1, health_y1, health_x2, health_y2);
 
-	CDDraw::ReleaseBackCDC();  // ÄÀ©ñµe¥¬ªºCDC
+	CDDraw::ReleaseBackCDC();					// ÄÀ©ñµe¥¬ªºCDC
 }
 
 
 void CGameStateRun::Gameover()						//¹CÀ¸µ²§ô
 {
+	ost->Pause();
+	Sleep(1000);
+
+	if (!enemies.empty()) {
+		levelpass = 0;
+	}else {
+		levelpass = 1;
+	}
+	
 	GotoGameState(GAME_STATE_OVER);
 	enemies.clear();
-	ost->Pause();
 	background.UnshowBitmap();
+	isGameover = false;
 }

@@ -54,6 +54,7 @@ namespace game_framework {
 	/////////////////////////////////////////////////////////////////////////////
 
 	extern int selectedMapIndex;
+	extern int levelpass;
 	
 	/////////////////////////////////////////////////////////////////////////////
 	// Constants
@@ -87,7 +88,7 @@ namespace game_framework {
 		int state = 0; 	//0: 水月  1:星空  2:遊戲開始
 		CMovingBitmap firstbackground;
 		CMovingBitmap secondbackground;
-		CMovingBitmap buttons[30];
+		CMovingBitmap buttons[3];
 	};
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -164,7 +165,7 @@ namespace game_framework {
 		void SortOperator();	
 		void Gameover();										// 遊戲結束
 
-		void ShowEnemyHealthBar(int healthPercent, int posX, int posY);		// 顯示敵人的血條
+		void ShowHealthBar(int healthPercent, int posX, int posY, bool isEnemy);		// 顯示血條
 
 		CAudio* ost = CAudio::Instance();						// OST
 	};
@@ -179,14 +180,18 @@ namespace game_framework {
 		CGameStateOver(CGame *g);
 		void OnBeginState();							// 設定每次重玩所需的變數
 		void OnInit();
+		void OnLButtonUp(UINT nFlags, CPoint point);	// 處理滑鼠的動作
 	protected:
 		void OnMove();									// 移動遊戲元素
 		void OnShow();									// 顯示這個狀態的遊戲畫面
 	private:
-		CMovingBitmap background;
+		CMovingBitmap gameoverBackground;				// 遊戲結束的背景
+		CMovingBitmap gameResult;						// 遊戲結果
 		GameMapManager gameMapManager;
 		GameMap gameMap;
 		int counter;									// 倒數之計數器
+		void loadGameOverMap();
+		void loadGameResult();
 	};
 
 }

@@ -8,7 +8,7 @@ namespace game_framework
     {
     public:
         Saria()
-            : Operator(1833, 320, 442, 3, 15, 15, 40, 1.2f, OperatorClass::Defender, "Saria") {
+            : Operator(1833, 320, 442, 3, 17, 25, 40, 1.2f, OperatorClass::Defender, "Saria") {
             headImage.LoadBitmapByString({ "resources/characters/operators/Saria/Saria_Head.bmp" }, RGB(0, 0, 0));
             position.SetPoint(1080, 720);
 

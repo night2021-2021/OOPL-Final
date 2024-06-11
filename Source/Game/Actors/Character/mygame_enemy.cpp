@@ -9,6 +9,7 @@ namespace  game_framework {
         std::vector<int> startPosition = trajectory.front();
         logicX = startPosition[0];
         logicY = startPosition[1];
+        ChangeEnemyOrientation();
     }
 
     void Enemy::Move(std::vector<int> originalPosition, std::vector<int> nextPosition, CheckpointManager& checkpointManager){
@@ -35,6 +36,7 @@ namespace  game_framework {
                     this->logicX = this->trajectory[this->positionIndex + 1][0];
                     this->logicY = this->trajectory[this->positionIndex + 1][1];
                     this->positionIndex += 1;                                           //Move to the next position
+                    this->ChangeEnemyOrientation();                                     //Change the orientation of the enemy
                 }
             }
         }
@@ -63,21 +65,51 @@ namespace  game_framework {
 		}
     }
 
+    void Enemy::ChangeEnemyOrientation() {
+        if (logicX > this->trajectory[this->positionIndex + 1][0]) {
+			this->enemyOrientation = EnemyOrientation::Left;
+        }
+        else if (logicX < this->trajectory[this->positionIndex + 1][0]) 
+        {
+			this->enemyOrientation = EnemyOrientation::Right;
+		}
+        ChangeImages();
+    }
+
     void Enemy::ChangeImages() {
-        switch (enemyState) {
-		case EnemyState::IDLE:
-			this->image = this->MoveImage;
-			break;
-		case EnemyState::MOVE:
-			this->image = this->MoveImage;
-			break;
-		case EnemyState::ATTACK:
-			this->image = this->AttackImage;
-			break;
-		case EnemyState::DEAD:
-			break;
-        case EnemyState::BLUE_DOOR:
-			break;
+        if(this->enemyOrientation == EnemyOrientation::Left){
+            switch (enemyState) {
+		        case EnemyState::IDLE:
+			        this->image = this->leftMoveImage;
+			        break;
+		        case EnemyState::MOVE:
+			        this->image = this->leftMoveImage;
+			        break;
+		        case EnemyState::ATTACK:
+			        this->image = this->leftAttackImage;
+			        break;
+		        case EnemyState::DEAD:
+			        break;
+                case EnemyState::BLUE_DOOR:
+			        break;
+            }
+        }
+        else if(this->enemyOrientation == EnemyOrientation::Right){
+            switch (enemyState) {
+		        case EnemyState::IDLE:
+			        this->image = this->rightMoveImage;
+			        break;
+		        case EnemyState::MOVE:
+			        this->image = this->rightMoveImage;
+			        break;
+		        case EnemyState::ATTACK:
+			        this->image = this->rightAttackImage;
+			        break;
+		        case EnemyState::DEAD:
+			        break;
+				case EnemyState::BLUE_DOOR:
+			        break;
+			}
         }
 	}
 }

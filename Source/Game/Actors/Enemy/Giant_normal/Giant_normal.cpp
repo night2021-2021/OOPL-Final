@@ -4,8 +4,10 @@
 namespace game_framework {
 
 	void Giant_normal::LoadImages() {
-		LoadIdleImagesForDirection("N/A", "Move", MoveImage, 27);
-        LoadIdleImagesForDirection("N/A", "Attack", AttackImage, 12);
+        LoadIdleImagesForDirection("left", "Move", leftMoveImage, 27);
+        LoadIdleImagesForDirection("left", "Attack", leftAttackImage, 12);
+        LoadIdleImagesForDirection("right", "Move", rightMoveImage, 27);
+        LoadIdleImagesForDirection("right", "Attack", rightAttackImage, 12);
 	}
 
     void Giant_normal::LoadIdleImagesForDirection(const char* subfolder, const char* statusfolder, CMovingBitmap& imageObject, int imageCount) {
@@ -14,7 +16,7 @@ namespace game_framework {
         imagePaths.clear();
 
         for (int i = 1; i <= imageCount; ++i) {
-            sprintf(buffer, "resources/characters/enimies/Giant_normal/Giant_normal_%s/Giant_normal_%s_%d.bmp", statusfolder, statusfolder, i);
+            sprintf(buffer, "resources/characters/enimies/Giant_normal/%s/Giant_normal_%s_%s/Giant_normal_%s_%s_%d.bmp", subfolder, subfolder, statusfolder, subfolder, statusfolder, i);
             imagePaths.push_back(std::string(buffer));
         }
 

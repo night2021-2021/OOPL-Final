@@ -7,11 +7,11 @@ namespace game_framework
 	class Bug_normal : public Enemy
 	{
 	public:
-        Bug_normal(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>> TRAJECTORY, EnemyType TYPE, EnemyState STATE, int TIME)
-            : Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE, TIME)
+		Bug_normal(int IDENTIFY, int MAX_HP, int ATK, int DEF, int SP, int BLOCKS, float AS, float MS, const std::vector<std::vector<int>>& TRAJECTORY, EnemyType TYPE, EnemyState STATE, int TIME)		//It's default, you can't change it.
+			: Enemy(IDENTIFY, MAX_HP, ATK, DEF, SP, BLOCKS, AS, MS, TRAJECTORY, TYPE, TIME)
 		{
 			LoadImages();
-			image = MoveImage;
+			image = leftMoveImage;
 		}
 
         

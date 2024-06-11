@@ -27,6 +27,7 @@
     <None Include="Resources\map\enemyJSON\0-1_Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-1Enemy.json" />
     <None Include="Resources\map\enemyJSON\0-2Enemy.json" />
+    <None Include="Resources\map\enemyJSON\0-3Enemy.json" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Library\audio.cpp">
@@ -65,6 +66,14 @@
     <ClCompile Include="Source\Game\Actors\Enemy\Bug_normal\Bug_normal.cpp" />
     <ClCompile Include="Source\Game\Actors\Operator\Saria\Sarai.cpp" />
     <ClCompile Include="Source\Game\Actors\Enemy\Giant_normal\Giant_normal.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Eyjafjalla\Eyjafjalla.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Bagpipe\Bagpipe.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Blaze\Blaze.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Dusk\Dusk.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Hongxue\Hongxue.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Ines\Ines.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Nian\Nian.cpp" />
+    <ClCompile Include="Source\Game\Actors\Operator\Nightingale\Nightingale.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Library\audio.h">
@@ -116,6 +125,14 @@
     <ClInclude Include="Source\Game\Actors\Operator\Saria\Saria.h" />
     <ClInclude Include="Source\Game\Execute\mygame_text.h" />
     <ClInclude Include="Source\Game\Actors\Enemy\Giant_normal\Giant_normal.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Eyjafjalla\Eyjafjalla.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Bagpipe\Bagpipe.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Blaze\Blaze.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Dusk\Dusk.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Hongxue\Hongxue.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Ines\Ines.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Nian\Nian.h" />
+    <ClInclude Include="Source\Game\Actors\Operator\Nightingale\Nightingale.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\Core\game.rc">
