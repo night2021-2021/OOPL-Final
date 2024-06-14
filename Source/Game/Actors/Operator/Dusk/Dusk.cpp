@@ -6,8 +6,14 @@ namespace game_framework {
     void Dusk::SetAttackRange(){
         attackRange.clear();
 
-        attackRange.push_back({ 0, 0 });
-        attackRange.push_back({ 1, 0 });
+        for (int i = 0; i <= 3; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 3 && (j == -1 || j == 1)) {
+                    continue;
+                }
+                attackRange.push_back({ i, j });
+            }
+        }
 
         originalAttackRange = attackRange;
     }

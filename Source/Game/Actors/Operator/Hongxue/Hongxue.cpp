@@ -6,8 +6,11 @@ namespace game_framework {
     void Hongxue::SetAttackRange(){
         attackRange.clear();
 
-        attackRange.push_back({ 0, 0 });
-        attackRange.push_back({ 1, 0 });
+        for (int i = 0; i <= 3; i++) {
+            for (int j = -1; j <= 1; j++) {
+                attackRange.push_back({ i, j });
+            }
+        }
 
         originalAttackRange = attackRange;
     }
