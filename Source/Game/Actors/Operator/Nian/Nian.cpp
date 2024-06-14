@@ -7,7 +7,6 @@ namespace game_framework {
         attackRange.clear();
 
         attackRange.push_back({ 0, 0 });
-        attackRange.push_back({ 1, 0 });
 
         originalAttackRange = attackRange;
     }

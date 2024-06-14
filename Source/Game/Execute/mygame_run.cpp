@@ -668,7 +668,7 @@ void CGameStateRun::ShowHealthBar(int healthPercent, int posX, int posY, bool is
 void CGameStateRun::Gameover()						//¹CÀ¸µ²§ô
 {
 	ost->Pause();
-	Sleep(1000);
+	Sleep(2000);
 
 	if (!enemies.empty()) {
 		levelpass = 0;
