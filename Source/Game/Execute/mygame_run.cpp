@@ -49,6 +49,7 @@ using namespace game_framework;
 /////////////////////////////////////////////////////////////////////////////
 const int deviationX = 120;
 const int deviationY = 180;
+const int costUpdateInterval = 1000;						// cost+1/1000ms，如果太慢可以調整
 int enemyCount = 0;
 int life = 3;
 bool isGameover;
@@ -497,7 +498,7 @@ void CGameStateRun::UpdateGameTime() {
 		lastUpdateTime = now;										// 更新 lastUpdateTime 為目前時間
 
 		auto LastCostUpdate = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCostUpdateTime).count();
-		if (LastCostUpdate >= 500 && cost < 99) {
+		if (LastCostUpdate >= costUpdateInterval && cost < 99) {				
 			cost += 1;
 			lastCostUpdateTime = now;
 		}
