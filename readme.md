@@ -33,5 +33,5 @@ LGF (Leistungsstarkes Game Framework) 是一款基於陳偉凱老師的 Game Fra
 
 DameDaNe DameYo DameNaNoYo
 
-## 遊玩說明
-
+## 遊玩注意
+音量注意!!!! 太大聲啦!
